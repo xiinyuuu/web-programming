@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MovRec - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand text-light" href="#">MovRec</a>
+    
+      <div class="collapse navbar-collapse justify-content-between">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Movies</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Actors</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Watchlist</a></li>
+        </ul>
+    
+        <!-- Wrap search and avatar in separate flex container -->
+        <form class="d-flex me-4" style="max-width: 300px;">
+          <div class="input-group">
+            <input class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-search" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+        <a href="login.html" class="btn btn-outline-light btn-sm me-2">Login</a>
+        <a href="signup.html" class="btn btn-outline-light btn-sm me-2">Sign up</a>
+          <img src="images/profile.jpg" alt="Profile" class="rounded-circle profile-img">
+        </div>
+      </div>
+    </div>    
+  </nav>
+
+  <!-- Login Form Section -->
+  <div class="container d-flex justify-content-center align-items-center min-vh-100" id="loginSection">
+    <div class="auth-container bg-dark text-light p-4 p-md-5 rounded shadow" style="background-color: rgba(255, 255, 255, 0.05);max-width: 500px; width: 100%;">  
+      <h2 class="auth-logo text-center mb-4">Login Your MovRec Account</h2>
+      <div class="alert alert-danger d-none" id="loginError" role="alert">
+        Invalid email or password. Please try again.
+      </div>
+      <form id="loginForm">
+        <div class="mb-3">
+          <input type="email" class="form-control" id="loginEmail" placeholder="Email address" required />
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" id="loginPassword" placeholder="Password" required />
+        </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="rememberMe" />
+          <label class="form-check-label" for="rememberMe">Remember me</label>
+        </div>
+        <button type="submit" class="btn btn-auth w-100 btn-primary">Log In</button>
+      </form>
+      <div class="text-center mt-3">
+        <a href="#" class="auth-link" id="forgotPassword">Forgot password?</a>
+      </div>
+      <hr class="divider" />
+      <div class="text-center mb-3">
+        <p>Don't have an account? <a href="signup.html" class="auth-link">Sign up</a></p>
+      </div>
+      <div class="social-login d-grid gap-2">
+        <button class="btn btn-social btn-light text-dark">
+          <i class="bi bi-google me-2"></i> Continue with Google
+        </button>
+        <button class="btn btn-social btn-light text-dark">
+          <i class="bi bi-facebook me-2"></i> Continue with Facebook
+        </button>
+        <button class="btn btn-social btn-light text-dark">
+          <i class="bi bi-apple me-2"></i> Continue with Apple
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center p-4 footer">
+    <div>
+      MovRec &copy; 2025 All Rights Reserved &bull;
+      <a href="mailto:movrec.support@example.com" class="footer-link">Contact Us</a>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Login Script -->
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      if (email && password) {
+        localStorage.setItem("movrec_user", JSON.stringify({
+          email: email,
+          name: email.split("@")[0],
+          isLoggedIn: true
+        }));
+        window.location.href = "home.html";
+      } else {
+        document.getElementById("loginError").classList.remove("d-none");
+      }
+    });
+
+    document.getElementById("forgotPassword").addEventListener("click", function(event) {
+      event.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      if (email) {
+        alert(`Password reset link would be sent to ${email} in a real application.`);
+      } else {
+        alert("Please enter your email address first.");
+      }
+    });
+  </script>
+</body>
+</html>

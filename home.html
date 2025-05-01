@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MovRec</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand text-light" href="#">MovRec</a>
+    
+      <div class="collapse navbar-collapse justify-content-between">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Movies</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Actors</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Watchlist</a></li>
+        </ul>
+    
+        <!-- Wrap search and avatar in separate flex container -->
+        <form class="d-flex me-4" style="max-width: 300px;">
+          <div class="input-group">
+            <input class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-search" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+        <a href="login.html" class="btn btn-outline-light btn-sm me-2">Sign Out</a>
+        <a href="profile.html"><img src="images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
+        </div>
+      </div>
+    </div>    
+  </nav>
+
+
+  <!-- Movies Section -->
+  <div class="container mt-5 text-center">
+    <h3 class="section-title">Top Recommended Movies</h3>
+    <hr class="section-divider">
+  </div>
+
+  <div class="container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-4 justify-content-center">
+      <!-- 10 Movie Cards (5+5) -->
+      <div class="col">
+        <div class="card movie-card text-center">
+          <img src="images/mulan.jpg" class="card-img-top movie-img" alt="Mulan">
+          <div class="card-body p-1"><h6 class="movie-title">Mulan</h6></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card movie-card text-center">
+          <img src="images/barbie.jpg" class="card-img-top movie-img" alt="Barbie">
+          <div class="card-body p-1"><h6 class="movie-title">Barbie</h6></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card movie-card text-center">
+          <img src="images/hitman.webp" class="card-img-top movie-img" alt="Hitman">
+          <div class="card-body p-1"><h6 class="movie-title">Hitman</h6></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card movie-card text-center">
+          <img src="images/joker_2.jpeg" class="card-img-top movie-img" alt="Joker 2">
+          <div class="card-body p-1"><h6 class="movie-title">Joker 2</h6></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card movie-card text-center">
+          <img src="images/moana_2.jpg" class="card-img-top movie-img" alt="Moana 2">
+          <div class="card-body p-1"><h6 class="movie-title">Moana 2</h6></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card movie-card text-center">
+          <img src="images/interstellar.jpg" class="card-img-top movie-img" alt="Interstellar">
+          <div class="card-body p-1"><h6 class="movie-title">Interstellar</h6></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card movie-card text-center">
+          <img src="images/damsel.webp" class="card-img-top movie-img" alt="Damsel">
+          <div class="card-body p-1"><h6 class="movie-title">Damsel</h6></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card movie-card text-center">
+          <img src="images/uglies.jpg" class="card-img-top movie-img" alt="Uglies">
+          <div class="card-body p-1"><h6 class="movie-title">Uglies</h6></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card movie-card text-center">
+          <img src="images/amazingspiderman.jpg" class="card-img-top movie-img" alt="The Amazing Spider-Man">
+          <div class="card-body p-1"><h6 class="movie-title">The Amazing Spider-Man</h6></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card movie-card text-center">
+          <img src="images/maleficent.jpeg" class="card-img-top movie-img" alt="Maleficent">
+          <div class="card-body p-1"><h6 class="movie-title">Maleficent</h6></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actors Section -->
+  <div class="container text-center mt-5">
+    <h3 class="section-title">Featured Actors & Actresses</h3>
+    <hr class="section-divider">
+    <div class="row row-cols-3 row-cols-md-6 g-4 justify-content-center">
+      <div class="col"><img src="images/profile.jpg" class="actor-img" alt="Actor 1"></div>
+      <div class="col"><img src="images/profile.jpg" class="actor-img" alt="Actor 2"></div>
+      <div class="col"><img src="images/profile.jpg" class="actor-img" alt="Actor 3"></div>
+      <div class="col"><img src="images/profile.jpg" class="actor-img" alt="Actor 4"></div>
+      <div class="col"><img src="images/profile.jpg" class="actor-img" alt="Actor 5"></div>
+      <div class="col"><img src="images/profile.jpg" class="actor-img" alt="Actor 6"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center mt-5 p-4 footer">
+    <div>
+      MovRec &copy; 2025 All Rights Reserved &bull;
+      <a href="mailto:movrec.support@example.com" class="footer-link">Contact Us</a>
+    </div>
+  </footer>
+
+  <!-- Floating Roulette Button -->
+  <div class="roulette-button" onclick="alert('Roulette feature coming soon!')">
+    <img src="images/roulette.png" alt="Roulette" class="roulette-icon">
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MovRec - Sign Up</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="signup.css" />
+</head>
+<body>
+
+  <!-- Navbar (matches login page structure) -->
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand text-light" href="#">MovRec</a>
+    
+      <div class="collapse navbar-collapse justify-content-between">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Movies</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Actors</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Watchlist</a></li>
+        </ul>
+    
+        <!-- Search form matches login page -->
+        <form class="d-flex me-4" style="max-width: 300px;">
+          <div class="input-group">
+            <input class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-search" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+        <a href="login.html" class="btn btn-outline-light btn-sm me-2">Login</a>
+        <a href="signup.html" class="btn btn-outline-light btn-sm me-2">Sign up</a>
+          <img src="images/profile.jpg" alt="Profile" class="rounded-circle profile-img">
+        </div>
+      </div>
+    </div>    
+  </nav>
+
+  <!-- Sign Up Form Section (matches login structure) -->
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="auth-container bg-dark text-light p-4 p-md-5 rounded shadow" style="background-color: rgba(255, 255, 255, 0.05);max-width: 500px; width: 100%;">  
+      <h2 class="auth-logo text-center mb-4">Create Your MovRec Account</h2>
+      <div class="alert alert-danger d-none" id="signupError" role="alert"></div>
+
+      <form id="signupForm" novalidate>
+        <div class="mb-3">
+          <input type="text" class="form-control" id="fullName" placeholder="Full Name" required />
+        </div>
+        <div class="mb-3">
+          <input type="email" class="form-control" id="signupEmail" placeholder="Email Address" required />
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" id="signupPassword" placeholder="Password" required />
+          <small class="form-text text-light">
+            Must include 8+ characters, uppercase, lowercase, number, and special character.
+          </small>
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required />
+        </div>
+        <div class="mb-3 form-check">
+          <input class="form-check-input" type="checkbox" id="termsAgree" required />
+          <label class="form-check-label" for="termsAgree">
+            I agree to the <a href="#" class="auth-link">Terms of Service</a> and <a href="#" class="auth-link">Privacy Policy</a>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-auth w-100 btn-primary">Create Account</button>
+      </form>
+
+      <div class="text-center mt-3">
+        <p>Already have an account? <a href="login.html" class="auth-link">Log in here</a></p>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="social-login d-grid gap-2">
+        <button class="btn btn-social btn-light text-dark">
+          <i class="bi bi-google me-2"></i> Continue with Google
+        </button>
+        <button class="btn btn-social btn-light text-dark">
+          <i class="bi bi-facebook me-2"></i> Continue with Facebook
+        </button>
+        <button class="btn btn-social btn-light text-dark">
+          <i class="bi bi-apple me-2"></i> Continue with Apple
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer (matches login page) -->
+  <footer class="text-center p-4 footer">
+    <div>
+      MovRec &copy; 2025 All Rights Reserved &bull;
+      <a href="mailto:movrec.support@example.com" class="footer-link">Contact Us</a>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Signup Script (keep existing functionality) -->
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const password = document.getElementById("signupPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const termsAgree = document.getElementById("termsAgree").checked;
+      const errorDiv = document.getElementById("signupError");
+
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+      if (!fullName || !email || !password || !confirmPassword || !termsAgree) {
+        errorDiv.textContent = "Please fill in all fields.";
+        errorDiv.classList.remove("d-none");
+        return;
+      }
+
+      if (!passwordRegex.test(password)) {
+        errorDiv.textContent = "Password doesn't meet requirements.";
+        errorDiv.classList.remove("d-none");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorDiv.textContent = "Passwords do not match.";
+        errorDiv.classList.remove("d-none");
+        return;
+      }
+
+      localStorage.setItem("movrec_user", JSON.stringify({
+        name: fullName,
+        email: email,
+        isLoggedIn: true
+      }));
+
+      window.location.href = "home.html";
+    });
+  </script>
+</body>
+</html>
