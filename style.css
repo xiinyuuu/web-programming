@@ -19,6 +19,12 @@ body {
   font-weight: 500;
 }
 
+.navbar .nav-link.active {
+  color: #d6b4fc !important; /* light purple */
+  font-weight: 700;
+}
+
+
 .search-box {
   background: white;
   color: black;
