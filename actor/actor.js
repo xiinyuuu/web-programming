@@ -52,7 +52,7 @@ const actors = {
       filmography: [
         { title: "Interstellar", poster: "images/interstellar.jpg" },
         { title: "Dallas Buyers Club", poster: "images/dallasbuyersclub.webp"},
-        { title: "The Lincoln Laywer", poster: "images/thelincolnlawyer.webp"}
+        { title: "The Lincoln Lawyer", poster: "images/thelincolnlawyer.webp"}
       ]
     },
     "millie": {
