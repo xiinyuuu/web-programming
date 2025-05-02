@@ -1,4 +1,3 @@
-<!-- Movies Page -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,64 +47,60 @@
   <!-- Movies Grid -->
   <div class="container mt-3">
     <div id="movieGrid" class="row row-cols-2 row-cols-sm-3 row-cols-md-5 row-cols-xl-7 g-4 justify-content-center">
-      <!-- JavaScript will inject 35 movies per page here -->
+      <!-- Movie cards will be injected here -->
     </div>
 
     <div class="text-center my-4">
-        <button class="btn btn-outline-light me-2" id="prevBtn">
-          <i class="bi bi-arrow-left"></i>
-        </button>
-        <button class="btn btn-outline-light" id="nextBtn">
-          <i class="bi bi-arrow-right"></i>
-        </button>
-      </div>
-      
+      <button class="btn btn-outline-light me-2" id="prevBtn">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <button class="btn btn-outline-light" id="nextBtn">
+        <i class="bi bi-arrow-right"></i>
+      </button>
+    </div>
+  </div>
 
+  <!-- Script -->
   <script>
-   const movies = [
-        { title: "Birds of Prey", img: "birdsofprey.webp" },
-        { title: "The Hunger Games", img: "thehungergames.jpg" },
-        { title: "Crazy Rich Asians", img: "crazyrichasians.jpg" },
-        { title: "Letters to Juliet", img: "letterstojuliet.jpg" },
-        { title: "Maleficent", img: "maleficent.jpeg" },
-        { title: "La La Land", img: "lalaland.jpg" },
-        { title: "Joker 2", img: "joker_2.jpeg" },
-        { title: "Twister", img: "twister.webp" },
-        { title: "About Time", img: "abouttime.jpg" },
-        { title: "Barbie", img: "barbie.jpg" },
-        { title: "Cruella", img: "cruella.jpg" },
-        { title: "The Lincoln Lawyer", img: "thelincolnlawyer.webp" },
-        { title: "Uglies", img: "uglies.jpg" },
-        { title: "Hitman", img: "hitman.webp" },
-        { title: "Dallas Buyers Club", img: "dallasbuyersclub.webp" },
-        { title: "The Amazing Spider-Man", img: "amazingspiderman.jpg" },
-        { title: "Damsel", img: "damsel.webp" },
-        { title: "Flipped", img: "flipped.jpg" },
-        { title: "The Age of Adaline", img: "theageofadaline.jpg" },
-        { title: "The Suicide Squad", img: "thesuicidesquad.webp" },
-        { title: "Begin Again", img: "beginagain.jpg" },
-        { title: "Mulan", img: "mulan.jpg" },
-        { title: "Black Panther", img: "blackpanther.jpg" },
-        { title: "Doctor Strange", img: "doctorstrange.jpg" },
-        { title: "Her", img: "her.webp" },
-        { title: "Moana 2", img: "moana_2.jpg" },
-        { title: "Inception", img: "inception.jpg" },
-        { title: "Life As We Know It", img: "lifeasweknowit.jpg" },
-        { title: "The Dark Knight", img: "thedarkknight.jpg" },
-        { title: "Anyone But You", img: "anyonebutyou.webp" },
-        { title: "Enola Holmes", img: "enolaholmes.webp" },
-        { title: "Walk The Line", img: "walktheline.webp" },
-        { title: "Meet Yourself", img: "meetyourself.webp" },
-        { title: "Interstellar", img: "interstellar.jpg" },
-        { title: "Five Feet Apart", img: "fivefeetapart.jpg" },
-        { title: "Midnight Sun", img: "midnightsun.jpg" },
-        { title: "Once Upon A Time", img: "onceuponatime.webp" }
+    const movies = [
+      { title: "Birds of Prey", img: "birdsofprey.webp" },
+      { title: "The Hunger Games", img: "thehungergames.jpg" },
+      { title: "Crazy Rich Asians", img: "crazyrichasians.jpg" },
+      { title: "Letters to Juliet", img: "letterstojuliet.jpg" },
+      { title: "Maleficent", img: "maleficent.jpeg" },
+      { title: "La La Land", img: "lalaland.jpg" },
+      { title: "Joker 2", img: "joker_2.jpeg" },
+      { title: "Twister", img: "twister.webp" },
+      { title: "About Time", img: "abouttime.jpg" },
+      { title: "Barbie", img: "barbie.jpg" },
+      { title: "Cruella", img: "cruella.jpg" },
+      { title: "The Lincoln Lawyer", img: "thelincolnlawyer.webp" },
+      { title: "Uglies", img: "uglies.jpg" },
+      { title: "Hitman", img: "hitman.webp" },
+      { title: "Dallas Buyers Club", img: "dallasbuyersclub.webp" },
+      { title: "The Amazing Spider-Man", img: "amazingspiderman.jpg" },
+      { title: "Damsel", img: "damsel.webp" },
+      { title: "Flipped", img: "flipped.jpg" },
+      { title: "The Age of Adaline", img: "theageofadaline.jpg" },
+      { title: "The Suicide Squad", img: "thesuicidesquad.webp" },
+      { title: "Begin Again", img: "beginagain.jpg" },
+      { title: "Mulan", img: "mulan.jpg" },
+      { title: "Black Panther", img: "blackpanther.jpg" },
+      { title: "Doctor Strange", img: "doctorstrange.jpg" },
+      { title: "Her", img: "her.webp" },
+      { title: "Moana 2", img: "moana_2.jpg" },
+      { title: "Inception", img: "inception.jpg" },
+      { title: "Life As We Know It", img: "lifeasweknowit.jpg" },
+      { title: "The Dark Knight", img: "thedarkknight.jpg" },
+      { title: "Anyone But You", img: "anyonebutyou.webp" },
+      { title: "Enola Holmes", img: "enolaholmes.webp" },
+      { title: "Walk The Line", img: "walktheline.webp" },
+      { title: "Meet Yourself", img: "meetyourself.webp" },
+      { title: "Interstellar", img: "interstellar.jpg" },
+      { title: "Five Feet Apart", img: "fivefeetapart.jpg" },
+      { title: "Midnight Sun", img: "midnightsun.jpg" },
+      { title: "Once Upon A Time", img: "onceuponatime.webp" }
     ];
-
-
-
-
-    
 
     let currentPage = 1;
     const moviesPerPage = 35;
@@ -122,10 +117,14 @@
         const col = document.createElement('div');
         col.className = 'col';
         col.innerHTML = `
-          <div class="card movie-card text-center">
-            <img src="images/${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
-            <div class="card-body p-1"><h6 class="movie-title">${movie.title}</h6></div>
-          </div>
+          <a href="moviedesc.html" class="text-decoration-none text-light">
+            <div class="card movie-card text-center">
+              <img src="images/${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
+              <div class="card-body p-1">
+                <h6 class="movie-title">${movie.title}</h6>
+              </div>
+            </div>
+          </a>
         `;
         grid.appendChild(col);
       }
@@ -147,6 +146,19 @@
 
     renderMovies(); // Initial render
   </script>
+
+  <!--footer-->
+  <footer class="text-center mt-5 p-4 footer">
+    <div>
+      MovRec &copy; 2025 All Rights Reserved &bull;
+      <a href="mailto:movrec.support@example.com" class="footer-link">Contact Us</a>
+    </div>
+  </footer>
+
+  <!-- Floating Roulette Button -->
+  <div class="roulette-button" onclick="alert('Roulette feature coming soon!')">
+    <img src="images/roulette.png" alt="Roulette" class="roulette-icon">
+  </div>
 
 </body>
 </html>

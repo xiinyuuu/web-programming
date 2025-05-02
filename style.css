@@ -132,3 +132,23 @@ body {
   border-radius: 0;
 }
 
+/* Movie Description */
+#movie-details img {
+  max-height: 400px;
+  object-fit: cover;
+}
+
+#movie-details h2 {
+  font-size: 32px;
+  color: #ffccff;
+}
+
+#movie-details p {
+  color: #ddd;
+  font-size: 16px;
+}
+
+
+
+
+
