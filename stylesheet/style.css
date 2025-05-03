@@ -1,13 +1,21 @@
-/* Global Styles */
-body {
+/* GLOBAL RESET + STRUCTURE */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   font-family: 'Poppins', sans-serif;
   background: radial-gradient(circle at 20% 20%, #2d0055, #0a001a, #000000);
   background-size: cover;
   color: white;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Navigation Bar */
+main {
+  flex: 1;
+}
+
+/* NAVIGATION BAR */
 .custom-navbar {
   background: #2d006b;
 }
@@ -20,11 +28,11 @@ body {
   font-weight: 500;
 }
 .navbar.nav-link.active {
-  color: #d6b4fc !important; /* light purple */
+  color: #d6b4fc !important;
   font-weight: 700;
 }
 
-/* Search Bar */
+/* SEARCH BAR */
 .search-box {
   background: white;
   color: black;
@@ -37,14 +45,15 @@ body {
   border: none;
 }
 
-/* Profile Image */
+/* PROFILE IMAGE */
 .profile-img {
   width: 35px;
   height: 35px;
   object-fit: cover;
+  border-radius: 50%;
 }
 
-/* Section Titles */
+/* SECTION TITLES */
 .section-title {
   font-weight: bold;
   color: #ffccff;
@@ -58,7 +67,7 @@ body {
   border-radius: 10px;
 }
 
-/* Movie Cards */
+/* MOVIE CARDS */
 .movie-img {
   height: 260px;
   object-fit: cover;
@@ -78,7 +87,7 @@ body {
   border: none;
 }
 
-/* Actor Cards */
+/* ACTOR CARDS */
 .actor-img {
   width: 100px;
   height: 100px;
@@ -91,23 +100,35 @@ body {
   transform: scale(1.1);
 }
 
-/* Footer */
-.footer {
-  background: #1a0033;
-  color: #eee;
+/* ADD TO WATCHLIST BUTTON */
+.add-watchlist-btn {
+  background: linear-gradient(135deg, #ff66cc, #cc66ff);
+  color: white;
+  font-weight: bold;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 0 15px rgba(255, 102, 204, 0.6);
+  transition: all 0.3s ease;
 }
-.footer-link {
-  color: #cc99ff;
-  text-decoration: none;
+.add-watchlist-btn:hover {
+  background: linear-gradient(135deg, #ff33cc, #9933ff);
+  box-shadow: 0 0 25px rgba(255, 102, 255, 0.8);
+  transform: scale(1.05);
+}
+.add-watchlist-btn.active {
+  background: linear-gradient(135deg, #6600cc, #9900ff);
+  box-shadow: 0 0 20px rgba(153, 0, 255, 0.8);
+  color: #ffffff;
 }
 
-/* Floating Roulette Button */
+/* FLOATING ROULETTE BUTTON */
 .roulette-button {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  width: 115px;      
-  height: 115px;     
+  width: 115px;
+  height: 115px;
   border-radius: 50%;
   overflow: hidden;
   padding: 0;
@@ -127,10 +148,9 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 0;
 }
 
-/* Movie Description Page */
+/* MOVIE DESCRIPTION PAGE */
 #movie-details img {
   max-height: 400px;
   object-fit: cover;
@@ -144,30 +164,15 @@ body {
   font-size: 16px;
 }
 
-/* Add to Watchlist Button */
-.add-watchlist-btn {
-  background: linear-gradient(135deg, #ff66cc, #cc66ff);
-  color: white;
-  font-weight: bold;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 50px;
-  box-shadow: 0 0 15px rgba(255, 102, 204, 0.6);
-  transition: all 0.3s ease;
+/* FOOTER */
+.footer {
+  background: #1a0033;
+  color: #eee;
 }
-
-.add-watchlist-btn:hover {
-  background: linear-gradient(135deg, #ff33cc, #9933ff);
-  box-shadow: 0 0 25px rgba(255, 102, 255, 0.8);
-  transform: scale(1.05);
+.footer-link {
+  color: #cc99ff;
+  text-decoration: none;
 }
-
-/* Active Watchlist Button */
-.add-watchlist-btn.active {
-  background: linear-gradient(135deg, #6600cc, #9900ff);
-  box-shadow: 0 0 20px rgba(153, 0, 255, 0.8);
-  color: #ffffff;
-  content: "✓ Added"; /* fallback */
+.footer-link:hover {
+  text-decoration: underline;
 }
-
-
