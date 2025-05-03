@@ -1,11 +1,12 @@
-/* GLOBAL RESET + STRUCTURE */
+/* Global reset and structure */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
-  background: radial-gradient(circle at 20% 20%, #2d0055, #0a001a, #000000);
+  background: linear-gradient(135deg, #2d0055, #0a001a, #000000);
   background-size: cover;
+  background-attachment: fixed;
   color: white;
   display: flex;
   flex-direction: column;
@@ -13,11 +14,18 @@ html, body {
 
 main {
   flex: 1;
+  background: transparent !important;
 }
 
-/* NAVIGATION BAR */
+/* Fix layout background bleeding */
+.container, .row, .card, .card-body {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Navigation bar */
 .custom-navbar {
-  background: #2d006b;
+  background: #2d006b !important;
 }
 .navbar-brand {
   font-size: 28px;
@@ -27,12 +35,12 @@ main {
   color: white !important;
   font-weight: 500;
 }
-.navbar.nav-link.active {
+.navbar .nav-link.active {
   color: #d6b4fc !important;
   font-weight: 700;
 }
 
-/* SEARCH BAR */
+/* Search bar */
 .search-box {
   background: white;
   color: black;
@@ -45,7 +53,7 @@ main {
   border: none;
 }
 
-/* PROFILE IMAGE */
+/* Profile image */
 .profile-img {
   width: 35px;
   height: 35px;
@@ -53,7 +61,7 @@ main {
   border-radius: 50%;
 }
 
-/* SECTION TITLES */
+/* Section titles */
 .section-title {
   font-weight: bold;
   color: #ffccff;
@@ -67,7 +75,7 @@ main {
   border-radius: 10px;
 }
 
-/* MOVIE CARDS */
+/* Movie cards */
 .movie-img {
   height: 260px;
   object-fit: cover;
@@ -83,11 +91,11 @@ main {
   margin-top: 5px;
 }
 .movie-card {
-  background: none;
-  border: none;
+  background: transparent !important;
+  border: none !important;
 }
 
-/* ACTOR CARDS */
+/* Actor cards */
 .actor-img {
   width: 100px;
   height: 100px;
@@ -100,7 +108,7 @@ main {
   transform: scale(1.1);
 }
 
-/* ADD TO WATCHLIST BUTTON */
+/* Add to watchlist button */
 .add-watchlist-btn {
   background: linear-gradient(135deg, #ff66cc, #cc66ff);
   color: white;
@@ -122,7 +130,7 @@ main {
   color: #ffffff;
 }
 
-/* FLOATING ROULETTE BUTTON */
+/* Floating roulette button */
 .roulette-button {
   position: fixed;
   bottom: 30px;
@@ -150,7 +158,7 @@ main {
   object-fit: cover;
 }
 
-/* MOVIE DESCRIPTION PAGE */
+/* Movie description page */
 #movie-details img {
   max-height: 400px;
   object-fit: cover;
@@ -164,9 +172,9 @@ main {
   font-size: 16px;
 }
 
-/* FOOTER */
+/* Footer */
 .footer {
-  background: #1a0033;
+  background: #140033;
   color: #eee;
 }
 .footer-link {
@@ -176,3 +184,4 @@ main {
 .footer-link:hover {
   text-decoration: underline;
 }
+
