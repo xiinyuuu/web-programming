@@ -1,3 +1,4 @@
+/* Global Styles */
 body {
   font-family: 'Poppins', sans-serif;
   background: radial-gradient(circle at 20% 20%, #2d0055, #0a001a, #000000);
@@ -6,7 +7,7 @@ body {
   margin: 0;
 }
 
-/* Navbar */
+/* Navigation Bar */
 .custom-navbar {
   background: #2d006b;
 }
@@ -18,19 +19,17 @@ body {
   color: white !important;
   font-weight: 500;
 }
-
-.navbar .nav-link.active {
+.navbar.nav-link.active {
   color: #d6b4fc !important; /* light purple */
   font-weight: 700;
 }
 
-
+/* Search Bar */
 .search-box {
   background: white;
   color: black;
   border-radius: 20px 0 0 20px;
 }
-
 .btn-search {
   background: #5e0099;
   color: white;
@@ -38,6 +37,7 @@ body {
   border: none;
 }
 
+/* Profile Image */
 .profile-img {
   width: 35px;
   height: 35px;
@@ -58,7 +58,7 @@ body {
   border-radius: 10px;
 }
 
-/* Movies */
+/* Movie Cards */
 .movie-img {
   height: 260px;
   object-fit: cover;
@@ -78,7 +78,7 @@ body {
   border: none;
 }
 
-/* Actors */
+/* Actor Cards */
 .actor-img {
   width: 100px;
   height: 100px;
@@ -120,11 +120,9 @@ body {
   transition: transform 0.3s ease;
   background-color: transparent;
 }
-
 .roulette-button:hover {
   transform: scale(1.1);
 }
-
 .roulette-icon {
   width: 100%;
   height: 100%;
@@ -132,23 +130,16 @@ body {
   border-radius: 0;
 }
 
-/* Movie Description */
+/* Movie Description Page */
 #movie-details img {
   max-height: 400px;
   object-fit: cover;
 }
-
 #movie-details h2 {
   font-size: 32px;
   color: #ffccff;
 }
-
 #movie-details p {
   color: #ddd;
   font-size: 16px;
 }
-
-
-
-
-
