@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -39,9 +41,25 @@
 
   <!-- Filter Button -->
   <div class="container mt-4 text-end">
-    <a href="#" class="btn btn-outline-light btn-sm">
-      <i class="bi bi-funnel"></i> Filter Movies
-    </a>
+    <div class="dropdown">
+      <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" 
+              data-bs-toggle="dropdown" aria-expanded="false" id="filterDropdown">
+        <i class="bi bi-funnel"></i> Filter Movies
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><h6 class="dropdown-header">Filter By</h6></li>
+        <li><a class="dropdown-item" href="#" data-filter="genre" id="filterGenre">Genre</a></li>
+        <li><a class="dropdown-item" href="#" data-filter="year" id="filterYear">Year</a></li>
+        <li><a class="dropdown-item" href="#" data-filter="popular" id="filterPopular">Popular</a></li>
+        <li><a class="dropdown-item" href="#" data-filter="rating" id="filterRating">Rating</a></li>
+        <li><a class="dropdown-item" href="#" data-filter="languages" id="filterLanguages">Languages</a></li>
+        <li><a class="dropdown-item" href="#" data-filter="country" id="filterCountry">Country</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header">Sort By</h6></li>
+        <li><a class="dropdown-item" href="#" data-sort="alphabetical">A to Z</a></li>
+        <li><a class="dropdown-item" href="#" data-sort="reverse-alphabetical">Z to A</a></li>
+      </ul>
+    </div>
   </div>
 
   <!-- Movies Grid -->
