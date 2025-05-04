@@ -39,133 +39,180 @@
     </div>
   </nav>
 
-  <!-- Filter Button -->
-  <div class="container mt-4 text-end">
-    <div class="dropdown">
-      <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" 
-              data-bs-toggle="dropdown" aria-expanded="false" id="filterDropdown">
-        <i class="bi bi-funnel"></i> Filter Movies
-      </button>
-      <ul class="dropdown-menu dropdown-menu-end">
-        <li><h6 class="dropdown-header">Filter By</h6></li>
-        <li><a class="dropdown-item" href="#" data-filter="genre" id="filterGenre">Genre</a></li>
-        <li><a class="dropdown-item" href="#" data-filter="year" id="filterYear">Year</a></li>
-        <li><a class="dropdown-item" href="#" data-filter="popular" id="filterPopular">Popular</a></li>
-        <li><a class="dropdown-item" href="#" data-filter="rating" id="filterRating">Rating</a></li>
-        <li><a class="dropdown-item" href="#" data-filter="languages" id="filterLanguages">Languages</a></li>
-        <li><a class="dropdown-item" href="#" data-filter="country" id="filterCountry">Country</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><h6 class="dropdown-header">Sort By</h6></li>
-        <li><a class="dropdown-item" href="#" data-sort="alphabetical">A to Z</a></li>
-        <li><a class="dropdown-item" href="#" data-sort="reverse-alphabetical">Z to A</a></li>
-      </ul>
+  <!-- Filter Section -->
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div id="activeFilters"></div>
+        <div class="dropdown">
+            <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" 
+                            data-bs-toggle="dropdown" aria-expanded="false" id="filterDropdown">
+                <i class="bi bi-funnel"></i> Filter Movies
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><h6 class="dropdown-header">Filter By</h6></li>
+                <li><a class="dropdown-item" href="#" data-filter="genre" id="filterGenre">Genre</a></li>
+                <li><a class="dropdown-item" href="#" data-filter="year" id="filterYear">Year</a></li>
+                <li><a class="dropdown-item" href="#" data-filter="popular" id="filterPopular">Popularity</a></li>
+                <li><a class="dropdown-item" href="#" data-filter="rating" id="filterRating">Rating</a></li>
+                <li><a class="dropdown-item" href="#" data-filter="language" id="filterLanguage">Languages</a></li>
+                <li><a class="dropdown-item" href="#" data-filter="country" id="filterCountry">Countries</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><h6 class="dropdown-header">Sort By</h6></li>
+                <li><a class="dropdown-item" href="#" data-sort="alphabetical">A to Z</a></li>
+                <li><a class="dropdown-item" href="#" data-sort="reverse-alphabetical">Z to A</a></li>
+                <li><a class="dropdown-item" href="#" data-sort="release-date">Release Date</a></li>
+            </ul>
+        </div>
     </div>
   </div>
 
   <!-- Movies Grid -->
   <div class="container mt-3">
     <div id="movieGrid" class="row row-cols-2 row-cols-sm-3 row-cols-md-5 row-cols-xl-7 g-4 justify-content-center">
-      <!-- Movie cards will be injected here -->
+        <!-- Movie cards will be injected here -->
     </div>
 
     <div class="text-center my-4">
-      <button class="btn btn-outline-light me-2" id="prevBtn">
-        <i class="bi bi-arrow-left"></i>
-      </button>
-      <button class="btn btn-outline-light" id="nextBtn">
-        <i class="bi bi-arrow-right"></i>
-      </button>
+        <button class="btn btn-outline-light me-2" id="prevBtn">
+            <i class="bi bi-arrow-left"></i>
+        </button>
+        <button class="btn btn-outline-light" id="nextBtn">
+            <i class="bi bi-arrow-right"></i>
+        </button>
     </div>
   </div>
 
-  <!-- Script -->
-  <script>
-    const movies = [
-      { title: "Birds of Prey", img: "birdsofprey.webp" },
-      { title: "The Hunger Games", img: "thehungergames.jpg" },
-      { title: "Crazy Rich Asians", img: "crazyrichasians.jpg" },
-      { title: "Letters to Juliet", img: "letterstojuliet.jpg" },
-      { title: "Maleficent", img: "maleficent.jpeg" },
-      { title: "La La Land", img: "lalaland.jpg" },
-      { title: "Joker 2", img: "joker_2.jpeg" },
-      { title: "Twister", img: "twister.webp" },
-      { title: "About Time", img: "abouttime.jpg" },
-      { title: "Barbie", img: "barbie.jpg" },
-      { title: "Cruella", img: "cruella.jpg" },
-      { title: "The Lincoln Lawyer", img: "thelincolnlawyer.webp" },
-      { title: "Uglies", img: "uglies.jpg" },
-      { title: "Hitman", img: "hitman.webp" },
-      { title: "Dallas Buyers Club", img: "dallasbuyersclub.webp" },
-      { title: "The Amazing Spider-Man", img: "amazingspiderman.jpg" },
-      { title: "Damsel", img: "damsel.webp" },
-      { title: "Flipped", img: "flipped.jpg" },
-      { title: "The Age of Adaline", img: "theageofadaline.jpg" },
-      { title: "The Suicide Squad", img: "thesuicidesquad.webp" },
-      { title: "Begin Again", img: "beginagain.jpg" },
-      { title: "Mulan", img: "mulan.jpg" },
-      { title: "Black Panther", img: "blackpanther.jpg" },
-      { title: "Doctor Strange", img: "doctorstrange.jpg" },
-      { title: "Her", img: "her.webp" },
-      { title: "Moana 2", img: "moana_2.jpg" },
-      { title: "Inception", img: "inception.jpg" },
-      { title: "Life As We Know It", img: "lifeasweknowit.jpg" },
-      { title: "The Dark Knight", img: "thedarkknight.jpg" },
-      { title: "Anyone But You", img: "anyonebutyou.webp" },
-      { title: "Enola Holmes", img: "enolaholmes.webp" },
-      { title: "Walk The Line", img: "walktheline.webp" },
-      { title: "Meet Yourself", img: "meetyourself.webp" },
-      { title: "Interstellar", img: "interstellar.jpg" },
-      { title: "Five Feet Apart", img: "fivefeetapart.jpg" },
-      { title: "Midnight Sun", img: "midnightsun.jpg" },
-      { title: "Once Upon A Time", img: "onceuponatime.webp" }
-    ];
-
-    let currentPage = 1;
-    const moviesPerPage = 35;
-
-    function renderMovies() {
-      const grid = document.getElementById('movieGrid');
-      grid.innerHTML = '';
-
-      const start = (currentPage - 1) * moviesPerPage;
-      const end = start + moviesPerPage;
-      const moviesToShow = movies.slice(start, end);
-
-      for (const movie of moviesToShow) {
-        const col = document.createElement('div');
-        col.className = 'col';
-        col.innerHTML = `
-          <a href="../html/moviedesc.html" class="text-decoration-none text-light">
-            <div class="card movie-card text-center">
-              <img src="../images/${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
-              <div class="card-body p-1">
-                <h6 class="movie-title">${movie.title}</h6>
-              </div>
+  <!-- Filter Modals -->
+  <!-- Genre Filter Modal -->
+  <div class="modal fade" id="genreModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Genres</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-          </a>
-        `;
-        grid.appendChild(col);
-      }
-    }
+            <div class="modal-body">
+                <div class="genre-checkboxes"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="applyGenreFilter">Apply</button>
+            </div>
+        </div>
+    </div>
+  </div>
 
-    document.getElementById('prevBtn').addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderMovies();
-      }
-    });
+  <!-- Year Filter Modal -->
+  <div class="modal fade" id="yearModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Year Range (1990-2025)</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-between">
+                    <input type="number" class="form-control me-2" id="startYear" 
+                           placeholder="Start Year" min="1990" max="2025">
+                    <input type="number" class="form-control" id="endYear" 
+                           placeholder="End Year" min="1990" max="2025">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="applyYearFilter">Apply</button>
+            </div>
+        </div>
+    </div>
+  </div>
 
-    document.getElementById('nextBtn').addEventListener('click', () => {
-      if ((currentPage * moviesPerPage) < movies.length) {
-        currentPage++;
-        renderMovies();
-      }
-    });
+  <!-- Popularity Filter Modal -->
+  <div class="modal fade" id="popularModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Popularity Range</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-between">
+                    <input type="number" class="form-control me-2" id="minPopularity" 
+                           placeholder="Min" min="0">
+                    <input type="number" class="form-control" id="maxPopularity" 
+                           placeholder="Max" min="0">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="applyPopularityFilter">Apply</button>
+            </div>
+        </div>
+    </div>
+  </div>
 
-    renderMovies(); // Initial render
-  </script>
+  <!-- Rating Filter Modal -->
+  <div class="modal fade" id="ratingModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Rating Range (0-10)</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-between">
+                    <input type="number" class="form-control me-2" id="minRating" 
+                           placeholder="Min" step="0.1" min="0" max="10">
+                    <input type="number" class="form-control" id="maxRating" 
+                           placeholder="Max" step="0.1" min="0" max="10">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="applyRatingFilter">Apply</button>
+            </div>
+        </div>
+    </div>
+  </div>
 
-  <!--footer-->
+  <!-- Language Filter Modal -->
+  <div class="modal fade" id="languageModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Languages</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="language-checkboxes"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="applyLanguageFilter">Apply</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Country Filter Modal -->
+  <div class="modal fade" id="countryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Countries</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="country-checkboxes"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="applyCountryFilter">Apply</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
   <footer class="text-center mt-5 p-4 footer">
     <div>
       MovRec &copy; 2025 All Rights Reserved &bull;
@@ -178,5 +225,388 @@
     <img src="../images/roulette.png" alt="Roulette" class="roulette-icon">
   </div>
 
+  <script>
+    const movies = [
+    { title: "Birds of Prey", img: "birdsofprey.webp", genre: ["Action", "Adventure"], year: 2020, rating: 6.1, language: "English", country: "USA", popularity: 1500 },
+    { title: "La La Land", img: "lalaland.jpg", genre: ["Romance", "Drama"], year: 2016, rating: 8.0, language: "English", country: "USA", popularity: 2500 },
+    { title: "Inception", img: "inception.jpg", genre: ["Action", "Sci-Fi"], year: 2010, rating: 8.8, language: "English", country: "USA", popularity: 3500 },
+    { title: "The Hunger Games", img: "thehungergames.jpg", genre: ["Action", "Adventure"], year: 2012, rating: 7.2, language: "English", country: "USA", popularity: 2000 },
+    { title: "Crazy Rich Asians", img: "crazyrichasians.jpg", genre: ["Romance", "Comedy"], year: 2018, rating: 7.0, language: "English", country: "USA", popularity: 1800 },
+    { title: "Letters to Juliet", img: "letterstojuliet.jpg", genre: ["Romance", "Drama"], year: 2010, rating: 6.5, language: "English", country: "USA", popularity: 1200 },
+    { title: "Maleficent", img: "maleficent.jpeg", genre: ["Fantasy", "Adventure"], year: 2014, rating: 7.0, language: "English", country: "USA", popularity: 2200 },
+    { title: "Joker 2", img: "joker_2.jpeg", genre: ["Drama", "Crime"], year: 2024, rating: 8.5, language: "English", country: "USA", popularity: 3000 },
+    { title: "Twister", img: "twister.webp", genre: ["Action", "Thriller"], year: 1996, rating: 6.4, language: "English", country: "USA", popularity: 1400 },
+    { title: "About Time", img: "abouttime.jpg", genre: ["Romance", "Drama"], year: 2013, rating: 7.8, language: "English", country: "UK", popularity: 1600 },
+    { title: "Barbie", img: "barbie.jpg", genre: ["Comedy", "Fantasy"], year: 2023, rating: 7.3, language: "English", country: "USA", popularity: 2800 },
+    { title: "Cruella", img: "cruella.jpg", genre: ["Comedy", "Crime"], year: 2021, rating: 7.4, language: "English", country: "USA", popularity: 2300 },
+    { title: "The Lincoln Lawyer", img: "thelincolnlawyer.webp", genre: ["Drama", "Crime"], year: 2011, rating: 7.3, language: "English", country: "USA", popularity: 1500 },
+    { title: "Uglies", img: "uglies.jpg", genre: ["Sci-Fi", "Drama"], year: 2025, rating: 6.8, language: "English", country: "USA", popularity: 1100 },
+    { title: "Hitman", img: "hitman.webp", genre: ["Action", "Thriller"], year: 2007, rating: 6.3, language: "English", country: "USA", popularity: 1300 },
+    { title: "Dallas Buyers Club", img: "dallasbuyersclub.webp", genre: ["Drama"], year: 2013, rating: 8.0, language: "English", country: "USA", popularity: 1700 },
+    { title: "The Amazing Spider-Man", img: "amazingspiderman.jpg", genre: ["Action", "Adventure"], year: 2012, rating: 6.9, language: "English", country: "USA", popularity: 2400 },
+    { title: "Damsel", img: "damsel.webp", genre: ["Fantasy", "Adventure"], year: 2023, rating: 6.7, language: "English", country: "USA", popularity: 1000 },
+    { title: "Flipped", img: "flipped.jpg", genre: ["Romance", "Drama"], year: 2010, rating: 7.7, language: "English", country: "USA", popularity: 1500 },
+    { title: "The Age of Adaline", img: "theageofadaline.jpg", genre: ["Romance", "Drama"], year: 2015, rating: 7.2, language: "English", country: "USA", popularity: 1400 },
+    { title: "The Suicide Squad", img: "thesuicidesquad.webp", genre: ["Action", "Comedy"], year: 2021, rating: 7.2, language: "English", country: "USA", popularity: 2600 },
+    { title: "Begin Again", img: "beginagain.jpg", genre: ["Romance", "Music"], year: 2013, rating: 7.4, language: "English", country: "USA", popularity: 1300 },
+    { title: "Mulan", img: "mulan.jpg", genre: ["Action", "Adventure"], year: 2020, rating: 5.7, language: "English", country: "USA", popularity: 2000 },
+    { title: "Black Panther", img: "blackpanther.jpg", genre: ["Action", "Adventure"], year: 2018, rating: 7.3, language: "English", country: "USA", popularity: 3200 },
+    { title: "Doctor Strange", img: "doctorstrange.jpg", genre: ["Action", "Fantasy"], year: 2016, rating: 7.5, language: "English", country: "USA", popularity: 2900 },
+    { title: "Her", img: "her.webp", genre: ["Romance", "Sci-Fi"], year: 2013, rating: 8.0, language: "English", country: "USA", popularity: 1800 },
+    { title: "Moana 2", img: "moana_2.jpg", genre: ["Animation", "Adventure"], year: 2024, rating: 7.8, language: "English", country: "USA", popularity: 2500 },
+    { title: "Life As We Know It", img: "lifeasweknowit.jpg", genre: ["Romance", "Comedy"], year: 2010, rating: 6.5, language: "English", country: "USA", popularity: 1200 },
+    { title: "The Dark Knight", img: "thedarkknight.jpg", genre: ["Action", "Crime"], year: 2008, rating: 9.0, language: "English", country: "USA", popularity: 4000 },
+    { title: "Anyone But You", img: "anyonebutyou.webp", genre: ["Romance", "Comedy"], year: 2023, rating: 6.9, language: "English", country: "USA", popularity: 1100 },
+    { title: "Enola Holmes", img: "enolaholmes.webp", genre: ["Mystery", "Adventure"], year: 2020, rating: 6.6, language: "English", country: "USA", popularity: 1500 },
+    { title: "Walk The Line", img: "walktheline.webp", genre: ["Drama", "Music"], year: 2005, rating: 7.8, language: "English", country: "USA", popularity: 1400 },
+    { title: "Meet Yourself", img: "meetyourself.webp", genre: ["Drama", "Romance"], year: 2023, rating: 7.1, language: "English", country: "USA", popularity: 1200 },
+    { title: "Interstellar", img: "interstellar.jpg", genre: ["Sci-Fi", "Adventure"], year: 2014, rating: 8.6, language: "English", country: "USA", popularity: 3500 },
+    { title: "Five Feet Apart", img: "fivefeetapart.jpg", genre: ["Romance", "Drama"], year: 2019, rating: 7.2, language: "English", country: "USA", popularity: 1600 },
+    { title: "Midnight Sun", img: "midnightsun.jpg", genre: ["Romance", "Drama"], year: 2018, rating: 6.6, language: "English", country: "USA", popularity: 1300 },
+    { title: "Once Upon A Time", img: "onceuponatime.webp", genre: ["Fantasy", "Drama"], year: 2017, rating: 7.5, language: "English", country: "USA", popularity: 1400 }
+    ];
+
+    let currentPage = 1;
+    const moviesPerPage = 35;
+    let activeFilters = {
+      genres: [],
+      yearRange: null,
+      popularityRange: null,
+      ratingRange: null,
+      languages: [],
+      countries: [],
+      sort: null
+    };
+
+    // Initialize genres
+    const allGenres = ["Action", "Adventure", "Romance", "Drama", "Sci-Fi", "Comedy"];
+
+    // Filter and Sort Functions
+    function filterMovies(movies) {
+      return movies.filter(movie => {
+        // Genre filter
+        if (activeFilters.genres.length > 0 && 
+            !activeFilters.genres.some(genre => movie.genre.includes(genre))) return false;
+
+        // Year filter
+        if (activeFilters.yearRange && 
+           (movie.year < activeFilters.yearRange.start || movie.year > activeFilters.yearRange.end)) return false;
+
+        // Popularity filter
+        if (activeFilters.popularityRange && 
+           (movie.popularity < activeFilters.popularityRange.min || 
+            movie.popularity > activeFilters.popularityRange.max)) return false;
+
+        // Rating filter
+        if (activeFilters.ratingRange && 
+           (movie.rating < activeFilters.ratingRange.min || 
+            movie.rating > activeFilters.ratingRange.max)) return false;
+
+        // Language filter
+        if (activeFilters.languages.length > 0 && 
+            !activeFilters.languages.includes(movie.language)) return false;
+
+        // Country filter
+        if (activeFilters.countries.length > 0 && 
+            !activeFilters.countries.includes(movie.country)) return false;
+        return true;
+      });
+    }
+
+    // Filter and sort functions
+    function filterMovies(movies) {
+      return movies.filter(movie => {
+        if (activeFilters.genres.length > 0 && 
+            !activeFilters.genres.some(genre => movie.genre.includes(genre))) return false;
+
+        if (activeFilters.yearRange && 
+           (movie.year < activeFilters.yearRange.start || movie.year > activeFilters.yearRange.end)) return false;
+
+        if (activeFilters.popularityRange && 
+           (movie.popularity < activeFilters.popularityRange.min || 
+            movie.popularity > activeFilters.popularityRange.max)) return false;
+
+        if (activeFilters.ratingRange && 
+           (movie.rating < activeFilters.ratingRange.min || 
+            movie.rating > activeFilters.ratingRange.max)) return false;
+
+        if (activeFilters.languages.length > 0 && 
+            !activeFilters.languages.includes(movie.language)) return false;
+
+        if (activeFilters.countries.length > 0 && 
+            !activeFilters.countries.includes(movie.country)) return false;
+
+        return true;
+      });
+    }
+
+
+    function sortMovies(movies) {
+      if (!activeFilters.sort) return movies;
+      return [...movies].sort((a, b) => {
+        switch(activeFilters.sort) {
+          case 'alphabetical': return a.title.localeCompare(b.title);
+          case 'reverse-alphabetical': return b.title.localeCompare(a.title);
+          case 'release-date': return b.year - a.year;
+          default: return 0;
+        }
+      });
+    }
+
+    // UI Update Functions
+    function updateActiveFiltersDisplay() {
+      const container = document.getElementById('activeFilters');
+      const filters = [];
+      
+      if (activeFilters.genres.length > 0) {
+        filters.push(`Genres: ${activeFilters.genres.join(', ')}`);
+      }
+      
+      if (activeFilters.yearRange) {
+        filters.push(`Years: ${activeFilters.yearRange.start}-${activeFilters.yearRange.end}`);
+      }
+
+      if (activeFilters.popularityRange) {
+        filters.push(`Popularity: ${activeFilters.popularityRange.min}-${activeFilters.popularityRange.max}`);
+      }
+
+      if (activeFilters.ratingRange) {
+        filters.push(`Rating: ${activeFilters.ratingRange.min}-${activeFilters.ratingRange.max}`);
+      }
+
+      if (activeFilters.languages.length > 0) {
+        filters.push(`Languages: ${activeFilters.languages.join(', ')}`);
+      }
+
+      if (activeFilters.countries.length > 0) {
+        filters.push(`Countries: ${activeFilters.countries.join(', ')}`);
+      }
+
+      if (activeFilters.sort) {
+        filters.push(`Sorted by: ${activeFilters.sort.replace('-', ' ')}`);
+      }
+
+      container.innerHTML = filters.map(f => `
+        <span class="badge bg-secondary me-2">
+          ${f} <button class="btn-close btn-close-white ms-2" 
+                  onclick="clearFilter('${f.split(': ')[0].toLowerCase()}')"></button>
+        </span>
+      `).join('');
+    }
+
+    window.clearFilter = (filterType) => {
+      switch(filterType) {
+        case 'genres':
+          activeFilters.genres = [];
+          break;
+        case 'years':
+          delete activeFilters.yearRange;
+          break;
+        case 'popularity':
+          delete activeFilters.popularityRange;
+          break;
+        case 'rating':
+          delete activeFilters.ratingRange;
+          break;
+        case 'languages':
+          activeFilters.languages = [];
+          break;
+        case 'countries':
+          activeFilters.countries = [];
+          break;
+        case 'sorted by':
+          activeFilters.sort = null;
+          break;
+      }
+      updateActiveFiltersDisplay();
+      renderMovies();
+    };
+
+    // Rendering
+    function renderMovies() {
+      const grid = document.getElementById('movieGrid');
+      grid.innerHTML = '';
+
+      let filteredMovies = filterMovies(movies);
+      filteredMovies = sortMovies(filteredMovies);
+
+      const start = (currentPage - 1) * moviesPerPage;
+      const end = start + moviesPerPage;
+      const moviesToShow = filteredMovies.slice(start, end);
+
+      moviesToShow.forEach(movie => {
+        const col = document.createElement('div');
+        col.className = 'col';
+        col.innerHTML = `
+          <a href="../html/moviedesc.html" class="text-decoration-none text-light">
+            <div class="card movie-card text-center">
+              <img src="../images/${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
+              <div class="card-body p-1">
+                <h6 class="movie-title">${movie.title}</h6>
+                <small class="text-muted">${movie.year} • ${movie.genre.join(', ')}</small>
+              </div>
+            </div>
+          </a>
+        `;
+        grid.appendChild(col);
+      });
+    }
+
+    // Event listeners
+    document.getElementById('filterGenre').addEventListener('click', () => {
+      new bootstrap.Modal(document.getElementById('genreModal')).show();
+    });
+
+    document.getElementById('applyGenreFilter').addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('.genre-checkboxes input:checked');
+      activeFilters.genres = Array.from(checkboxes).map(cb => cb.value);
+      updateActiveFiltersDisplay();
+      currentPage = 1;
+      renderMovies();
+      new bootstrap.Modal(document.getElementById('genreModal')).hide();
+    });
+
+    document.getElementById('filterYear').addEventListener('click', () => {
+      new bootstrap.Modal(document.getElementById('yearModal')).show();
+    });
+
+    document.getElementById('applyYearFilter').addEventListener('click', () => {
+      let startYear = parseInt(document.getElementById('startYear').value) || 1990;
+      let endYear = parseInt(document.getElementById('endYear').value) || 2025;
+
+      // Enforce range constraints
+      startYear = Math.max(1990, Math.min(startYear, 2025));
+      endYear = Math.max(1990, Math.min(endYear, 2025));
+      
+      // Ensure valid range
+      if (startYear > endYear) [startYear, endYear] = [endYear, startYear];
+
+      activeFilters.yearRange = { start: startYear, end: endYear };
+      updateActiveFiltersDisplay();
+      currentPage = 1;
+      renderMovies();
+      new bootstrap.Modal(document.getElementById('yearModal')).hide();
+    });
+
+    document.getElementById('filterPopular').addEventListener('click', () => {
+      new bootstrap.Modal(document.getElementById('popularModal')).show();
+    });
+
+    document.getElementById('applyPopularityFilter').addEventListener('click', () => {
+      const min = parseInt(document.getElementById('minPopularity').value) || 0;
+      const max = parseInt(document.getElementById('maxPopularity').value) || Infinity;
+      activeFilters.popularityRange = { min, max };
+      updateActiveFiltersDisplay();
+      currentPage = 1;
+      renderMovies();
+      new bootstrap.Modal(document.getElementById('popularModal')).hide();
+    });
+
+    document.getElementById('filterRating').addEventListener('click', () => {
+      new bootstrap.Modal(document.getElementById('ratingModal')).show();
+    });
+
+    document.getElementById('applyRatingFilter').addEventListener('click', () => {
+      const min = parseFloat(document.getElementById('minRating').value) || 0;
+      const max = parseFloat(document.getElementById('maxRating').value) || 10;
+      activeFilters.ratingRange = { 
+        min: Math.max(0, Math.min(min, 10)),
+        max: Math.max(0, Math.min(max, 10))
+      };
+      updateActiveFiltersDisplay();
+      currentPage = 1;
+      renderMovies();
+      new bootstrap.Modal(document.getElementById('ratingModal')).hide();
+    });
+
+    document.getElementById('filterLanguage').addEventListener('click', () => {
+      new bootstrap.Modal(document.getElementById('languageModal')).show();
+    });
+
+    document.getElementById('applyLanguageFilter').addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('.language-checkboxes input:checked');
+      activeFilters.languages = Array.from(checkboxes).map(cb => cb.value);
+      updateActiveFiltersDisplay();
+      currentPage = 1;
+      renderMovies();
+      new bootstrap.Modal(document.getElementById('languageModal')).hide();
+    });
+
+    document.getElementById('filterCountry').addEventListener('click', () => {
+      new bootstrap.Modal(document.getElementById('countryModal')).show();
+    });
+
+    document.getElementById('applyCountryFilter').addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('.country-checkboxes input:checked');
+      activeFilters.countries = Array.from(checkboxes).map(cb => cb.value);
+      updateActiveFiltersDisplay();
+      currentPage = 1;
+      renderMovies();
+      new bootstrap.Modal(document.getElementById('countryModal')).hide();
+    });
+
+    document.querySelectorAll('[data-sort]').forEach(item => {
+      item.addEventListener('click', () => {
+        activeFilters.sort = item.getAttribute('data-sort');
+        updateActiveFiltersDisplay();
+        renderMovies();
+      });
+    });
+
+    // Pagination Controls
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderMovies();
+      }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      const filteredMovies = filterMovies(movies);
+      if ((currentPage * moviesPerPage) < filteredMovies.length) {
+        currentPage++;
+        renderMovies();
+      }
+    });
+
+    // Initialization
+    function populateGenres() {
+      const container = document.querySelector('.genre-checkboxes');
+      container.innerHTML = allGenres.map(genre => `
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="${genre}" id="${genre}">
+          <label class="form-check-label" for="${genre}">${genre}</label>
+        </div>
+      `).join('');
+    }
+
+    function populateLanguages() {
+      const allLanguages = [...new Set(movies.map(movie => movie.language))];
+      const container = document.querySelector('.language-checkboxes');
+      container.innerHTML = allLanguages.map(language => `
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="${language}" id="${language}">
+          <label class="form-check-label" for="${language}">${language}</label>
+        </div>
+      `).join('');
+    }
+
+    function populateCountries() {
+      const allCountries = [...new Set(movies.map(movie => movie.country))];
+      const container = document.querySelector('.country-checkboxes');
+      container.innerHTML = allCountries.map(country => `
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="${country}" id="${country}">
+          <label class="form-check-label" for="${country}">${country}</label>
+        </div>
+      `).join('');
+    }
+
+    // Initial render
+    populateGenres();
+    populateLanguages();
+    populateCountries();
+    renderMovies();
+  </script>
 </body>
 </html>
