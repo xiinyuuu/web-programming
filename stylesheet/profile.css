@@ -54,6 +54,7 @@ body {
 }
 
 .profile-header {
+  position:relative;
   background-color: rgba(20, 20, 20, 0.8);
   border-radius: 10px;
   padding: 30px;
@@ -152,6 +153,24 @@ body {
   align-items: center;
 }
 
+.btn-edit-profile {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.8rem;
+  background-color: transparent;
+  border: 1px solid var(--primary);
+  color: var(--light);
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.btn-edit-profile:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
 .btn-edit {
   font-size: 0.9rem;
   padding: 0.3rem 0.8rem;
@@ -167,90 +186,50 @@ body {
   color: white;
 }
 
-.preference-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.tag {
-  background-color: #333;
-  color: var(--light);
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  display: inline-block;
-}
-
-.tag.active {
-  background-color: var(--primary);
-}
-
-.subscription-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  background-color: #252525;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.sub-info h4 {
-  margin-bottom: 5px;
-  font-size: 1.2rem;
-}
-
-.sub-info p {
-  margin-bottom: 0;
-  color: #999;
-  font-size: 0.9rem;
-}
-
-.btn-upgrade {
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  padding: 8px 18px;
-  border-radius: 5px;
-  font-weight: 600;
-  transition: background-color 0.3s;
-}
-
-.btn-upgrade:hover {
-  background-color: #ff33cc;
-}
-
 .activity-item {
-  margin-bottom: 20px;
+  position: relative;
+  /* margin-bottom: 20px;
   padding-bottom: 20px;
   border-bottom: 1px solid #333;
+  transition: all 0.2s ease; */
+  padding: 1.0rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  transition: all 0.1s ease;
+  background-color: rgba(255, 255, 255, 0.03);
+  /* border-left: 3px solid transparent; */
 }
 
-.activity-item:last-child {
+/* .activity-item:last-child {
   border-bottom: none;
   margin-bottom: 0;
   padding-bottom: 0;
-}
+} */
 
-.activity-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.activity-type {
-  font-weight: 600;
+.activity-item:hover {
+  /* background-color: rgba(255, 255, 255, 0.05);
+  transform: translateX(5px); */
+  background-color: rgba(94, 0, 153, 0.1); /* Using your --primary color with opacity */
+  border-left: 3px solid var(--primary);
+  transform: none; /* Remove the translateX from before */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .activity-date {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   color: #999;
   font-size: 0.9rem;
 }
 
 .activity-content {
+  /* display: flex;
+  align-items: flex-start;
+  pointer-events: none; */
   display: flex;
-  align-items: center;
+  gap: 1.5rem;
+  align-items: flex-start;
 }
 
 .activity-movie-img {
@@ -263,12 +242,16 @@ body {
 
 .activity-movie-title {
   font-weight: 600;
-  margin-bottom: 5px;
 }
 
 .activity-movie-info {
   color: #999;
   font-size: 0.9rem;
+}
+
+.activity-movie-review {
+  font-size: small;
+  font-style: italic;
 }
 
 .footer {
@@ -310,10 +293,26 @@ body {
 }
 
 /* Modal Styles */
+
+/* Center modals vertically */
+.modal-dialog {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - (1.75rem * 2)); /* Accounts for modal padding */
+}
+
 .modal-content {
   background-color: #1a1a1a;
   color: var(--light);
   border: 1px solid #333;
+  width: 100%;
+  #modalMovieReview {
+    font-style: italic;
+  }
+  #modalMovieTitle {
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+  }
 }
 
 .modal-header {
