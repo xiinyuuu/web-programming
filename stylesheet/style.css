@@ -135,8 +135,8 @@ main {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  width: 115px;
-  height: 115px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   overflow: hidden;
   padding: 0;
@@ -145,8 +145,9 @@ main {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 999;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
   background-color: transparent;
 }
 .roulette-button:hover {

@@ -1,0 +1,48 @@
+<!-- Roulette Modal -->
+<div class="modal fade" id="rouletteModal" tabindex="-1" aria-labelledby="rouletteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content p-1">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rouletteModalLabel">Don't know what to watch? Just Spin the Wheel!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body mt-1">
+            <div class="roulette-wrapper">
+                <div class="container">
+                    <div class="spinBtn">Spin!</div>
+                    <div class="wheel">
+                        <div class="number" style="--i:1;--clr:#db7093;"><span>Interstellar</span></div>
+                        <div class="number" style="--i:2;--clr:#20b22a;"><span>Barbie</span></div>
+                        <div class="number" style="--i:3;--clr:#d63e92;"><span>Mulan</span></div>
+                        <div class="number" style="--i:4;--clr:#daa520;"><span>Moana 2</span></div>
+                        <div class="number" style="--i:5;--clr:#ff340f;"><span>Begin Again</span></div>
+                        <div class="number" style="--i:6;--clr:#ff7f50;"><span>La La Land</span></div>
+                        <div class="number" style="--i:7;--clr:#3cb371;"><span>Flipped</span></div>
+                        <div class="number" style="--i:8;--clr:#4169e1;"><span>Hitman</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div id="rouletteDimOverlay" class="roulette-dim-overlay"></div>
+    </div>
+  </div>
+
+  <!-- Result Modal -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-1">
+        <div class="modal-header border-0 text-center">
+            <h5 class="modal-title" id="resultModalLabel">Your Pick! Enjoy Watching!</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img id="resultPoster" src="" alt="Movie Poster" class="img-fluid rounded mb-3" style="max-height: 300px;">
+          <h4 id="resultTitle" style="font-weight: bold;"></h4>
+          <p id="resultInfo"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
