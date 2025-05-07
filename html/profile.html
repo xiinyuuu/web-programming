@@ -105,20 +105,20 @@
       </div>
       
       <div class="profile-info">
-        <h1 class="username" id="displayName">Sebastian Jeremiah</h1>
-        <p class="user-email" id="displayEmail">sebastian.jeremiah@example.com</p>
+        <h1 class="username" id="displayName"></h1>
+        <p class="user-email" id="displayEmail"></p>
         
         <div class="profile-stats">
           <div class="stat">
-            <div class="stat-value">42</div>
+            <div class="stat-value">0</div>
             <div class="stat-label">Movies Watched</div>
           </div>
           <div class="stat">
-            <div class="stat-value">16</div>
+            <div class="stat-value">0</div>
             <div class="stat-label">Reviews</div>
           </div>
           <div class="stat">
-            <div class="stat-value">8</div>
+            <div class="stat-value">0</div>
             <div class="stat-label">Watchlist</div>
           </div>
         </div>
@@ -128,67 +128,13 @@
         </button>
     </div>
   
-    
     <!-- My Reviews -->
     <div class="content-section">
-      <h3 class="section-title">My Reviews</h3>
-      
-      <div class="activity-item">
-        <span class="activity-date">2 days ago</span>
-        <div class="activity-content">
-          <img src="../images/interstellar.jpg" alt="Interstellar" class="activity-movie-img">
-          <div>
-            <div class="activity-movie-title">Interstellar</div>
-            <div class="activity-movie-info">Sci-Fi, Adventure • 2014</div>
-            <div class="text-warning mb-1">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-half"></i>
-            </div>
-            <p class="small text activity-movie-review">"Nolan is simply the Picasso of film industry"</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="activity-item">
-        <span class="activity-date">1 week ago</span>
-        <div class="activity-content">
-          <img src="../images/barbie.jpg" alt="Barbie" class="activity-movie-img">
-          <div>
-            <div class="activity-movie-title">Barbie</div>
-            <div class="activity-movie-info">Comedy, Adventure • 2023</div>
-            <div class="text-warning mb-1">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star"></i>
-              <i class="bi bi-star"></i>
-            </div>
-            <p class="small text activity-movie-review">"This movie just slay. Absolute 10/10"</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="activity-item">
-        <span class="activity-date">2 weeks ago</span>
-        <div class="activity-content">
-          <img src="../images/mulan.jpg" alt="Mulan" class="activity-movie-img">
-          <div>
-            <div class="activity-movie-title">Mulan</div>
-            <div class="activity-movie-info">Action, Drama • 2020</div>
-            <div class="text-warning mb-1">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star"></i>
-              <i class="bi bi-star"></i>
-            </div>
-            <p class="small text activity-movie-review">"Visually impressive but lacking the heart of the original..."</p>
-          </div>
-        </div>
-      </div>
+      <h3 class="section-title">My Reviews
+        <a href="all-my-reviews.html" class="btn btn-edit"><i class="bi bi-eye me-2"></i>View All</a>
+      </h3>
+      <!-- Your existing review items will be populated by JavaScript -->
+      <div id="reviews-container"></div>
     </div>
     
     <!-- Account Settings -->
@@ -250,11 +196,11 @@
           <form id="editProfileForm">
             <div class="mb-3">
               <label for="editName" class="form-label">Full Name</label>
-              <input type="text" class="form-control" id="editName" value="John Doe">
+              <input type="text" class="form-control" id="editName" value="">
             </div>
             <div class="mb-3">
               <label for="editEmail" class="form-label">Email</label>
-              <input type="email" class="form-control" id="editEmail" value="john.doe@example.com">
+              <input type="email" class="form-control" id="editEmail" value="">
             </div>
           </form>
         </div>

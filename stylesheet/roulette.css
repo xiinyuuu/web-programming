@@ -114,6 +114,8 @@
   #resultModal .modal-header {
     border-bottom: none;
     align-items: center;
+    justify-content: center;
+    padding-left: 95px;
   }
   
   #resultModal .btn-close {

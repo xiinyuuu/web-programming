@@ -188,30 +188,18 @@ body {
 
 .activity-item {
   position: relative;
-  /* margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #333;
-  transition: all 0.2s ease; */
   padding: 1.0rem;
+  padding-bottom: 0rem;
   border-radius: 8px;
   margin-bottom: 1rem;
   transition: all 0.1s ease;
   background-color: rgba(255, 255, 255, 0.03);
-  /* border-left: 3px solid transparent; */
 }
 
-/* .activity-item:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-} */
-
 .activity-item:hover {
-  /* background-color: rgba(255, 255, 255, 0.05);
-  transform: translateX(5px); */
+  transform: translateX(5px);
   background-color: rgba(94, 0, 153, 0.1); /* Using your --primary color with opacity */
   border-left: 3px solid var(--primary);
-  transform: none; /* Remove the translateX from before */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -224,12 +212,15 @@ body {
 }
 
 .activity-content {
-  /* display: flex;
-  align-items: flex-start;
-  pointer-events: none; */
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
+  max-width: 100%;
+}
+
+.activity-content > div {
+  flex: 1;
+  min-width: 0; /* CRITICAL: allows text ellipsis to work in flex children */
 }
 
 .activity-movie-img {
@@ -237,7 +228,7 @@ body {
   height: 90px;
   object-fit: cover;
   border-radius: 5px;
-  margin-right: 15px;
+  margin-right: 5px;
 }
 
 .activity-movie-title {
@@ -252,6 +243,12 @@ body {
 .activity-movie-review {
   font-size: small;
   font-style: italic;
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all; /* Handles long unbroken words */
 }
 
 .footer {
@@ -269,6 +266,21 @@ body {
   color: var(--primary);
   text-decoration: underline;
 }
+
+/* For all-reviews.html */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Make View All button align properly */
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 
 .settings-option {
   padding: 15px;
@@ -302,7 +314,7 @@ body {
 }
 
 .modal-content {
-  background-color: #1a1a1a;
+  background-color: #1d0c28;
   color: var(--light);
   border: 1px solid #333;
   width: 100%;
@@ -318,6 +330,69 @@ body {
 .modal-header {
   border-bottom: 1px solid #333;
 }
+
+/* testtt */
+
+/* Modal content container */
+.modal-body {
+  max-height: 70vh; /* Limit modal height */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Review text container */
+#modalMovieReview {
+  max-height: 200px; /* Limit review text height */
+  overflow-y: auto; /* Enable scrolling */
+  word-wrap: break-word; /* Break long words */
+  white-space: pre-wrap; /* Preserve line breaks but wrap text */
+  padding-right: 10px; /* Add some padding so scrollbar doesn't cover text */
+}
+
+/* Custom scrollbar styling */
+#modalMovieReview::-webkit-scrollbar {
+  width: 6px;
+}
+
+#modalMovieReview::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+#modalMovieReview::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 3px;
+}
+
+/* Modal image container */
+.modal-body .col-md-4 {
+  position: relative;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-body {
+    max-height: 60vh;
+  }
+  
+  #modalMovieReview {
+    max-height: 150px;
+  }
+  
+  .modal-body .row {
+    flex-direction: column;
+  }
+  
+  .modal-body .col-md-4 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  #modalMovieImage {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+}
+/* testtt */
 
 .modal-footer {
   border-top: 1px solid #333;
@@ -404,4 +479,30 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.profile-container {
+  position: relative; /* Create a positioning context */
+}
+
+.back-to-profile-btn {
+  position: absolute;
+  top: 35px; /* Adjust as needed */
+  left: -30px; /* Adjust as needed */
+  padding-top: 0.3rem; /* Slightly less top padding */
+  padding-bottom: 0.2rem; /* Slightly more bottom padding */
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  background-color:var(--dark);
+  border: 2px solid #3c065e;
+  color: var(--light);
+  border-radius: 5px;
+}
+
+.back-to-profile-btn:hover {
+  background-color: #5e0099
+}
+
+.all-reviews-section {
+  margin-top: 40px; /* Adjust to create space below the button */
 }
