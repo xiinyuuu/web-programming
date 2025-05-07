@@ -86,6 +86,55 @@
     </div>
   </div>
 
+  <!-- Ratings and Reviews Section -->
+  <div class="container text-center mt-5">
+    <h3 class="section-title">User Ratings & Reviews</h3>
+    <hr class="section-divider">
+  
+    <!-- Average Rating -->
+    <div class="mb-3">
+      <strong>Average Rating:</strong>
+      <span class="text-warning">4.3</span>
+      <i class="bi bi-star-fill text-warning"></i>
+      <i class="bi bi-star-fill text-warning"></i>
+      <i class="bi bi-star-fill text-warning"></i>
+      <i class="bi bi-star-fill text-warning"></i>
+      <i class="bi bi-star-half text-warning"></i>
+      <span class="text-light">(based on 123 reviews)</span>
+    </div>
+  
+    <!-- Submitted Reviews -->
+    <div class="mb-4" id="user-reviews">
+      <!-- New reviews will appear here -->
+    </div>
+  
+    <!-- Submit Review Form -->
+    <div class="bg-dark p-4 rounded">
+      <h5 class="text-light">Submit Your Review</h5>
+      <form id="review-form">
+        <!-- Star Rating -->
+        <div class="mb-3">
+          <label class="form-label text-light d-block">Your Rating:</label>
+          <div id="star-rating" class="text-warning fs-4">
+            <i class="bi bi-star" data-value="1"></i>
+            <i class="bi bi-star" data-value="2"></i>
+            <i class="bi bi-star" data-value="3"></i>
+            <i class="bi bi-star" data-value="4"></i>
+            <i class="bi bi-star" data-value="5"></i>
+          </div>
+        </div>
+  
+        <!-- Review Text -->
+        <div class="mb-3">
+          <label for="review" class="form-label text-light">Your Review</label>
+          <textarea class="form-control" id="review" rows="3" required></textarea>
+        </div>
+  
+        <button type="submit" class="btn btn-warning">Submit Review</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="text-center mt-5 p-4 footer">
     <div>
@@ -118,6 +167,51 @@
       added = !added;
       watchlistBtn.classList.toggle('active', added);
       watchlistBtn.textContent = added ? 'Added to Watchlist' : 'Add to Watchlist';
+    });
+
+    let selectedRating = 0;
+  
+    const stars = document.querySelectorAll('#star-rating i');
+    stars.forEach(star => {
+      star.addEventListener('click', function () {
+        selectedRating = this.getAttribute('data-value');
+        updateStars(selectedRating);
+      });
+    });
+  
+    function updateStars(rating) {
+      stars.forEach(star => {
+        const val = star.getAttribute('data-value');
+        star.className = val <= rating ? "bi bi-star-fill text-warning" : "bi bi-star text-warning";
+      });
+    }
+  
+    document.getElementById('review-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+  
+      if (selectedRating === 0) {
+        alert("Please select a star rating.");
+        return;
+      }
+  
+      const reviewText = document.getElementById('review').value;
+      const username = "@username"; // Placeholder
+  
+      const starsHTML = '<i class="bi bi-star-fill text-warning"></i>'.repeat(selectedRating) +
+        '<i class="bi bi-star text-warning"></i>'.repeat(5 - selectedRating);
+  
+      const reviewHTML = `
+        <div class="border rounded p-3 mb-3 bg-dark">
+          <strong class="text-light">${username}</strong>
+          <p class="mb-1 text-warning">${starsHTML}</p>
+          <p class="text-light">${reviewText}</p>
+        </div>
+      `;
+  
+      document.getElementById('user-reviews').innerHTML += reviewHTML;
+      this.reset();
+      updateStars(0);
+      selectedRating = 0;
     });
   </script>  
 </body>
