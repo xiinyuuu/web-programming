@@ -334,7 +334,7 @@ body {
 /* testtt */
 
 /* Modal content container */
-.modal-body {
+.modal-body #reviewModalContent {
   max-height: 70vh; /* Limit modal height */
   overflow-y: auto; /* Enable vertical scrolling */
 }
@@ -452,6 +452,19 @@ body {
     background-color: #ff4d4d; 
   }
 
+  .btn-deactivate {
+    background-color: transparent; 
+    font-size: 0.9rem;
+    padding: 0.3rem 1.1rem;
+    color: gray;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-deactivate:hover {
+    background-color: gray; 
+  }
+
   /* Floating roulette button */
 .roulette-button {
   position: fixed;
@@ -506,3 +519,4 @@ body {
 .all-reviews-section {
   margin-top: 40px; /* Adjust to create space below the button */
 }
+
