@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+
     // Initialize Bootstrap toasts
     const logoutToast = new bootstrap.Toast(document.getElementById('logoutToast'));
     const updateToast = new bootstrap.Toast(document.getElementById('updateToast'));
@@ -6,6 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const updatePasswordToast = new bootstrap.Toast(document.getElementById('updatePasswordToast'));
     const deleteAccountToast = new bootstrap.Toast(document.getElementById('deleteAccountToast'));
     const reviewModal = new bootstrap.Modal(document.getElementById('reviewDetailModal'));
+
+    // Inside profile.js (remove the myReviews array)
+    const myReviews = window.myReviews || []; // Fallback to empty array if not loaded yet
 
     // Check if we should show logout toast (from URL parameter)
     if (window.location.search.includes('logout=true')) {
@@ -24,46 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
             watchlist: 8
         }
     };
-
-    // Review data
-    const myReviews = [
-        {
-            id: 1,
-            title: "Interstellar",
-            info: "Sci-Fi, Adventure • 2014",
-            image: "../images/interstellar.jpg",
-            rating: 4.5,
-            review: "Nolan is simply the Picasso of film industry",
-            date: "2 days ago"
-        },
-        {
-            id: 2,
-            title: "Barbie",
-            info: "Comedy, Adventure • 2023",
-            image: "../images/barbie.jpg",
-            rating: 3,
-            review: "This movie just slay. Absolute 10/10",
-            date: "1 week ago"
-        },
-        {
-            id: 3,
-            title: "Mulan",
-            info: "Action, Drama • 2020",
-            image: "../images/mulan.jpg",
-            rating: 3,
-            review: "Visually impressive but lacking the heart of the original",
-            date: "2 weeks ago"
-        },
-        {
-            id: 9,
-            title: "Maleficent",
-            info: "Action, Drama • 2020",
-            image: "../images/maleficent.jpeg",
-            rating: 3,
-            review: "A dark twist on a classic tale, with stunning visuals and a very powerful performance by Angelina Jolie.",
-            date: "1 day ago"
-        }
-    ];
 
     // Function to generate star ratings
     function generateStars(rating) {

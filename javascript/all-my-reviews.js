@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const reviewModal = new bootstrap.Modal(document.getElementById('reviewDetailModal'));
 
     // Review data (same as in profile.js)
-    const userReviews = [
+    const myReviews = [
         {
             id: 1,
             title: "Interstellar",
@@ -86,6 +86,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
 
+    // Inside all-my-reviews.js (keep all existing code)
+    window.myReviews = myReviews; // Make it globally accessible
+
     // Function to generate star ratings
     function generateStars(rating) {
         const fullStars = Math.floor(rating);
@@ -138,7 +141,7 @@ function attachReviewClickHandlers() {
         item.style.cursor = 'pointer';
         item.addEventListener('click', function() {
             const reviewId = parseInt(this.getAttribute('data-review-id'));
-            const review = userReviews.find(r => r.id === reviewId);
+            const review = myReviews.find(r => r.id === reviewId);
             
             if (review) {
                 // Reset modal scroll position
@@ -167,7 +170,7 @@ function attachReviewClickHandlers() {
         container.innerHTML = '';
         
         // Sort by date (newest first)
-        const sortedReviews = [...userReviews].sort((a, b) => {
+        const sortedReviews = [...myReviews].sort((a, b) => {
             // Simple date comparison for "X days/weeks ago" format
             if (a.date.includes('day') && !b.date.includes('day')) return -1;
             if (!a.date.includes('day') && b.date.includes('day')) return 1;
