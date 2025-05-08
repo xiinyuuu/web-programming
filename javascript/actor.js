@@ -102,6 +102,53 @@ const actors = {
       { title: "The Hunger Game", poster: "../images/thehungergames.jpg" },
     ]
   },
+  "ray": {
+    name: "Ray Winstone",
+    image: "../images/ray.webp",
+    bio: "Raymond Andrew Winstone (born February 19, 1957) is an English television, stage, film, and voice-over actor with a career spanning five decades. Having worked with many prominent directors, including Martin Scorsese and Steven Spielberg, he is perhaps best known for his tough guy roles (usually delivered in his distinctive London accent), beginning with that of Carlin in the 1979 film Scum, and Will Scarlet in the cult TV adventure series Robin of Sherwood.",
+    born: " <strong>Born:</strong> February 19, 1957 · Hackney, London, England, UK",
+    filmography: [
+      { title: "Damsel", poster: "../images/damsel.webp" },
+    ]
+  },
+
+  "angela": {
+    name: "Angela Basett",
+    image: "../images/angela.webp",
+    bio: "Angela Evelyn Bassett (born August 16, 1958) is an American actress. Known for her work in film and television since the 1980s, she has received various accolades, including a Primetime Emmy Award and two Golden Globe Awards, as well as nominations for two Academy Awards. In 2023, Time magazine named her one of the 100 most influential people in the world, and she received an Academy Honorary Award.",
+    born: " <strong>Born:</strong> August 16, 1958 · New York City, New York, USA",
+    filmography: [
+      { title: "Damsel", poster: "../images/damsel.webp" },
+    ]
+  },
+
+  "brooke": {
+    name: "Brooke Carter",
+    image: "../images/brooke.webp",
+    bio: "Brooke Carter is known for Damsel (2024), The Peripheral (2022) and The Alienist (2018).",
+    born: " <strong>Born:</strong> May 31, 2010 · Coventry, England, United Kingdom",
+    filmography: [
+      { title: "Damsel", poster: "../images/damsel.webp" },
+    ]
+  },
+  "nick": {
+    name: "Nick Robinson",
+    image: "../images/nick.webp",
+    bio: "Nicholas John , Nick Robinson (born March 22, 1995) is an American actor. As a child, he appeared in stage productions of A Christmas Carol and Mame (both in 2008), following which he starred in the television sitcom Melissa & Joey (2010–2015). He went on play a supporting role in the highly successful science fiction film Jurassic World (2015) and took on lead roles in several teen dramas, including The Kings of Summer (2013), The 5th Wave (2016), and Everything, Everything (2017). In 2018, Robinson starred as the titular protagonist Simon Spier in the romantic comedy-drama film Love, Simon.",
+    born: " <strong>Born:</strong> March 22, 1995 · Seattle, Washington, USA",
+    filmography: [
+      { title: "Damsel", poster: "../images/damsel.webp" },
+    ]
+  },
+  "robin": {
+    name: "Robin Wright",
+    image: "../images/robin.webp",
+    bio: "Robin Gayle Wright (born April 8, 1966) is an American actress. She is best known for her roles as Jenny Curran in Forrest Gump, as Buttercup in The Princess Bride, and as Mary Surratt in The Conspirator. She has also been credited as Robin Wright Penn.",
+    born: " <strong>Born:</strong> April 8, 1966 · Dallas, Texas, USA",
+    filmography: [
+      { title: "Damsel", poster: "../images/damsel.webp" },
+    ]
+  },
 };
 
 const urlParams = new URLSearchParams(window.location.search);
