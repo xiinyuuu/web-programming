@@ -63,13 +63,27 @@
     user-select: none;
     cursor: pointer;
 }
-.roulette-wrapper .wheel .number span {
+/* .roulette-wrapper .wheel .number span {
     position: relative;
     transform: rotate(45deg);
     font-size: 1rem;
     font-weight: 700;
     color: #fff;
     text-shadow: 3px 5px 2px rgba(0, 0, 0, 0.15);
+} */
+.roulette-wrapper .wheel .number span {
+  position: relative;
+  transform: rotate(45deg); /* Keep this for upright text */
+  font-size: 1rem;        /* Smaller font size for long titles */
+  font-weight: 700;
+  color: #fff;
+  text-align: center;        /* Center the text */
+  padding: 0 4px;
+  text-shadow: 3px 5px 2px rgba(0, 0, 0, 0.15);
+  max-width: 100px;           /* Limit width */
+  word-wrap: break-word;     /* Allow wrapping */
+  line-height: 1.1;
+  display: block;
 }
 
 .btn-close {
@@ -145,5 +159,6 @@
     display: none;
   }
   
+
   
   
