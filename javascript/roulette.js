@@ -87,6 +87,7 @@ fetch('../html/roulette.html')
               document.getElementById("resultPoster").src = movie.poster;
               document.getElementById("resultTitle").textContent = winningMovieName;
               document.getElementById("resultInfo").textContent = movie.info;
+              document.getElementById("resultDuration").textContent = movie.duration;
 
               const resultModal = new bootstrap.Modal(document.getElementById("resultModal"));
               resultModal.show();
@@ -104,59 +105,73 @@ fetch('../html/roulette.html')
   const movieData = {
     "Interstellar": {
       poster: "../images/interstellar.jpg",
-      info: "Sci-Fi, Adventure • 2014"
+      info: "Sci-Fi, Adventure • 2014",
+      duration: "2h 49m"
     },
     "Barbie": {
       poster: "../images/barbie.jpg",
-      info: "Fantasy, Comedy • 2023"
+      info: "Fantasy, Comedy • 2023",
+      duration: "1h 54m"  
     },
     "Mulan": {
       poster: "../images/mulan.jpg",
-      info: "Action, Adventure • 2020"
+      info: "Action, Adventure • 2020",
+      duration: "1h 55m"
     },
     "Moana 2": {
       poster: "../images/moana_2.jpg",
-      info: "Action, Superhero • 2019"
+      info: "Action, Superhero • 2019",
+      duration: "1h 55m"
     },
     "Begin Again": {
       poster: "../images/beginagain.jpg",
-      info: "Fantasy, Action • 2016"
+      info: "Fantasy, Action • 2016",
+      duration: "1h 55m"
     },
     "La La Land": {
       poster: "../images/lalaland.jpg",
-      info: "Musical, Romance • 2016"
+      info: "Musical, Romance • 2016",
+      duration: "2h 8m"
     },
     "Flipped": {
       poster: "../images/flipped.jpg",
-      info: "Romance, Drama • 2010"
+      info: "Romance, Drama • 2010",
+      duration: "1h 30m"
     },
     "Hitman": {
       poster: "../images/hitman.webp",
-      info: "Sci-Fi, Fantasy • 2009"
+      info: "Sci-Fi, Fantasy • 2009",
+      duration: "1h 30m"
     },
     "Joker 2": {
       poster: "../images/joker_2.jpeg",
-      info: "Thriller, Fantasy • 2009"
+      info: "Thriller, Fantasy • 2009",
+      duration: "1h 30m"
     },
     "Letters to Juliet": {
       poster: "../images/letterstojuliet.jpg",
-      info: "Romance, Drama • 2009"
+      info: "Romance, Drama • 2009",
+      duration: "1h 30m"
     },
     "The Age of Adaline": {
       poster: "../images/theageofadaline.jpg",
-      info: "Romcance, Fantasy • 2009"
+      info: "Romcance, Fantasy • 2009",
+      duration: "1h 30m"
     },
     "The Hunger Games": {
       poster: "../images/thehungergames.jpg",
-      info: "Sci-Fi, Fantasy • 2009"
+      info: "Sci-Fi, Fantasy • 2009",   
+      duration: "1h 30m"
     },
     "Twisters": {
       poster: "../images/Twister.webp",
-      info: "Science, Thriller • 2009"
+      info: "Science, Thriller • 2009",
+      duration: "1h 30m"
     },
     "Uglies": {
       poster: "../images/uglies.jpg",
-      info: "Sci-Fi, Fantasy • 2009"
+      info: "Sci-Fi, Fantasy • 2009",
+      duration: "1h 30m"
     }
   };
   

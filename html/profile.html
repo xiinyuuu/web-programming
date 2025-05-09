@@ -91,6 +91,16 @@
     </div>
   </div>
 
+  <!-- Account Deactivated Toast -->
+  <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" id="deactivateAccountToast">
+    <div class="d-flex">
+      <div class="toast-body">
+        <i class="bi bi-check-circle me-2"></i> Account deactivated successfully!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+
   <!-- Account Deleted Toast -->
   <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" id="deleteAccountToast">
     <div class="d-flex">
@@ -179,15 +189,15 @@
         </button>
       </div>
       
-      <!-- <div class="settings-option">
+      <div class="settings-option">
         <div>
           <div class="option-label">Deactivate Account</div>
           <div class="option-description">Temporarily hide your account and all data from other users</div>
         </div>
-        <button class="btn btn-outline-warning btn-deactivate" data-bs-toggle="modal" data-bs-target="#deactivateAccountModal">
+        <button class="btn btn-outline-secondary btn-deactivate" data-bs-toggle="modal" data-bs-target="#deactivateAccountModal">
           Deactivate
         </button>
-      </div> -->
+      </div>
 
       <div class="settings-option">
         <div>
@@ -296,6 +306,26 @@
     </div>
   </div>
 
+  <!-- Deactivate Account Modal -->
+  <div class="modal fade" id="deactivateAccountModal" tabindex="-1" aria-labelledby="deactivateAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deactivateAccountModalLabel">Deactivate Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to deactivate your account?</p>
+          <p>Your account and past activities will not be visible to other users until you reactivate.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmDeactivateBtn">Deactivate Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Delete Account Modal -->
   <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -336,6 +366,7 @@
           </div>
           <div class="col-md-8">
             <h3 class="mt-3" id="modalMovieTitle"></h3>
+            <p class="activity-movie-duration" id="modalMovieDuration"></p>
             <p class="activity-movie-info" id="modalMovieInfo"></p>
             <!-- Horizontal divider with text -->
             <hr class="my-3">

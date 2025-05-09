@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const updateToast = new bootstrap.Toast(document.getElementById('updateToast'));
     const updateProfilePicToast = new bootstrap.Toast(document.getElementById('updateProfilePicToast'));
     const updatePasswordToast = new bootstrap.Toast(document.getElementById('updatePasswordToast'));
+    const deactivateAccountToast = new bootstrap.Toast(document.getElementById('deactivateAccountToast'));
     const deleteAccountToast = new bootstrap.Toast(document.getElementById('deleteAccountToast'));
     const reviewModal = new bootstrap.Modal(document.getElementById('reviewDetailModal'));
 
@@ -63,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('modalMovieImage').src = review.image;
                     document.getElementById('modalMovieTitle').textContent = review.title;
                     document.getElementById('modalMovieInfo').textContent = review.info;
+                    document.getElementById('modalMovieDuration').textContent = review.duration;
                     document.getElementById('modalMovieRating').innerHTML = generateStars(review.rating);
                     document.getElementById('modalMovieReview').textContent = review.review;
                     document.getElementById('modalReviewDate').textContent = review.date;
@@ -233,6 +235,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Deactivate Account Modal
+    const deactivateAccountModal = new bootstrap.Modal(document.getElementById('deactivateAccountModal'));
+    const confirmDeactivateBtn = document.getElementById('confirmDeactivateBtn');
+
+    if (confirmDeactivateBtn) {
+        confirmDeactivateBtn.addEventListener('click', function() {
+            // Here should make an API call to the backend to make sure the password is correct
+            simulateAccountDeactivation();
+        });
+    }
+
     // Delete Account Modal
     const deleteAccountModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
     const deleteAccountForm = document.getElementById('deleteAccountForm');
@@ -309,6 +322,32 @@ document.addEventListener('DOMContentLoaded', function() {
         existingAlerts.forEach(alert => alert.remove());
     }
 
+    // Deactivate Account Functionality
+    function simulateAccountDeactivation() {
+        // Show loading state
+        confirmDeactivateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deactivating...';
+        confirmDeactivateBtn.disabled = true;
+
+        // In a real app, you would make an API call here
+        console.log("Attempting to delete account...");
+
+        setTimeout(function() {
+            document.querySelector('#deactivateAccountToast .toast-body').innerHTML = 
+            '<i class="bi bi-check-circle me-2"></i> Account deactivated successfully!';
+            deactivateAccountToast.show();
+                    
+            // Reset button state
+            confirmDeactivateBtn.innerHTML = 'Deactivate Account';
+            confirmDeactivateBtn.disabled = false;
+                    
+            // Close modal and redirect after delay
+            deactivateAccountModal.hide();
+            setTimeout(() => {
+                window.location.href = '../html/login.html?accountDeactivated=true';
+            }, 1500);
+        }, 1500);
+    }
+
     // Delete Account Functionality
     function simulateAccountDeletion(password) {
         // Show loading state
@@ -373,6 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const movieImg = this.querySelector('.activity-movie-img').src;
         const movieTitle = this.querySelector('.activity-movie-title').textContent;
         const movieInfo = this.querySelector('.activity-movie-info').textContent;
+        const movieDuration = this.querySelector('.activity-movie-duration').textContent;
         const movieRating = this.querySelector('.text-warning').innerHTML;
         const movieReview = this.querySelector('.small.text').textContent;
         const reviewDate = this.querySelector('.activity-date').textContent;
@@ -381,6 +421,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modalMovieImage').src = movieImg;
         document.getElementById('modalMovieTitle').textContent = movieTitle;
         document.getElementById('modalMovieInfo').textContent = movieInfo;
+        document.getElementById('modalMovieDuration').textContent = movieDuration;
         document.getElementById('modalMovieRating').innerHTML = movieRating;
         document.getElementById('modalMovieReview').textContent = movieReview;
         document.getElementById('modalReviewDate').textContent = reviewDate;

@@ -136,6 +136,14 @@
     filter: invert(1) brightness(200%);
   }
   
+  #resultModal .modal-body {
+    #resultInfo {
+      margin-top: -15px;
+      margin-bottom: -20px;
+      font-size: 1rem;
+    }
+  }
+
   /* Custom dark overlay when result modal is active */
 .body-darkened::before {
     content: "";
