@@ -38,8 +38,7 @@
 </head>
 
 <body>
-
-  <!-- Navbar -->
+   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg custom-navbar">
     <div class="container-fluid px-4">
       <a class="navbar-brand text-light" href="#">MovRec</a>
@@ -53,16 +52,20 @@
         </ul>
     
         <!-- Wrap search and avatar in separate flex container -->
-        <div class="d-flex align-items-center">
-          <form class="d-flex me-4">
-            <input class="form-control search-box" type="search" placeholder="Search">
-            <button class="btn btn-search" type="submit">Search</button>
-          </form>
-            <a href="../html/profile.html"><img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
+        <form class="d-flex me-4" style="max-width: 300px;">
+          <div class="input-group">
+            <input class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-search" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+          <a href="../html/profile.html"><img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
         </div>
       </div>
     </div>    
   </nav>
+
 
   <!-- Actor Section -->
   <div class="container text-center mt-5">
