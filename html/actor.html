@@ -72,8 +72,7 @@
     <h3 class="section-title">Featured Actors & Actresses</h3>
     <hr class="section-divider">
   
-    <div id="actorGridContainer" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center">
-      <!-- Actor cards will be dynamically inserted here -->
+    <div id="actorGridContainer" class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-5">
     </div>
   </div>
 
@@ -123,12 +122,23 @@
       { name: "Brooke Carter", img: "brooke.webp", key: "brooke"},
       { name: "Nick Robinson", img: "nick.webp", key: "nick"},
       { name: "Robin Wright", img: "robin.webp", key: "robin"},
-
-      // Add more actors as needed
+      { name: "Costance Wu", img: "constance.webp", key: "constance" },
+      { name: "Blake Lively", img: "blake.webp", key: "blake" },
+      { name: "Benedict Cumberbatch", img: "benedict.webp", key: "benedict" },
+      { name: "Chiwetel Ejiofor", img: "chiwetel.webp", key: "chiwetel" },
+      { name: "Rachel McAdams", img: "rachel.webp", key: "rachel" },
+      { name: "Benedict Wong", img: "benedict.webp", key: "wong" },
+      { name: "Mads Mikkelson", img: "mads.webp", key:"mads"},
+      { name: "Tilda Swinton", img: "tilda.webp", key: "tilda"},
+      { name: "Ryan Gosling", img: "ryan.webp", key: "ryan"},
+      { name: "Emma Stone", img: "emma.webp", key: "emma"},
+      { name: "John Legend", img: "john.webp", key: "john"},
+      { name: "Rosemarie DeWitt", img: "rosemarie.webp", key: "rosemarie" },
+      { name: "J.K. Simmons", img: "jk.webp", key: "jk" },
     ];
 
     let currentPage = 1;
-    const actorsPerPage = 6;
+    const actorsPerPage = 25;
 
     function renderActors() {
       const grid = document.getElementById('actorGridContainer');

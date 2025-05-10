@@ -149,6 +149,124 @@ const actors = {
       { title: "Damsel", poster: "../images/damsel.webp" },
     ]
   },
+  "constance": {
+    name: "Costance Wu",
+    image: "../images/constance.webp",
+    bio: " Constance Tianming Wu (born March 22, 1982) is an American actress. She began her career in the theater, before her breakthrough role as Jessica Huang in the ABC comedy series Fresh Off the Boat. In 2017, Wu was named one of TIME magazine's 100 People Who Help Shape the World.",
+    born: " <strong>Born:</strong> March 22, 1982 · Richmond, Virginia, USA",
+    filmography: [
+      { title: "Crazy Rich Asian", poster: "../images/crazyrichasians.jpg" },
+    ]
+  },
+    "blake": {
+      name: "Blake Lively",
+      image: "../images/blake.webp",
+      bio: " Blake Ellender Lively (born August 25, 1987) is an American actress, model, and director. Born in Los Angeles, Lively is the daughter of actor Ernie Lively, and made her professional debut in his directorial project Sandman (1998). She starred as Bridget Vreeland in The Sisterhood of the Traveling Pants (2005) alongside its sequel The Sisterhood of the Traveling Pants 2 (2008) to commercial success. She appeared opposite Justin Long in the comedy Accepted (2006), and gained recognition for portraying Serena van der Woodsen in the CW drama television series Gossip Girl (2007–2012).",
+      born: " <strong>Born:</strong> August 25, 1987 · Los Angeles, California, USA",
+      filmography: [
+        { title: "The Age of Adaline", poster: "../images/theageofadaline.jpg" },
+      ]
+  },
+  "benedict": {
+    name: "Benedict Cumberbatch",
+    image: "../images/benedict.webp",
+    bio: " Blake Ellender Lively (born August 25, 1987) is an American actress, model, and director. Born in Los Angeles, Lively is the daughter of actor Ernie Lively, and made her professional debut in his directorial project Sandman (1998). She starred as Bridget Vreeland in The Sisterhood of the Traveling Pants (2005) alongside its sequel The Sisterhood of the Traveling Pants 2 (2008) to commercial success. She appeared opposite Justin Long in the comedy Accepted (2006), and gained recognition for portraying Serena van der Woodsen in the CW drama television series Gossip Girl (2007–2012).",
+    born: " <strong>Born:</strong> August 25, 1987 · Los Angeles, California, USA",
+    filmography: [
+      { title: "Doctor Strange", poster: "../images/doctorstrange.jpg" },
+    ]
+},
+"chiwetel": {
+  name: "Chiwetel Ejiofor",
+  image: "../images/chiwetel.webp",
+  bio: " Chiwetel Umeadi Ejiofor CBE (/ˈtʃuːətɛlˈɛdʒioʊfɔːr/ CHOO-ə-tel EJ-ee-oh-for; born 10 July 1977) is a British actor. He is the recipient of various accolades, including a British Academy Film Award and a Laurence Olivier Award, in addition to nominations for an Academy Award, two Primetime Emmy Awards, and five Golden Globe Awards. In 2008, he was appointed Officer of the Order of the British Empire (OBE), and in 2015, he was appointed Commander (CBE) for his services to the arts.",
+  born: " <strong>Born:</strong>July 10, 1977 · Forest Gate, London, England, UK",
+  filmography: [
+    { title: "Doctor Strange", poster: "../images/doctorstrange.jpg" },
+  ]
+},
+"rachel": {
+  name: "Rachel McAdams",
+  image: "../images/rachel.webp",
+  bio: " Rachel Anne McAdams (born November 17, 1978) is a Canadian actress. After graduating from a theatre degree program at York University in 2001, she worked in Canadian television and film productions, such as the drama film Perfect Pie (2002), for which she received a Genie Award nomination, the comedy film My Name Is Tanino (2002), and the comedy series Slings & Arrows (2003–2005), for which she won a Gemini Award.",
+  born: " <strong>Born:</strong> November 17, 1978 · London, Ontario, Canada",
+  filmography: [
+    { title: "Doctor Strange", poster: "../images/doctorstrange.jpg" },
+  ]
+},
+"wong": {
+  name: "Benedict Wong",
+  image: "../images/wong.webp",
+  bio: " Benedict Wong (born 3 July 1971) is a British actor. He began his career on stage before starring in the film Dirty Pretty Things (2003), which earned him a British Independent Film Award nomination, and the BBC sitcom 15 Storeys High (2002–2004). Roles followed this in the films On a Clear Day (2005), Sunshine, Grow Your Own (both 2007), Moon (2009), and the CBBC series Spirit Warriors (2010).",
+  born: " <strong>Born:</strong> June 3, 1971 · Eccles, Salford, Greater Manchester, England, UK",
+  filmography: [
+    { title: "Doctor Strange", poster: "../images/doctorstrange.jpg" },
+  ]
+},
+"mads": {
+  name: "Mads Mikkelson",
+  image: "../images/mads.webp",
+  bio: " Mads Dittmann Mikkelsen (Danish: [ˈmæsˈme̝kl̩sn̩]; born 22 November 1965) is a Danish actor. He rose to fame in Denmark as an actor for his roles such as Tonny in the first two films of the Pusher film trilogy (1996, 2004), Detective Sergeant Allan Fischer in the television series Rejseholdet (2000–2004), Niels in Open Hearts (2002), Svend in The Green Butchers (2003), Ivan in Adam's Apples (2005), and Jacob Petersen in After the Wedding (2006).",
+  born: " <strong>Born:</strong> June 3, 1971 · Østerbro, Copenhagen, Denmark",
+  filmography: [
+    { title: "Doctor Strange", poster: "../images/doctorstrange.jpg" },
+  ]
+},
+"tilda": {
+  name: "Tilda Swinton",
+  image: "../images/tilda.webp",
+  bio: " Tilda Swinton (born Katherine Matilda Swinton; November 5, 1960) is an award-winning British actress of Scottish descent, known for her versatile roles in independent films and blockbusters. She is a recipient various accolades throughout her long career, including an Academy Award and two BAFTA Awards, in addition to being nominated for three Golden Globe Awards and five Screen Actors Guild Awards.",
+  born: " <strong>Born:</strong> November 5, 1960  · London, England, UK",
+  filmography: [
+    { title: "Doctor Strange", poster: "../images/doctorstrange.jpg" },
+  ]
+},
+"ryan": {
+  name: "Ryan Gosling",
+  image: "../images/ryan.webp",
+  bio: " Ryan Thomas Gosling (born November 12, 1980) is a Canadian actor. Prominent in independent film, he has also worked in blockbuster films of varying genres, and has accrued a worldwide box office gross of over 1.9 billion USD. He has received various accolades, including a Golden Globe Award, and nominations for two Academy Awards and a BAFTA Award.\n\nBorn and raised in Canada, he rose to prominence at age 13 for being a child star on the Disney Channel's The Mickey Mouse Club (1993–1995), and went on to appear in other family entertainment programs, including Are You Afraid of the Dark? (1995) and Goosebumps (1996). His first film role was as a Jewish neo-Nazi in The Believer (2001), and he went on to star in several independent films, including Murder by Numbers (2002), The Slaughter Rule (2002), and The United States of Leland (2003).",
+  born: " <strong>Born:</strong> November 12, 1980 · London, Ontario, Canada",
+  filmography: [
+    { title: "Barbie", poster: "../images/barbie.jpg" },
+    { title: "La La Land", poster: "../images/lalaland.jpg" },
+  ]
+},
+"emma": {
+  name: "Emma Stone",
+  image: "../images/emma.webp",
+  bio: " Emily Jean Emma Stone (born November 6, 1988) is an American actress and producer. Her accolades include two Academy Awards, two British Academy Film Awards, and two Golden Globe Awards. In 2017, she was the world's highest-paid actress and was named by Time magazine as one of the 100 most influential people in the world.",
+  born: " <strong>Born:</strong> November 6, 1988 · Scottsdale, Arizona, USA",
+  filmography: [
+    { title: "La La Land", poster: "../images/lalaland.jpg" },
+  ]
+},
+"john": {
+  name: "John Legend",
+  image: "../images/john.webp",
+  bio: "John Legend is an American singer, songwriter, musician, actor, and producer. He was born John Roger Stephens on December 28, 1978 in Springfield, Ohio. As of 2017, he has won ten Grammy Awards, one Golden Globe Award, and one Academy Award. He is married to model Chrissy Teigen, and they have a daughter - Luna Simone Stephens - born in 2016. The couple's second child is due in 2018.",
+  born: " <strong>Born:</strong> December 28, 1978 · Springfield, Ohio, USA",
+  filmography: [
+    { title: "La La Land", poster: "../images/lalaland.jpg" },
+  ]
+},
+"rosemarie": {
+  name: "Rosiemaire DeWitt",
+  image: "../images/rosemarie.webp",
+  bio: "Rosemarie Braddock DeWitt (born October 26, 1971) is an American actress. DeWitt played Emily Lehman in the Fox television series Standoff (2006–07), co-starring with her future husband Ron Livingston, as well as Charmaine Craine on United States of Tara. She also was the title character in 2008's Rachel Getting Married, garnering several awards and nominations for best supporting actress. She starred in the horror/thriller Poltergeist (2015), a remake of the 1982 film of the same name",
+  born: " <strong>Born:</strong> October 26, 1971 · Flushing, Queens, New York City, New York, USA",
+  filmography: [
+    { title: "La La Land", poster: "../images/lalaland.jpg" },
+  ]
+},
+"jk": {
+  name: "J.K. Simmons",
+  image: "../images/jk.webp",
+  bio: "Jonathan Kimble Simmons (born January 9, 1955) is an American actor. He has been cited as one of the greatest contemporary character actors, and has appeared in over 200 film and television roles since his debut in 1986. He is an Academy Award, BAFTA Award, Golden Globe Award, Screen Actors Guild Award, and Critics Choice Award winner, among other accolades.",
+  born: " <strong>Born:</strong> January 9, 1955 ·Detroit, Michigan, USA",
+  filmography: [
+    { title: "La La Land", poster: "../images/lalaland.jpg" },
+  ]
+},
 };
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -162,7 +280,7 @@ if (actor) {
   document.getElementById("actor-name").textContent = actor.name;
   document.getElementById("actor-bio").textContent = actor.bio;
 
-  // This is where we use innerHTML to render the HTML in 'born'
+ 
   document.getElementById("actor-born").innerHTML = actor.born;
 
   const filmList = document.getElementById("actor-films");
