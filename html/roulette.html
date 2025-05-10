@@ -6,7 +6,24 @@
           <h5 class="modal-title" id="rouletteModalLabel">Don't know what to watch? Just Spin the Wheel!</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body mt-1">
+        <div class="modal-body">
+          <div class="mb-0 text-end">
+            <label for="genreDropdown" class="form-label fw-bold"></label>
+            <div class="dropdown d-inline-block">
+              <button class="btn btn-outline-light dropdown-toggle" type="button" id="genreDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Pick A Genre!
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="genreDropdownButton">
+                <li><a class="dropdown-item" href="#" onclick="selectGenre('Action')">Action</a></li>
+                <li><a class="dropdown-item" href="#" onclick="selectGenre('Comedy')">Comedy</a></li>
+                <li><a class="dropdown-item" href="#" onclick="selectGenre('Drama')">Drama</a></li>
+                <li><a class="dropdown-item" href="#" onclick="selectGenre('Horror')">Horror</a></li>
+                <li><a class="dropdown-item" href="#" onclick="selectGenre('Romance')">Romance</a></li>
+                <li><a class="dropdown-item" href="#" onclick="selectGenre('Sci-Fi')">Sci-Fi</a></li>
+                <li><a class="dropdown-item" href="#" onclick="selectGenre('Thriller')">Thriller</a></li>
+              </ul>
+            </div>
+          </div>
             <div class="roulette-wrapper">
                 <div class="container">
                     <div class="spinBtn">Spin!</div>
@@ -23,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" style="display: none;">
           <button type="button" class="shuffleBtn btn" 
           style="color: white; background-color: #000000; border-color: #c8a300;"
           onmouseover="this.style.backgroundColor='#c8a300'; this.style.borderColor='#c8a300';"
@@ -52,5 +69,7 @@
       </div>
     </div>
   </div>
+
+
   
   
