@@ -304,8 +304,12 @@ if (actor) {
     title.textContent = film.title;
     title.classList.add("movie-title");
 
-    li.appendChild(img);
-    li.appendChild(title);
+   // Append img and title into anchor tag
+    movieLink.appendChild(img);
+    movieLink.appendChild(title);
+
+    // Append anchor into list item
+    li.appendChild(movieLink);
     filmList.appendChild(li);
   });
 } else {
