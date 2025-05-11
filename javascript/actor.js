@@ -293,6 +293,7 @@ if (actor) {
     const movieLink = document.createElement("a");
     movieLink.href = `../html/moviedesc.html?title=${encodeURIComponent(film.title)}`;
     movieLink.classList.add("text-decoration-none"); // Optional: remove underline
+    console.log(movieLink.href); // This will log the href URL
 
     const img = document.createElement("img");
     img.src = film.poster;
