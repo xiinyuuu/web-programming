@@ -192,7 +192,7 @@ const movies = [
   {
     title: "The Age of Adaline",
     img: "theageofadaline.jpg",
-    rating: 3,6,
+    rating: 3.6,
     duration: "1h 52min",
     year: "2015",
     genre: ["Romance", "Drama"],
