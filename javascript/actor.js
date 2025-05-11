@@ -289,6 +289,11 @@ if (actor) {
     const li = document.createElement("li");
     li.classList.add("movie-card", "d-inline-block", "me-3", "text-center");
 
+    // Create an anchor link for the movie
+    const movieLink = document.createElement("a");
+    movieLink.href = `../html/moviedesc.html?title=${encodeURIComponent(film.title)}`;
+    movieLink.classList.add("text-decoration-none"); // Optional: remove underline
+
     const img = document.createElement("img");
     img.src = film.poster;
     img.alt = film.title;
@@ -305,3 +310,5 @@ if (actor) {
 } else {
   document.querySelector("body").innerHTML = "<h2 class='text-center mt-5 text-light'>Actor not found</h2>";
 }
+
+
