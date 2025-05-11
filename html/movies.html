@@ -441,7 +441,7 @@
         const col = document.createElement('div');
         col.className = 'col';
         col.innerHTML = `
-          <a href="../html/moviedesc.html" class="text-decoration-none text-light">
+          <a href="../html/moviedesc.html?title=${encodeURIComponent(movie.title)}" class="text-decoration-none text-light">
             <div class="card movie-card text-center">
               <img src="../images/${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
               <div class="card-body p-1">
