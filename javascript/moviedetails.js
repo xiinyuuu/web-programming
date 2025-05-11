@@ -201,7 +201,7 @@ const movies = [
   },
   {
     title: "The Suicide Squad",
-    img: "thesuicidesquad.jpg",
+    img: "thesuicidesquad.webp",
     rating: 3.6,
     duration: "2h 12min",
     year: "2021",
@@ -251,7 +251,7 @@ const movies = [
   },
   {
     title: "Her",
-    img: "her.jpg",
+    img: "her.webp",
     rating: 4.0,
     duration: "2h 6min",
     year: "2013",
@@ -261,7 +261,7 @@ const movies = [
   },
   {
     title: "Moana 2",
-    img: "moana2.jpg",
+    img: "moana_2.jpg",
     rating: 3.9,
     duration: "TBA",
     year: "2024",
@@ -291,7 +291,7 @@ const movies = [
   },
   {
     title: "Anyone But You",
-    img: "anyonebutyou.jpg",
+    img: "anyonebutyou.webp",
     rating: 3.5,
     duration: "1h 43min",
     year: "2023",
@@ -301,7 +301,7 @@ const movies = [
   },
   {
     title: "Enola Holmes",
-    img: "enolaholmes.jpg",
+    img: "enolaholmes.webp",
     rating: 3.3,
     duration: "2h 3min",
     year: "2020",
@@ -311,7 +311,7 @@ const movies = [
   },
   {
     title: "Walk The Line",
-    img: "walktheline.jpg",
+    img: "walktheline.webp",
     rating: 3.9,
     duration: "2h 16min",
     year: "2005",
@@ -321,7 +321,7 @@ const movies = [
   },
   {
     title: "Meet Yourself",
-    img: "meetyourself.jpg",
+    img: "meetyourself.webp",
     rating: 3.5,
     duration: "TBA",
     year: "2023",
@@ -361,7 +361,7 @@ const movies = [
   },
   {
     title: "Once Upon A Time",
-    img: "onceuponatime.jpg",
+    img: "onceuponatime.webp",
     rating: 3.8,
     duration: "1h 48min",
     year: "2017",
