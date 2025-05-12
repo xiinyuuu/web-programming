@@ -27,7 +27,7 @@ const movies = [
     rating: 4.4,
     duration: "2h 28min",
     year: 2010,
-    language: "English", country: "USA", popularity: 3500,
+    language: "English", country: "USA", popularity: 2000,
     genre: ["Action", "Sci-Fi"],
     director: "Christopher Nolan",
     synopsis: "A thief who steals corporate secrets through dream-sharing technology is given a chance to erase his past crimes by planting an idea into a target’s subconscious."
@@ -71,7 +71,7 @@ const movies = [
     rating: 3.5,
     duration: "1h 37min",
     year: 2014,
-    language: "English", country: "USA", popularity: 2200,
+    language: "English", country: "USA", popularity: 3200,
     genre: ["Fantasy", "Adventure"],
     director: "Robert Stromberg",
     synopsis: "A vengeful fairy curses an infant princess, but discovers the child may be the only one who can bring peace to their land."
@@ -159,7 +159,7 @@ const movies = [
     rating: 3.1,
     duration: "1h 40min",
     year: 2007,
-    language: "English", country: "USA", popularity: 1300,
+    language: "English", country: "USA", popularity: 3500,
     genre: ["Action", "Thriller"],
     director: "Xavier Gens",
     synopsis: "A genetically-engineered assassin becomes the target of a political conspiracy and battles forces from both sides."
@@ -192,7 +192,7 @@ const movies = [
     rating: 3.4,
     duration: "1h 50min",
     year: 2023,
-    language: "English", country: "USA", popularity: 1000,
+    language: "English", country: "USA", popularity: 3500,
     genre: ["Fantasy", "Adventure"],
     director: "Juan Carlos Fresnadillo",
     synopsis: "A young woman agrees to marry a prince, only to discover it’s a trap and she must survive a deadly cave dragon."
@@ -225,7 +225,7 @@ const movies = [
     rating: 3.6,
     duration: "2h 12min",
     year: 2021,
-    language: "English", country: "USA", popularity: 2600,
+    language: "English", country: "USA", popularity: 2500,
     genre: ["Action", "Adventure"],
     director: "James Gunn",
     synopsis: "Supervillains are sent to a remote island on a mission that could reduce their prison sentences — if they survive."
@@ -247,7 +247,7 @@ const movies = [
     rating: 2.9,
     duration: "1h 55min",
     year: 2020,
-    language: "English", country: "USA", popularity: 2000 ,
+    language: "English", country: "USA", popularity: 4000,
     genre: ["Action", "Adventure"],
     director: "Niki Caro",
     synopsis: "A young Chinese woman disguises herself as a male warrior to save her father and defend her country."
@@ -258,7 +258,7 @@ const movies = [
     rating: 3.6,
     duration: "2h 14min",
     year: 2018,
-    language: "English", country: "USA", popularity: 3200,
+    language: "English", country: "USA", popularity: 3000,
     genre: ["Action", "Sci-Fi"],
     director: "Ryan Coogler",
     synopsis: "T'Challa returns home as king of Wakanda but finds his sovereignty challenged by a new adversary."
@@ -313,7 +313,7 @@ const movies = [
     rating: 4.5,
     duration: "2h 32min",
     year: 2008,
-    language: "English", country: "USA", popularity: 4000,
+    language: "English", country: "USA", popularity: 2700,
     genre: ["Action", "Crime"],
     director: "Christopher Nolan",
     synopsis: "Batman faces his greatest psychological and physical tests when the Joker unleashes chaos on Gotham."
@@ -368,7 +368,7 @@ const movies = [
     rating: 4.3,
     duration: "2h 49min",
     year: 2014,
-    language: "English", country: "USA", popularity: 3500,
+    language: "English", country: "USA", popularity: 3000,
     genre: ["Sci-Fi", "Drama"],
     director: "Christopher Nolan",
     synopsis: "A group of explorers travels through a wormhole in space in search of a new home for humanity."
