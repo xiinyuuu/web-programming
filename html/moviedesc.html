@@ -210,16 +210,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
   <!-- Watchlist Button -->
-  <script>
-    const watchlistBtn = document.getElementById('watchlistBtn');
-    let added = false;
-  
-    watchlistBtn.addEventListener('click', () => {
-      added = !added;
-      watchlistBtn.classList.toggle('active', added);
-      watchlistBtn.textContent = added ? 'Added to Watchlist' : 'Add to Watchlist';
-    });
-  </script>  
+  <script src="../javascript/watchlist-button.js"></script>
 
   <!-- Load external script -->
   <script src="../javascript/reviews.js"></script>
