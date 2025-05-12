@@ -58,6 +58,8 @@
     </div>    
   </nav>
 
+  <script src="../javascript/moviedata.js"></script>
+
 
   <!-- Movies Section -->
   <div class="container mt-5 text-center">
@@ -66,101 +68,41 @@
   </div>
 
   <div class="container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-4 justify-content-center">
-  
-      <!-- Movie Card Template -->
-      <div class="col">
-        <a href="../html/moviedesc.html?title=Mulan" class="text-decoration-none text-dark">
-          <div class="card movie-card text-center">
-            <img src="../images/mulan.jpg" class="card-img-top movie-img" alt="Mulan">
-            <div class="card-body p-1"><h6 class="movie-title">Mulan</h6></div>
-          </div>
-        </a>
-      </div>
-  
-      <div class="col">
-        <a href="../html/moviedesc.html?title=Barbie" class="text-decoration-none text-dark">
-          <div class="card movie-card text-center">
-            <img src="../images/barbie.jpg" class="card-img-top movie-img" alt="Barbie">
-            <div class="card-body p-1"><h6 class="movie-title">Barbie</h6></div>
-          </div>
-        </a>
-      </div>
-  
-      <div class="col">
-        <a href="../html/moviedesc.html?title=Hitman" class="text-decoration-none text-dark">
-          <div class="card movie-card text-center">
-            <img src="../images/hitman.webp" class="card-img-top movie-img" alt="Hitman">
-            <div class="card-body p-1"><h6 class="movie-title">Hitman</h6></div>
-          </div>
-        </a>
-      </div>
-  
-      <div class="col">
-        <a href="../html/moviedesc.html?title=Joker2" class="text-decoration-none text-dark">
-          <div class="card movie-card text-center">
-            <img src="../images/joker_2.jpeg" class="card-img-top movie-img" alt="Joker 2">
-            <div class="card-body p-1"><h6 class="movie-title">Joker 2</h6></div>
-          </div>
-        </a>
-      </div>
-  
-      <div class="col">
-        <a href="../html/moviedesc.html?title=Moana2" class="text-decoration-none text-dark">
-          <div class="card movie-card text-center">
-            <img src="../images/moana_2.jpg" class="card-img-top movie-img" alt="Moana 2">
-            <div class="card-body p-1"><h6 class="movie-title">Moana 2</h6></div>
-          </div>
-        </a>
-      </div>
-  
-      <div class="col">
-        <a href="../html/moviedesc.html?title=Interstellar" class="text-decoration-none text-dark">
-          <div class="card movie-card text-center">
-            <img src="../images/interstellar.jpg" class="card-img-top movie-img" alt="Interstellar">
-            <div class="card-body p-1"><h6 class="movie-title">Interstellar</h6></div>
-          </div>
-        </a>
-      </div>
-  
-      <div class="col">
-        <a href="../html/moviedesc.html?title=Damsel" class="text-decoration-none text-dark">
-          <div class="card movie-card text-center">
-            <img src="../images/damsel.webp" class="card-img-top movie-img" alt="Damsel">
-            <div class="card-body p-1"><h6 class="movie-title">Damsel</h6></div>
-          </div>
-        </a>
-      </div>
-  
-      <div class="col">
-        <a href="../html/moviedesc.html?title=Uglies" class="text-decoration-none text-dark">
-          <div class="card movie-card text-center">
-            <img src="../images/uglies.jpg" class="card-img-top movie-img" alt="Uglies">
-            <div class="card-body p-1"><h6 class="movie-title">Uglies</h6></div>
-          </div>
-        </a>
-      </div>
-  
-      <div class="col">
-        <a href="../html/moviedesc.html?title=AmazingSpiderMan" class="text-decoration-none text-dark">
-          <div class="card movie-card text-center">
-            <img src="../images/amazingspiderman.jpg" class="card-img-top movie-img" alt="The Amazing Spider-Man">
-            <div class="card-body p-1"><h6 class="movie-title">The Amazing Spider-Man</h6></div>
-          </div>
-        </a>
-      </div>
-  
-      <div class="col">
-        <a href="../html/moviedesc.html?title=Maleficent" class="text-decoration-none text-dark">
-          <div class="card movie-card text-center">
-            <img src="../images/maleficent.jpeg" class="card-img-top movie-img" alt="Maleficent">
-            <div class="card-body p-1"><h6 class="movie-title">Maleficent</h6></div>
-          </div>
-        </a>
-      </div>
-  
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-4 justify-content-center" id="movie-container">
+      <!-- Movie cards will be dynamically inserted here -->
     </div>
   </div>
+
+  <script>
+    // Wait until the DOM is fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', function() {
+      // Sort movies by popularity
+      const topMovies = movies.sort((a, b) => b.popularity - a.popularity).slice(0, 10);
+
+      // Get the movie container element
+      const movieContainer = document.getElementById('movie-container');
+
+      // Loop through each movie and generate the movie card
+      topMovies.forEach(movie => {
+        const movieCard = document.createElement('div');
+        movieCard.classList.add('col');
+
+        movieCard.innerHTML = `
+          <a href="../html/moviedesc.html?title=${encodeURIComponent(movie.title)}" class="text-decoration-none text-dark">
+            <div class="card movie-card text-center">
+              <img src="../images/${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
+              <div class="card-body p-1">
+                <h6 class="movie-title">${movie.title}</h6>
+              </div>
+            </div>
+          </a>
+        `;
+
+        // Append the movie card to the container
+        movieContainer.appendChild(movieCard);
+      });
+    });
+  </script>
   
   
  <!-- Actors Section -->
