@@ -17,6 +17,7 @@ if (movie) {
     ${generateStars(movie.rating)}`;
 
   // Fill in the other details
+  document.querySelector('#movie-duration').innerHTML = `<strong>Duration:</strong> ${movie.duration}`;
   document.querySelector('#movie-year').innerHTML = `<strong>Year:</strong> ${movie.year}`;
   document.querySelector('#movie-genre').innerHTML = `<strong>Genre:</strong> ${movie.genre.join(', ')}`;
   document.querySelector('#movie-director').innerHTML = `<strong>Director:</strong> ${movie.director}`;
