@@ -12,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <!-- External CSS -->
   <link rel="stylesheet" href="../stylesheet/profile.css" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
   <!-- Navbar (matches login page structure) -->
@@ -26,8 +27,8 @@
           <li class="nav-item"><a class="nav-link" href="../html/actor.html">Actors</a></li>
           <li class="nav-item"><a class="nav-link" href="../html/watchlist.html">Watchlist</a></li>
         </ul>
-    
         
+          <!-- Navigation to profile -->
           <a href="../html/profile.html"><img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img me-1"></a>
 
           <!-- Sign Out button -->
@@ -201,9 +202,6 @@
         </button>
       </div>
     </div>
-    <!-- <div style="width: 100%; text-align: center;">
-      <a href="../html/login.html" class="btn btn-outline-secondary me-3" style="margin-right: 0;"><i class="bi bi-box-arrow-right"></i>  Sign Out</a>
-    </div> -->
   </div>
 
 
@@ -323,7 +321,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account<i class="bi bi-exclamation-triangle-fill ms-3" style="color: rgb(216, 13, 13); font-size: 1.5rem;"></i></h5>
+          <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account<i class="bi bi-exclamation-triangle-fill ms-3" style="color: gold; font-size: 1.5rem;"></i></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -400,4 +398,13 @@
   <script src="../javascript/signout-modal.js"></script>
         
 </body>
+
+<!-- Footer -->
+  <footer class="text-center p-4 footer">
+    <div>
+      MovRec &copy; 2025 All Rights Reserved &bull;
+      <a href="mailto:movrec.support@example.com" class="footer-link">Contact Us</a>
+    </div>
+  </footer>
+
 </html>          

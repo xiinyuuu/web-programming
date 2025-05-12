@@ -4,7 +4,8 @@ const movies = [
     img: "birdsofprey.webp",
     rating: 3.0,
     duration: "1h 49min",
-    year: "2020",
+    year: 2020,
+    language: "English", country: "USA", popularity: 1500,
     genre: ["Action", "Adventure"],
     director: "Cathy Yan",
     synopsis: "After splitting with the Joker, Harley Quinn joins superheroes Black Canary, Huntress, and Renee Montoya to save a young girl from an evil crime lord."
@@ -14,7 +15,8 @@ const movies = [
     img: "lalaland.jpg",
     rating: 4.0,
     duration: "2h 8min",
-    year: "2016",
+    year: 2016,
+    language: "English", country: "USA", popularity: 2500,
     genre: ["Romance", "Drama"],
     director: "Damien Chazelle",
     synopsis: "A jazz pianist falls for an aspiring actress in Los Angeles, but as success mounts, their love faces obstacles."
@@ -24,7 +26,8 @@ const movies = [
     img: "inception.jpg",
     rating: 4.4,
     duration: "2h 28min",
-    year: "2010",
+    year: 2010,
+    language: "English", country: "USA", popularity: 2000,
     genre: ["Action", "Sci-Fi"],
     director: "Christopher Nolan",
     synopsis: "A thief who steals corporate secrets through dream-sharing technology is given a chance to erase his past crimes by planting an idea into a target’s subconscious."
@@ -34,7 +37,8 @@ const movies = [
     img: "thehungergames.jpg",
     rating: 3.6,
     duration: "2h 22min",
-    year: "2012",
+    year: 2012,
+    language: "English", country: "USA", popularity: 2000,
     genre: ["Action", "Adventure"],
     director: "Gary Ross",
     synopsis: "Katniss Everdeen volunteers to take her sister's place in a televised fight to the death in a dystopian future."
@@ -44,7 +48,8 @@ const movies = [
     img: "crazyrichasians.jpg",
     rating: 3.5,
     duration: "2h 1min",
-    year: "2018",
+    year: 2018,
+    language: "English", country: "USA", popularity: 1800,
     genre: ["Romance", "Comedy"],
     director: "Jon M. Chu",
     synopsis: "An Asian American woman meets her boyfriend’s ultra-rich family in Singapore and discovers his hidden background."
@@ -54,7 +59,8 @@ const movies = [
     img: "letterstojuliet.jpg",
     rating: 3.2,
     duration: "1h 45min",
-    year: "2010",
+    year: 2010,
+    language: "English", country: "USA", popularity: 1200,
     genre: ["Romance", "Drama"],
     director: "Gary Winick",
     synopsis: "An aspiring writer in Italy finds a 50-year-old letter to Juliet and sets off to reunite lovers separated by time."
@@ -64,7 +70,8 @@ const movies = [
     img: "maleficent.jpeg",
     rating: 3.5,
     duration: "1h 37min",
-    year: "2014",
+    year: 2014,
+    language: "English", country: "USA", popularity: 3200,
     genre: ["Fantasy", "Adventure"],
     director: "Robert Stromberg",
     synopsis: "A vengeful fairy curses an infant princess, but discovers the child may be the only one who can bring peace to their land."
@@ -73,8 +80,9 @@ const movies = [
     title: "Joker 2",
     img: "joker_2.jpeg",
     rating: 4.2,
-    duration: "TBA",
-    year: "2024",
+    duration: "2h 18min",
+    year: 2024,
+    language: "English", country: "USA", popularity: 3000,
     genre: ["Drama", "Crime"],
     director: "Todd Phillips",
     synopsis: "The sequel to Joker continues Arthur Fleck's descent into madness and explores his influence on Gotham’s society."
@@ -84,7 +92,8 @@ const movies = [
     img: "twister.webp",
     rating: 3.2,
     duration: "1h 53min",
-    year: "1996",
+    year: 1996,
+    language: "English", country: "USA", popularity: 1400,
     genre: ["Action", "Thriller"],
     director: "Jan de Bont",
     synopsis: "A team of storm chasers risks their lives to test an experimental weather alert system by chasing deadly tornadoes."
@@ -94,7 +103,8 @@ const movies = [
     img: "abouttime.jpg",
     rating: 3.9,
     duration: "2h 3min",
-    year: "2013",
+    year: 2013,
+    language: "English", country: "UK", popularity: 1600 ,
     genre: ["Romance", "Drama"],
     director: "Richard Curtis",
     synopsis: "A young man discovers he can time travel and uses the ability to improve his love life and make a better future."
@@ -104,7 +114,8 @@ const movies = [
     img: "barbie.jpg",
     rating: 3.6,
     duration: "1h 54min",
-    year: "2023",
+    year: 2023,
+    language: "English", country: "USA", popularity: 2800,
     genre: ["Comedy", "Fantasy"],
     director: "Greta Gerwig",
     synopsis: "Barbie ventures into the real world to discover the joys and challenges of being human."
@@ -114,7 +125,8 @@ const movies = [
     img: "cruella.jpg",
     rating: 3.7,
     duration: "2h 14min",
-    year: "2021",
+    year: 2021,
+    language: "English", country: "USA", popularity: 2300,
     genre: ["Comedy", "Crime"],
     director: "Craig Gillespie",
     synopsis: "A rebellious fashion designer in 1970s London transforms into the legendary Cruella de Vil."
@@ -124,7 +136,8 @@ const movies = [
     img: "thelincolnlawyer.webp",
     rating: 3.6,
     duration: "1h 58min",
-    year: "2011",
+    year: 2011,
+    language: "English", country: "USA", popularity: 1500,
     genre: ["Drama", "Crime"],
     director: "Brad Furman",
     synopsis: "A defense lawyer operates out of his Lincoln sedan while handling the case of a wealthy client with a dark secret."
@@ -134,7 +147,8 @@ const movies = [
     img: "uglies.jpg",
     rating: 3.4,
     duration: "TBA",
-    year: "2025",
+    year: 2025,
+    language: "English", country: "USA", popularity: 1100,
     genre: ["Sci-Fi", "Drama"],
     director: "McG",
     synopsis: "In a society where everyone must undergo surgery at 16 to become 'pretty,' one girl questions the system and rebels."
@@ -144,7 +158,8 @@ const movies = [
     img: "hitman.webp",
     rating: 3.1,
     duration: "1h 40min",
-    year: "2007",
+    year: 2007,
+    language: "English", country: "USA", popularity: 3500,
     genre: ["Action", "Thriller"],
     director: "Xavier Gens",
     synopsis: "A genetically-engineered assassin becomes the target of a political conspiracy and battles forces from both sides."
@@ -154,7 +169,8 @@ const movies = [
     img: "dallasbuyersclub.webp",
     rating: 4.0,
     duration: "1h 57min",
-    year: "2013",
+    year: 2013,
+    language: "English", country: "USA", popularity: 1700,
     genre: ["Drama"],
     director: "Jean-Marc Vallée",
     synopsis: "Diagnosed with AIDS, a Texas man battles the system and medical establishment to help others access treatment."
@@ -164,7 +180,8 @@ const movies = [
     img: "amazingspiderman.jpg",
     rating: 3.5,
     duration: "2h 16min",
-    year: "2012",
+    year: 2012,
+    language: "English", country: "USA", popularity: 2400,
     genre: ["Action", "Adventure"],
     director: "Marc Webb",
     synopsis: "Peter Parker discovers secrets about his past while becoming the superhero Spider-Man."
@@ -174,7 +191,8 @@ const movies = [
     img: "damsel.webp",
     rating: 3.4,
     duration: "1h 50min",
-    year: "2023",
+    year: 2023,
+    language: "English", country: "USA", popularity: 3500,
     genre: ["Fantasy", "Adventure"],
     director: "Juan Carlos Fresnadillo",
     synopsis: "A young woman agrees to marry a prince, only to discover it’s a trap and she must survive a deadly cave dragon."
@@ -184,7 +202,8 @@ const movies = [
     img: "flipped.jpg",
     rating: 3.9,
     duration: "1h 30min",
-    year: "2010",
+    year: 2010,
+    language: "English", country: "USA", popularity: 1500,
     genre: ["Romance", "Drama"],
     director: "Rob Reiner",
     synopsis: "Two eighth-graders start to see each other in a different light as they grow up from childhood into adolescence."
@@ -194,7 +213,8 @@ const movies = [
     img: "theageofadaline.jpg",
     rating: 3.6,
     duration: "1h 52min",
-    year: "2015",
+    year: 2015,
+    language: "English", country: "USA", popularity: 1400,
     genre: ["Romance", "Drama"],
     director: "Lee Toland Krieger",
     synopsis: "A young woman stops aging after an accident and must hide her secret for decades until she meets someone worth revealing it to."
@@ -204,7 +224,8 @@ const movies = [
     img: "thesuicidesquad.webp",
     rating: 3.6,
     duration: "2h 12min",
-    year: "2021",
+    year: 2021,
+    language: "English", country: "USA", popularity: 2500,
     genre: ["Action", "Adventure"],
     director: "James Gunn",
     synopsis: "Supervillains are sent to a remote island on a mission that could reduce their prison sentences — if they survive."
@@ -214,7 +235,8 @@ const movies = [
     img: "beginagain.jpg",
     rating: 3.7,
     duration: "1h 44min",
-    year: "2013",
+    year: 2013,
+    language: "English", country: "USA", popularity: 1300,
     genre: ["Romance", "Drama"],
     director: "John Carney",
     synopsis: "A chance encounter between a disgraced music exec and a young singer-songwriter leads to a promising collaboration."
@@ -224,7 +246,8 @@ const movies = [
     img: "mulan.jpg",
     rating: 2.9,
     duration: "1h 55min",
-    year: "2020",
+    year: 2020,
+    language: "English", country: "USA", popularity: 4000,
     genre: ["Action", "Adventure"],
     director: "Niki Caro",
     synopsis: "A young Chinese woman disguises herself as a male warrior to save her father and defend her country."
@@ -234,7 +257,8 @@ const movies = [
     img: "blackpanther.jpg",
     rating: 3.6,
     duration: "2h 14min",
-    year: "2018",
+    year: 2018,
+    language: "English", country: "USA", popularity: 3000,
     genre: ["Action", "Sci-Fi"],
     director: "Ryan Coogler",
     synopsis: "T'Challa returns home as king of Wakanda but finds his sovereignty challenged by a new adversary."
@@ -244,7 +268,8 @@ const movies = [
     img: "doctorstrange.jpg",
     rating: 3.8,
     duration: "1h 55min",
-    year: "2016",
+    year: 2016,
+    language: "English", country: "USA", popularity: 2900,
     genre: ["Action", "Fantasy"],
     director: "Scott Derrickson",
     synopsis: "A brilliant surgeon's career ends with a crash, but mystical forces offer him a new path as a sorcerer."
@@ -254,7 +279,8 @@ const movies = [
     img: "her.webp",
     rating: 4.0,
     duration: "2h 6min",
-    year: "2013",
+    year: 2013,
+    language: "English", country: "USA", popularity: 1800,
     genre: ["Drama", "Romance"],
     director: "Spike Jonze",
     synopsis: "In the near future, a lonely writer falls in love with an artificial intelligence system."
@@ -264,7 +290,8 @@ const movies = [
     img: "moana_2.jpg",
     rating: 3.9,
     duration: "TBA",
-    year: "2024",
+    year: 2024,
+    language: "English", country: "USA", popularity: 2500,
     genre: ["Animation", "Adventure"],
     director: "Dave Derrick Jr.",
     synopsis: "Moana sets out on a new oceanic journey, encountering fresh challenges beyond the reef."
@@ -274,7 +301,8 @@ const movies = [
     img: "lifeasweknowit.jpg",
     rating: 3.2,
     duration: "1h 54min",
-    year: "2010",
+    year: 2010,
+    language: "English", country: "USA", popularity: 1200,
     genre: ["Romance", "Comedy"],
     director: "Greg Berlanti",
     synopsis: "Two single adults become caregivers to an orphaned girl when their mutual best friends die in an accident."
@@ -284,7 +312,8 @@ const movies = [
     img: "thedarkknight.jpg",
     rating: 4.5,
     duration: "2h 32min",
-    year: "2008",
+    year: 2008,
+    language: "English", country: "USA", popularity: 2700,
     genre: ["Action", "Crime"],
     director: "Christopher Nolan",
     synopsis: "Batman faces his greatest psychological and physical tests when the Joker unleashes chaos on Gotham."
@@ -294,7 +323,8 @@ const movies = [
     img: "anyonebutyou.webp",
     rating: 3.5,
     duration: "1h 43min",
-    year: "2023",
+    year: 2023,
+    language: "English", country: "USA", popularity: 1100,
     genre: ["Romance", "Comedy"],
     director: "Will Gluck",
     synopsis: "Two exes pretend to be a couple at a destination wedding, rekindling unresolved feelings."
@@ -304,7 +334,8 @@ const movies = [
     img: "enolaholmes.webp",
     rating: 3.3,
     duration: "2h 3min",
-    year: "2020",
+    year: 2020,
+    language: "English", country: "USA", popularity: 1500,
     genre: ["Mystery", "Adventure"],
     director: "Harry Bradbeer",
     synopsis: "Sherlock Holmes’ teenage sister embarks on a quest to find her missing mother and outwit villains."
@@ -314,7 +345,8 @@ const movies = [
     img: "walktheline.webp",
     rating: 3.9,
     duration: "2h 16min",
-    year: "2005",
+    year: 2005,
+    language: "English", country: "USA", popularity: 1400,
     genre: ["Biography", "Drama"],
     director: "James Mangold",
     synopsis: "The story of country music legend Johnny Cash and his journey from hardship to fame."
@@ -324,7 +356,8 @@ const movies = [
     img: "meetyourself.webp",
     rating: 3.5,
     duration: "TBA",
-    year: "2023",
+    year: 2023,
+    language: "English", country: "USA", popularity: 1200,
     genre: ["Drama", "Romance"],
     director: "Ding Zi Guang",
     synopsis: "Burned out from city life, a woman retreats to a rural village and finds healing and new connections."
@@ -334,7 +367,8 @@ const movies = [
     img: "interstellar.jpg",
     rating: 4.3,
     duration: "2h 49min",
-    year: "2014",
+    year: 2014,
+    language: "English", country: "USA", popularity: 3000,
     genre: ["Sci-Fi", "Drama"],
     director: "Christopher Nolan",
     synopsis: "A group of explorers travels through a wormhole in space in search of a new home for humanity."
@@ -344,7 +378,8 @@ const movies = [
     img: "fivefeetapart.jpg",
     rating: 3.6,
     duration: "1h 56min",
-    year: "2019",
+    year: 2019,
+    language: "English", country: "USA", popularity: 1600,
     genre: ["Romance", "Drama"],
     director: "Justin Baldoni",
     synopsis: "Two teenagers with cystic fibrosis fall in love but must maintain physical distance due to their illness."
@@ -354,7 +389,8 @@ const movies = [
     img: "midnightsun.jpg",
     rating: 3.3,
     duration: "1h 31min",
-    year: "2018",
+    year: 2018,
+    language: "English", country: "USA", popularity: 1300,
     genre: ["Romance", "Drama"],
     director: "Scott Speer",
     synopsis: "A girl with a rare condition that forces her to avoid sunlight meets a boy and begins to experience love."
@@ -364,7 +400,8 @@ const movies = [
     img: "onceuponatime.webp",
     rating: 3.8,
     duration: "1h 48min",
-    year: "2017",
+    year: 2017,
+    language: "English", country: "USA", popularity: 1400,
     genre: ["Fantasy", "Romance"],
     director: "Zhao Xiaoding, Anthony LaMolinara",
     synopsis: "A love story unfolds over lifetimes and worlds, testing the limits of fate and devotion."

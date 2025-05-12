@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             image: "../images/barbie.jpg",
             rating: 3,
             review: "This movie just slay. Absolute 10/10",
-            date: "1 week ago"
+            date: "2 weeks ago"
         },
         {
             id: 3,
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             image: "../images/amazingspiderman.jpg",
             rating: 4.5,
             review: "We love ANDREW GARFIELD <3",
-            date: "2 weeks ago"
+            date: "5 days ago"
         },
         {
             id: 4,
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             image: "../images/blackpanther.jpg",
             rating: 4.5,
             review: "Wakanda forever!",
-            date: "2 weeks ago"
+            date: "1 week ago"
         },
         {
             id: 5,

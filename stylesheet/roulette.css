@@ -171,6 +171,11 @@
   display: none;
 }
 
+canvas {
+  z-index: 1060 !important; /* A high value, greater than Bootstrap's modal z-index */
+  pointer-events: none; /* Prevent the confetti canvas from interfering with clicks */
+}
+
 
   
   
