@@ -27,26 +27,7 @@
           <li class="nav-item"><a class="nav-link" href="../html/watchlist.html">Watchlist</a></li>
         </ul>
     
-        <form class="d-flex me-4" style="max-width: 300px;" onsubmit="handleSearch(event)">
-          <div class="input-group">
-            <input id="searchInput" class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-search" type="submit">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
-        </form>
-
-        <script>
-          function handleSearch(event) {
-            event.preventDefault();
-            const keyword = document.getElementById('searchInput').value.trim();
-            if (keyword) {
-              window.location.href = `../html/search.html?query=${encodeURIComponent(keyword)}`;
-            }
-          }
-        </script>
-
-          <a href="../html/profile.html"><img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img me-1"></a>
+          <a href="../html/profile.html"><img src="../images/sad cat.png" alt="Profile" class="rounded-circle profile-img me-1"></a>
           <a href="../html/login.html" class="btn btn-outline-secondary btn-sm" style="margin-left: 0; background-color: #00000000; border-color: #00000000; font-size: 0.9rem;">Sign Out<i class="bi bi-box-arrow-right ms-1"></i></a>
       </div>
     </div>    
