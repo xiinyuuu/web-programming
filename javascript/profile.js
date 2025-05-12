@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
         profilePic: "../images/sad cat.png",
         stats: {
             moviesWatched: 42,
-            reviews: 16,
-            watchlist: 8
+            reviews: 9,
+            watchlist: 2
         }
     };
 
