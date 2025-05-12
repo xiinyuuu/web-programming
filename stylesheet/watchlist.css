@@ -89,6 +89,35 @@
     border: none !important;
   }
   
+/* Floating roulette button */
+.roulette-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+.roulette-button:hover {
+  transform: scale(1.1);
+}
+.roulette-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
   /* Footer */
   .footer {
     background: #140033;

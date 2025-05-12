@@ -143,9 +143,17 @@ fetch('../html/roulette.html')
     const rouletteDimOverlay = document.getElementById("rouletteDimOverlay");
     const modalFooter = document.querySelector('#rouletteModal .modal-footer'); // Get the footer element
 
-    resultModalEl.addEventListener("show.bs.modal", () => {
-    if (rouletteDimOverlay) rouletteDimOverlay.style.display = "block";
+    resultModalEl.addEventListener("shown.bs.modal", () => {
+      if (rouletteDimOverlay) rouletteDimOverlay.style.display = "block";
+
+      // Fire confetti
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
     });
+
 
     resultModalEl.addEventListener("hidden.bs.modal", () => {
     if (rouletteDimOverlay) rouletteDimOverlay.style.display = "none";
