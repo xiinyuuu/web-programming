@@ -25,14 +25,25 @@
           <li class="nav-item"><a class="nav-link" href="../html/watchlist.html">Watchlist</a></li>
         </ul>
 
-        <form class="d-flex me-4" style="max-width: 300px;">
+        <form class="d-flex me-4" style="max-width: 300px;" onsubmit="handleSearch(event)">
           <div class="input-group">
-            <input class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
+            <input id="searchInput" class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-search" type="submit">
               <i class="bi bi-search"></i>
             </button>
           </div>
         </form>
+
+        <script>
+          function handleSearch(event) {
+            event.preventDefault();
+            const keyword = document.getElementById('searchInput').value.trim();
+            if (keyword) {
+              window.location.href = `../html/search.html?query=${encodeURIComponent(keyword)}`;
+            }
+          }
+        </script>
+        
           <a href="../html/profile.html"><img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
       </div>
     </div>
@@ -441,7 +452,7 @@
         const col = document.createElement('div');
         col.className = 'col';
         col.innerHTML = `
-          <a href="../html/moviedesc.html" class="text-decoration-none text-light">
+          <a href="../html/moviedesc.html?title=${encodeURIComponent(movie.title)}" class="text-decoration-none text-light">
             <div class="card movie-card text-center">
               <img src="../images/${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
               <div class="card-body p-1">

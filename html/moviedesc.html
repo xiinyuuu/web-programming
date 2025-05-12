@@ -33,53 +33,63 @@
           <li class="nav-item"><a class="nav-link" href="../html/watchlist.html">Watchlist</a></li>
         </ul>
     
-        <!-- Wrap search and avatar in separate flex container -->
-        <form class="d-flex me-4" style="max-width: 300px;">
+        <form class="d-flex me-4" style="max-width: 300px;" onsubmit="handleSearch(event)">
           <div class="input-group">
-            <input class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
+            <input id="searchInput" class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-search" type="submit">
               <i class="bi bi-search"></i>
             </button>
           </div>
         </form>
+
+        <script>
+          function handleSearch(event) {
+            event.preventDefault();
+            const keyword = document.getElementById('searchInput').value.trim();
+            if (keyword) {
+              window.location.href = `../html/search.html?query=${encodeURIComponent(keyword)}`;
+            }
+          }
+        </script>
           <a href="../html/profile.html"><img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
         </div>
       </div>
     </div>    
   </nav>
 
+<!-- Movie Details -->
+<div class="container text-center mt-5" id="movie-details">
+  <div class="row justify-content-center align-items-start">
+    <div class="col-md-5 d-flex flex-column align-items-center">
+      <!-- Movie Poster -->
+      <img src="../images/damsel.webp" class="img-fluid w-75 rounded shadow mb-3" alt="Movie Poster">
+      <!-- Watchlist Button -->
+      <button class="btn add-watchlist-btn" id="watchlistBtn">Add to Watchlist</button>
+    </div>
 
-  <!-- Movie Details -->
-  <div class="container text-center mt-5" id="movie-details">
-    <div class="row justify-content-center align-items-start">
-        <div class="col-md-5 d-flex flex-column align-items-center">
-            <img src="../images/damsel.webp" class="img-fluid w-75 rounded shadow mb-3" alt="Movie Poster">
-            <button class="btn add-watchlist-btn" id="watchlistBtn">Add to Watchlist</button>
-        </div>
-        
-        <div class="col-md-7 text-start">
-          <h2 class="fw-bold text-light mb-3">Movie Title</h2>
-          <!-- Movie Rating Section -->
-          <p class="mb-3 text-warning small">
-            4.5
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-half"></i>
-          </p>
-          <p class="text-light"><strong>Duration:</strong> 1h 55min</p>
-          <p class="text-light"><strong>Release Date:</strong> January 1, 2025</p>
-          <p class="text-light"><strong>Genre:</strong> Drama, Romance</p>
-          <p class="text-light"><strong>Director:</strong> Jane Doe</p>
+    <div class="col-md-7 text-start">
+      <!-- Movie Title -->
+      <h2 class="fw-bold text-light mb-3" id="movie-title">Movie Title</h2>
 
-          <!-- Movie Synopsis -->
-          <p class="text-light mt-3">
-            <strong>Synopsis:</strong> A young woman agrees to marry a handsome prince -- only to discover it was all a trap. She is thrown into a cave with a fire-breathing dragon and must rely solely on her wits and will to survive.
-          </p>
-        </div>
+      <!-- Movie Rating -->
+      <p class="mb-3 text-warning small" id="movie-rating">
+        <!-- Rating number and stars will be dynamically added here -->
+      </p>
+
+      <!-- Movie Details (Duration, Release Date, Genre, Director, Synopsis) -->
+      <p class="text-light" id="movie-duration"><strong>Duration:</strong> 1h 55min</p>
+      <p class="text-light" id="movie-year"><strong>Year:</strong> 2025</p>
+      <p class="text-light" id="movie-genre"><strong>Genre:</strong> Drama, Romance</p>
+      <p class="text-light" id="movie-director"><strong>Director:</strong> Jane Doe</p>
+      <p class="text-light mt-3" id="movie-synopsis"><strong>Synopsis:</strong> A young woman agrees to marry a handsome prince -- only to discover it was all a trap. She is thrown into a cave with a fire-breathing dragon and must rely solely on her wits and will to survive.</p>
+
     </div>
   </div>
+</div>
+
+<!-- Movie Details Script -->
+<script src="../javascript/moviedata.js"></script>
+<script src="../javascript/movie.js"></script>
 
 <!-- Actors Section -->
 <div class="container text-center mt-5">

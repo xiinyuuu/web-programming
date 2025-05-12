@@ -185,3 +185,10 @@ main {
 .footer-link:hover {
   text-decoration: underline;
 }
+
+#movie-rating i {
+  font-size: 1.5rem; /* Adjust the size of the stars */
+  margin-right: 0.2rem; /* Space between stars */
+}
+
+
