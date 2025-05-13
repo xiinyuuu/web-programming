@@ -173,6 +173,55 @@ main {
   font-size: 16px;
 }
 
+/* Review submit button */
+.btn-submit-review {
+  background: linear-gradient(145deg, #6e00a8, #9b00ff);
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #9900ff80;
+}
+
+.btn-submit-review:hover {
+  background: linear-gradient(145deg, #580080, #7c00cc);
+  box-shadow: 0 0 15px #cc00ff;
+}
+
+
+/* Review section */
+.review-entry img {
+  object-fit: cover;
+}
+
+#review-user-reviews .text-light {
+  font-size: 1rem;
+}
+
+.review-entry p {
+  font-size: 1.05rem;
+}
+
+/* average rating display */
+.average-rating {
+  font-size: 1.5rem; /* Increase size */
+  font-weight: 600;
+  color: white;
+}
+
+.average-rating i {
+  font-size: 1.3rem; /* Slightly larger stars */
+  color: #ffcc00;
+}
+
+.average-rating .review-count {
+  font-size: 1rem;
+  color: #cccccc;
+}
+
+
 /* Footer */
 .footer {
   background: #140033;

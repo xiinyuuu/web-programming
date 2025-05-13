@@ -126,22 +126,21 @@
   <hr class="section-divider">
 
   <!-- Average Rating -->
-  <div class="mb-3">
+  <div class="mb-3 average-rating">
     <strong>Average Rating:</strong>
-    <span class="text-warning">4.3</span>
-    <i class="bi bi-star-fill text-warning"></i>
-    <i class="bi bi-star-fill text-warning"></i>
-    <i class="bi bi-star-fill text-warning"></i>
-    <i class="bi bi-star-fill text-warning"></i>
-    <i class="bi bi-star-half text-warning"></i>
-    <span class="text-light">(based on 123 reviews)</span>
+    <span>4.3</span>
+    <i class="bi bi-star-fill"></i>
+    <i class="bi bi-star-fill"></i>
+    <i class="bi bi-star-fill"></i>
+    <i class="bi bi-star-fill"></i>
+    <i class="bi bi-star-half"></i>
+    <span class="review-count">(based on 123 reviews)</span>
   </div>
 
+
   <!-- Submitted Reviews -->
-  <div class="mb-4" id="review-user-reviews">
-    <!-- Reviews will be inserted here -->
-  </div>
-  <button id="review-see-more-btn" class="btn btn-secondary d-none mb-4">See More</button>
+  <div class="mb-4 text-start" id="review-user-reviews"></div>
+  <button id="review-see-more-btn" class="btn btn-warning d-none mb-4">See More</button>
 
   <!-- Submit Review Form -->
   <div class="bg-dark p-4 rounded">
@@ -165,7 +164,7 @@
         <textarea class="form-control" id="review-text" rows="3" required></textarea>
       </div>
 
-      <button type="submit" class="btn btn-warning">Submit Review</button>
+      <button type="submit" class="btn btn-submit-review mt-3">Submit Review</button>
     </form>
   </div>
 </div>
