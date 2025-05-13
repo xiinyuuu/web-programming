@@ -1,11 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+
     // Initialize Bootstrap toasts
     const logoutToast = new bootstrap.Toast(document.getElementById('logoutToast'));
     const updateToast = new bootstrap.Toast(document.getElementById('updateToast'));
     const updateProfilePicToast = new bootstrap.Toast(document.getElementById('updateProfilePicToast'));
     const updatePasswordToast = new bootstrap.Toast(document.getElementById('updatePasswordToast'));
+    const deactivateAccountToast = new bootstrap.Toast(document.getElementById('deactivateAccountToast'));
     const deleteAccountToast = new bootstrap.Toast(document.getElementById('deleteAccountToast'));
     const reviewModal = new bootstrap.Modal(document.getElementById('reviewDetailModal'));
+
+    // Inside profile.js (remove the myReviews array)
+    const myReviews = window.myReviews || []; // Fallback to empty array if not loaded yet
 
     // Check if we should show logout toast (from URL parameter)
     if (window.location.search.includes('logout=true')) {
@@ -20,50 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
         profilePic: "../images/sad cat.png",
         stats: {
             moviesWatched: 42,
-            reviews: 16,
-            watchlist: 8
+            reviews: 9,
+            watchlist: 2
         }
     };
-
-    // Review data
-    const myReviews = [
-        {
-            id: 1,
-            title: "Interstellar",
-            info: "Sci-Fi, Adventure • 2014",
-            image: "../images/interstellar.jpg",
-            rating: 4.5,
-            review: "Nolan is simply the Picasso of film industry",
-            date: "2 days ago"
-        },
-        {
-            id: 2,
-            title: "Barbie",
-            info: "Comedy, Adventure • 2023",
-            image: "../images/barbie.jpg",
-            rating: 3,
-            review: "This movie just slay. Absolute 10/10",
-            date: "1 week ago"
-        },
-        {
-            id: 3,
-            title: "Mulan",
-            info: "Action, Drama • 2020",
-            image: "../images/mulan.jpg",
-            rating: 3,
-            review: "Visually impressive but lacking the heart of the original",
-            date: "2 weeks ago"
-        },
-        {
-            id: 9,
-            title: "Maleficent",
-            info: "Action, Drama • 2020",
-            image: "../images/maleficent.jpeg",
-            rating: 3,
-            review: "A dark twist on a classic tale, with stunning visuals and a very powerful performance by Angelina Jolie.",
-            date: "1 day ago"
-        }
-    ];
 
     // Function to generate star ratings
     function generateStars(rating) {
@@ -99,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('modalMovieImage').src = review.image;
                     document.getElementById('modalMovieTitle').textContent = review.title;
                     document.getElementById('modalMovieInfo').textContent = review.info;
+                    document.getElementById('modalMovieDuration').textContent = review.duration;
                     document.getElementById('modalMovieRating').innerHTML = generateStars(review.rating);
                     document.getElementById('modalMovieReview').textContent = review.review;
                     document.getElementById('modalReviewDate').textContent = review.date;
@@ -269,6 +235,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Deactivate Account Modal
+    const deactivateAccountModal = new bootstrap.Modal(document.getElementById('deactivateAccountModal'));
+    const confirmDeactivateBtn = document.getElementById('confirmDeactivateBtn');
+
+    if (confirmDeactivateBtn) {
+        confirmDeactivateBtn.addEventListener('click', function() {
+            // Here should make an API call to the backend to make sure the password is correct
+            simulateAccountDeactivation();
+        });
+    }
+
     // Delete Account Modal
     const deleteAccountModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
     const deleteAccountForm = document.getElementById('deleteAccountForm');
@@ -345,6 +322,32 @@ document.addEventListener('DOMContentLoaded', function() {
         existingAlerts.forEach(alert => alert.remove());
     }
 
+    // Deactivate Account Functionality
+    function simulateAccountDeactivation() {
+        // Show loading state
+        confirmDeactivateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deactivating...';
+        confirmDeactivateBtn.disabled = true;
+
+        // In a real app, you would make an API call here
+        console.log("Attempting to delete account...");
+
+        setTimeout(function() {
+            document.querySelector('#deactivateAccountToast .toast-body').innerHTML = 
+            '<i class="bi bi-check-circle me-2"></i> Account deactivated successfully!';
+            deactivateAccountToast.show();
+                    
+            // Reset button state
+            confirmDeactivateBtn.innerHTML = 'Deactivate Account';
+            confirmDeactivateBtn.disabled = false;
+                    
+            // Close modal and redirect after delay
+            deactivateAccountModal.hide();
+            setTimeout(() => {
+                window.location.href = '../html/login.html?accountDeactivated=true';
+            }, 1500);
+        }, 1500);
+    }
+
     // Delete Account Functionality
     function simulateAccountDeletion(password) {
         // Show loading state
@@ -409,6 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const movieImg = this.querySelector('.activity-movie-img').src;
         const movieTitle = this.querySelector('.activity-movie-title').textContent;
         const movieInfo = this.querySelector('.activity-movie-info').textContent;
+        const movieDuration = this.querySelector('.activity-movie-duration').textContent;
         const movieRating = this.querySelector('.text-warning').innerHTML;
         const movieReview = this.querySelector('.small.text').textContent;
         const reviewDate = this.querySelector('.activity-date').textContent;
@@ -417,6 +421,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modalMovieImage').src = movieImg;
         document.getElementById('modalMovieTitle').textContent = movieTitle;
         document.getElementById('modalMovieInfo').textContent = movieInfo;
+        document.getElementById('modalMovieDuration').textContent = movieDuration;
         document.getElementById('modalMovieRating').innerHTML = movieRating;
         document.getElementById('modalMovieReview').textContent = movieReview;
         document.getElementById('modalReviewDate').textContent = reviewDate;

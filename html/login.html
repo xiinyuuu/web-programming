@@ -26,25 +26,13 @@
     
       <div class="collapse navbar-collapse justify-content-between">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Movies</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Actors</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Watchlist</a></li>
+          <li class="nav-item"><a class="nav-link" href="../html/home.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="../html/movies.html">Movies</a></li>
+          <li class="nav-item"><a class="nav-link" href="../html/actor.html">Actors</a></li>
+          <li class="nav-item"><a class="nav-link" href="../html/watchlist.html">Watchlist</a></li>
         </ul>
     
-        <!-- Wrap search and avatar in separate flex container -->
-        <form class="d-flex me-4" style="max-width: 300px;">
-          <div class="input-group">
-            <input class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-search" type="submit">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
-        </form>
-        <a href="login.html" class="btn btn-outline-light btn-sm me-2">Login</a>
-        <a href="signup.html" class="btn btn-outline-light btn-sm me-2">Sign up</a>
-          <img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img">
-        </div>
+        <img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img">
       </div>
     </div>    
   </nav>
@@ -112,12 +100,46 @@
 
     document.getElementById("forgotPassword").addEventListener("click", function(event) {
       event.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      if (email) {
-        alert(`Password reset link would be sent to ${email} in a real application.`);
-      } else {
-        alert("Please enter your email address first.");
+
+      // Create a reset password container
+      const resetContainer = document.createElement("div");
+      resetContainer.className = "reset-password-container bg-dark text-light p-4 rounded shadow";
+      resetContainer.style = "max-width: 400px; width: 100%; margin: auto;";
+
+      resetContainer.innerHTML = `
+      <h3 class="text-center mb-3">Reset Password</h3>
+      <div class="alert alert-info d-none" id="resetSuccess" role="alert">
+        Password reset link has been sent to your email.
+      </div>
+      <form id="resetPasswordForm">
+        <div class="mb-3">
+        <input type="email" class="form-control" id="resetEmail" placeholder="Enter your email address" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Send Reset Link</button>
+      </form>
+      <div class="text-center mt-3">
+        <button class="btn btn-secondary btn-sm" id="cancelReset">Cancel</button>
+      </div>
+      `;
+
+      // Replace login section with reset password container
+      const loginSection = document.getElementById("loginSection");
+      loginSection.innerHTML = "";
+      loginSection.appendChild(resetContainer);
+
+      // Handle reset password form submission
+      document.getElementById("resetPasswordForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const resetEmail = document.getElementById("resetEmail").value;
+      if (resetEmail) {
+        document.getElementById("resetSuccess").classList.remove("d-none");
       }
+      });
+
+      // Handle cancel button
+      document.getElementById("cancelReset").addEventListener("click", function() {
+      window.location.reload();
+      });
     });
   </script>
 </body>

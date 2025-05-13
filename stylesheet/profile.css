@@ -235,6 +235,12 @@ body {
   font-weight: 600;
 }
 
+.activity-movie-duration {
+  color: #999;
+  font-size: 0.9rem;
+  margin-bottom: 0px;
+}
+
 .activity-movie-info {
   color: #999;
   font-size: 0.9rem;
@@ -392,7 +398,6 @@ body {
     margin: 0 auto;
   }
 }
-/* testtt */
 
 .modal-footer {
   border-top: 1px solid #333;
@@ -520,3 +525,15 @@ body {
   margin-top: 40px; /* Adjust to create space below the button */
 }
 
+/* Footer */
+.footer {
+  background: #140033;
+  color: #eee;
+}
+.footer-link {
+  color: #cc99ff;
+  text-decoration: none;
+}
+.footer-link:hover {
+  text-decoration: underline;
+}

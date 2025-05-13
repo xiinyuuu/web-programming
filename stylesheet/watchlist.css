@@ -1,23 +1,25 @@
-/* === GENERAL BODY STYLING === */
-html, body {
+  /* Global reset and structure */
+  html, body {
     height: 100%;
     margin: 0;
     padding: 0;
     font-family: 'Poppins', sans-serif;
-    background: radial-gradient(circle at 20% 20%, #2d0055, #0a001a, #000000);
+    background: linear-gradient(135deg, #2d0055, #0a001a, #000000);
     background-size: cover;
+    background-attachment: fixed;
     color: white;
     display: flex;
     flex-direction: column;
   }
-  
+
   main {
     flex: 1;
+    background: transparent !important;
   }
   
-  /* === NAVBAR === */
+  /* Navigation bar */
   .custom-navbar {
-    background: #2d006b;
+    background: #2d006b !important;
   }
   .navbar-brand {
     font-size: 28px;
@@ -27,6 +29,12 @@ html, body {
     color: white !important;
     font-weight: 500;
   }
+  .navbar .nav-link.active {
+    color: #d6b4fc !important;
+    font-weight: 700;
+  }
+
+  /* Search bar */
   .search-box {
     background: white;
     color: black;
@@ -38,16 +46,16 @@ html, body {
     border-radius: 0 20px 20px 0;
     border: none;
   }
-  .btn-search:hover {
-    background: #4b007a;
-  }
+
+  /* Profile image */
   .profile-img {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     object-fit: cover;
+    border-radius: 50%;
   }
   
-  /* === SECTION TITLES === */
+  /* Section titles */
   .section-title {
     font-weight: bold;
     color: #ffccff;
@@ -61,7 +69,7 @@ html, body {
     border-radius: 10px;
   }
   
-  /* === MOVIE CARDS === */
+  /* Movie Cards */
   .movie-img {
     height: 260px;
     object-fit: cover;
@@ -77,18 +85,49 @@ html, body {
     margin-top: 5px;
   }
   .movie-card {
-    background: none;
-    border: none;
+    background: transparent !important;
+    border: none !important;
   }
   
-  /* === FOOTER === */
+/* Floating roulette button */
+.roulette-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+.roulette-button:hover {
+  transform: scale(1.1);
+}
+.roulette-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+  /* Footer */
   .footer {
-    background: #1a0033;
+    background: #140033;
     color: #eee;
-    font-size: 14px;
   }
   .footer-link {
     color: #cc99ff;
     text-decoration: none;
+  }
+  .footer-link:hover {
+    text-decoration: underline;
   }
   

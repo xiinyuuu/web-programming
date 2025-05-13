@@ -35,11 +35,11 @@
     }
 
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 
 <body>
-
-  <!-- Navbar -->
+   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg custom-navbar">
     <div class="container-fluid px-4">
       <a class="navbar-brand text-light" href="#">MovRec</a>
@@ -52,25 +52,37 @@
           <li class="nav-item"><a class="nav-link" href="watchlist.html">Watchlist</a></li>
         </ul>
     
-        <!-- Wrap search and avatar in separate flex container -->
-        <div class="d-flex align-items-center">
-          <form class="d-flex me-4">
-            <input class="form-control search-box" type="search" placeholder="Search">
-            <button class="btn btn-search" type="submit">Search</button>
-          </form>
+        <form class="d-flex me-4" style="max-width: 300px;" onsubmit="handleSearch(event)">
+          <div class="input-group">
+            <input id="searchInput" class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-search" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+
+        <script>
+          function handleSearch(event) {
+            event.preventDefault();
+            const keyword = document.getElementById('searchInput').value.trim();
+            if (keyword) {
+              window.location.href = `../html/search.html?query=${encodeURIComponent(keyword)}`;
+            }
+          }
+        </script>
           <a href="../html/profile.html"><img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
         </div>
       </div>
     </div>    
   </nav>
 
+
   <!-- Actor Section -->
   <div class="container text-center mt-5">
     <h3 class="section-title">Featured Actors & Actresses</h3>
     <hr class="section-divider">
   
-    <div id="actorGridContainer" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center">
-      <!-- Actor cards will be dynamically inserted here -->
+    <div id="actorGridContainer" class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-5">
     </div>
   </div>
 
@@ -120,12 +132,23 @@
       { name: "Brooke Carter", img: "brooke.webp", key: "brooke"},
       { name: "Nick Robinson", img: "nick.webp", key: "nick"},
       { name: "Robin Wright", img: "robin.webp", key: "robin"},
-
-      // Add more actors as needed
+      { name: "Costance Wu", img: "constance.webp", key: "constance" },
+      { name: "Blake Lively", img: "blake.webp", key: "blake" },
+      { name: "Benedict Cumberbatch", img: "benedict.webp", key: "benedict" },
+      { name: "Chiwetel Ejiofor", img: "chiwetel.webp", key: "chiwetel" },
+      { name: "Rachel McAdams", img: "rachel.webp", key: "rachel" },
+      { name: "Benedict Wong", img: "benedict.webp", key: "wong" },
+      { name: "Mads Mikkelson", img: "mads.webp", key:"mads"},
+      { name: "Tilda Swinton", img: "tilda.webp", key: "tilda"},
+      { name: "Ryan Gosling", img: "ryan.webp", key: "ryan"},
+      { name: "Emma Stone", img: "emma.webp", key: "emma"},
+      { name: "John Legend", img: "john.webp", key: "john"},
+      { name: "Rosemarie DeWitt", img: "rosemarie.webp", key: "rosemarie" },
+      { name: "J.K. Simmons", img: "jk.webp", key: "jk" },
     ];
 
     let currentPage = 1;
-    const actorsPerPage = 6;
+    const actorsPerPage = 25;
 
     function renderActors() {
       const grid = document.getElementById('actorGridContainer');

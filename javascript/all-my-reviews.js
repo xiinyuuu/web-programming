@@ -2,11 +2,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const reviewModal = new bootstrap.Modal(document.getElementById('reviewDetailModal'));
 
     // Review data (same as in profile.js)
-    const userReviews = [
+    const myReviews = [
         {
             id: 1,
             title: "Interstellar",
             info: "Sci-Fi, Adventure • 2014",
+            duration: "2h 49m",
             image: "../images/interstellar.jpg",
             rating: 4.5,
             review: "Nolan is simply the Picasso of film industry",
@@ -16,33 +17,37 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 2,
             title: "Barbie",
             info: "Comedy, Adventure • 2023",
+            duration: "1h 54m",
             image: "../images/barbie.jpg",
             rating: 3,
             review: "This movie just slay. Absolute 10/10",
-            date: "1 week ago"
+            date: "2 weeks ago"
         },
         {
             id: 3,
             title: "Amazing Spiderman",
             info: "Action, Drama • 2020",
+            duration: "2h 16m",
             image: "../images/amazingspiderman.jpg",
             rating: 4.5,
             review: "We love ANDREW GARFIELD <3",
-            date: "2 weeks ago"
+            date: "5 days ago"
         },
         {
             id: 4,
             title: "Black Panther",
             info: "Action, Drama • 2020",
+            duration: "2h 14m",
             image: "../images/blackpanther.jpg",
             rating: 4.5,
             review: "Wakanda forever!",
-            date: "2 weeks ago"
+            date: "1 week ago"
         },
         {
             id: 5,
             title: "Cruella",
             info: "Action, Drama • 2020",
+            duration: "2h 14m",
             image: "../images/cruella.jpg",
             rating: 2,
             review: "Emma Stone is a queen!",
@@ -52,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 6,
             title: "Doctor Strange",
             info: "Action, Drama • 2020",
+            duration: "2h 14m",
             image: "../images/doctorstrange.jpg",
             rating: 5,
             review: "Doctor Strange is a must-watch for Marvel fans!",
@@ -61,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 7,
             title: "Enola Holmes",
             info: "Action, Drama • 2020",
+            duration: "2h 14m",
             image: "../images/enolaholmes.webp",
             rating: 1.2,
             review: "Millie Bobby Brown is a star!",
@@ -70,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 8,
             title: "Five Feet Apart",
             info: "Action, Drama • 2020",
+            duration: "2h 14m",
             image: "../images/fivefeetapart.jpg",
             rating: 1,
             review: "I cried so much watching this movie...",
@@ -79,12 +87,16 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 9,
             title: "Maleficent",
             info: "Action, Drama • 2020",
+            duration: "2h 14m",
             image: "../images/maleficent.jpeg",
             rating: 5,
             review: "A dark twist on a classic tale, with stunning visuals and a very powerful performance by Angelina Jolie.",
             date: "1 day ago"
         }
     ];
+
+    // Make it globally accessible
+    window.myReviews = myReviews; 
 
     // Function to generate star ratings
     function generateStars(rating) {
@@ -108,37 +120,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return stars;
     }
 
-    // // Function to attach click handlers to reviews
-    // function attachReviewClickHandlers() {
-    //     document.querySelectorAll('.activity-item').forEach(item => {
-    //         item.style.cursor = 'pointer';
-    //         item.addEventListener('click', function() {
-    //             const reviewId = parseInt(this.getAttribute('data-review-id'));
-    //             const review = userReviews.find(r => r.id === reviewId);
-                
-    //             if (review) {
-    //                 document.getElementById('modalMovieImage').src = review.image;
-    //                 document.getElementById('modalMovieTitle').textContent = review.title;
-    //                 document.getElementById('modalMovieInfo').textContent = review.info;
-    //                 document.getElementById('modalMovieRating').innerHTML = generateStars(review.rating);
-    //                 document.getElementById('modalMovieReview').textContent = review.review;
-    //                 document.getElementById('modalReviewDate').textContent = review.date;
-                    
-    //                 reviewModal.show();
-    //             }
-    //         });
-    //     });
-    // }
-
-
-
-    // Update your attachReviewClickHandlers function to:
 function attachReviewClickHandlers() {
     document.querySelectorAll('.activity-item').forEach(item => {
         item.style.cursor = 'pointer';
         item.addEventListener('click', function() {
             const reviewId = parseInt(this.getAttribute('data-review-id'));
-            const review = userReviews.find(r => r.id === reviewId);
+            const review = myReviews.find(r => r.id === reviewId);
             
             if (review) {
                 // Reset modal scroll position
@@ -148,6 +135,7 @@ function attachReviewClickHandlers() {
                 document.getElementById('modalMovieImage').src = review.image;
                 document.getElementById('modalMovieTitle').textContent = review.title;
                 document.getElementById('modalMovieInfo').textContent = review.info;
+                document.getElementById('modalMovieDuration').textContent = review.duration;
                 document.getElementById('modalMovieRating').innerHTML = generateStars(review.rating);
                 document.getElementById('modalMovieReview').textContent = review.review;
                 document.getElementById('modalReviewDate').textContent = review.date;
@@ -167,7 +155,7 @@ function attachReviewClickHandlers() {
         container.innerHTML = '';
         
         // Sort by date (newest first)
-        const sortedReviews = [...userReviews].sort((a, b) => {
+        const sortedReviews = [...myReviews].sort((a, b) => {
             // Simple date comparison for "X days/weeks ago" format
             if (a.date.includes('day') && !b.date.includes('day')) return -1;
             if (!a.date.includes('day') && b.date.includes('day')) return 1;
@@ -205,6 +193,7 @@ function attachReviewClickHandlers() {
         const movieImg = this.querySelector('.activity-movie-img').src;
         const movieTitle = this.querySelector('.activity-movie-title').textContent;
         const movieInfo = this.querySelector('.activity-movie-info').textContent;
+        const movieDuration = this.querySelector('.activity-movie-duration').textContent;
         const movieRating = this.querySelector('.text-warning').innerHTML;
         const movieReview = this.querySelector('.small.text').textContent;
         const reviewDate = this.querySelector('.activity-date').textContent;

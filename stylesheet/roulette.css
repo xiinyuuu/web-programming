@@ -6,6 +6,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin-bottom: 20px;
 }
 
 .roulette-wrapper .spinBtn {
@@ -136,6 +137,13 @@
     filter: invert(1) brightness(200%);
   }
   
+  #resultModal .modal-body {
+    #resultInfo {
+      margin-top: -15px;
+      font-size: 1rem;
+    }
+  }
+
   /* Custom dark overlay when result modal is active */
 .body-darkened::before {
     content: "";
@@ -159,6 +167,15 @@
     display: none;
   }
   
+.hidden {
+  display: none;
+}
+
+canvas {
+  z-index: 1060 !important; /* A high value, greater than Bootstrap's modal z-index */
+  pointer-events: none; /* Prevent the confetti canvas from interfering with clicks */
+}
+
 
   
   
