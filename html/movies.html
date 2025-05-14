@@ -384,6 +384,7 @@
           activeFilters.languages = [];
           break;
         case 'countries':
+
           activeFilters.countries = [];
           break;
         case 'sorted by':
@@ -393,6 +394,11 @@
       updateActiveFiltersDisplay();
       renderMovies();
     };
+
+
+    function storeMovie(movie) {
+      sessionStorage.setItem('selectedMovie', JSON.stringify(movie));
+    }
 
     // Rendering
     function renderMovies() {
@@ -409,18 +415,31 @@
       moviesToShow.forEach(movie => {
         const col = document.createElement('div');
         col.className = 'col';
-        col.innerHTML = `
-          <a href="../html/moviedesc.html?title=${encodeURIComponent(movie.title)}" class="text-decoration-none text-light">
-            <div class="card movie-card text-center">
-              <img src="../images/${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
-              <div class="card-body p-1">
-                <h6 class="movie-title">${movie.title}</h6>
-              </div>
-            </div>
-          </a>
+
+        const card = document.createElement('div');
+        card.className = 'card movie-card text-center';
+        card.innerHTML = `
+          <img src="${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
+          <div class="card-body p-1">
+            <h6 class="movie-title">${movie.title}</h6>
+          </div>
         `;
+
+        // Wrap card in link
+        const link = document.createElement('a');
+        link.href = '../html/moviedesc.html';
+        link.className = 'text-decoration-none text-light';
+
+        // Set movie object in sessionStorage on click
+        link.addEventListener('click', () => {
+          sessionStorage.setItem('selectedMovie', JSON.stringify(movie));
+        });
+
+        link.appendChild(card);
+        col.appendChild(link);
         grid.appendChild(col);
       });
+
     }
 
     // Event listeners
