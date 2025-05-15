@@ -1,3 +1,6 @@
+const API_KEY = 'b855267d7a05ecc45792618a1e73a27b';
+const BASE_URL = 'https://api.themoviedb.org/3';
+const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
 
 document.addEventListener("DOMContentLoaded", async () => {
   const movie = JSON.parse(sessionStorage.getItem('selectedMovie'));
