@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Interstellar",
             info: "Sci-Fi, Adventure • 2014",
             duration: "2h 49m",
-            image: "../images/interstellar.jpg",
+            image: "../images/interstellar.webp",
             rating: 4.5,
             review: "Nolan is simply the Picasso of film industry",
             date: "2 days ago"
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Barbie",
             info: "Comedy, Adventure • 2023",
             duration: "1h 54m",
-            image: "../images/barbie.jpg",
+            image: "../images/barbie.webp",
             rating: 3,
             review: "This movie just slay. Absolute 10/10",
             date: "2 weeks ago"
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Amazing Spiderman",
             info: "Action, Drama • 2020",
             duration: "2h 16m",
-            image: "../images/amazingspiderman.jpg",
+            image: "../images/theamazingspiderman.webp",
             rating: 4.5,
             review: "We love ANDREW GARFIELD <3",
             date: "5 days ago"
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Doctor Strange",
             info: "Action, Drama • 2020",
             duration: "2h 14m",
-            image: "../images/doctorstrange.jpg",
+            image: "../images/doctorstrange.webp",
             rating: 5,
             review: "Doctor Strange is a must-watch for Marvel fans!",
             date: "2 weeks ago"
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Maleficent",
             info: "Action, Drama • 2020",
             duration: "2h 14m",
-            image: "../images/maleficent.jpeg",
+            image: "../images/maleficent.webp",
             rating: 5,
             review: "A dark twist on a classic tale, with stunning visuals and a very powerful performance by Angelina Jolie.",
             date: "1 day ago"

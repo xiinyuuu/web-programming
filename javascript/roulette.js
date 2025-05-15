@@ -11,19 +11,19 @@ if (!linkExists) {
 
 const movieData = {
     "Interstellar": {
-      poster: "../images/interstellar.jpg",
+      poster: "../images/interstellar.webp",
       info: "Sci-Fi, Adventure • 2014",
       duration: "2h 49m",
       genre: "Sci-Fi"
     },
     "Barbie": {
-      poster: "../images/barbie.jpg",
+      poster: "../images/barbie.webp",
       info: "Fantasy, Comedy • 2023",
       duration: "1h 54m",
       genre: "Fantasy"
     },
     "Mulan": {
-      poster: "../images/mulan.jpg",
+      poster: "../images/mulan.webp",
       info: "Action, Adventure • 2020",
       duration: "1h 55m",
       genre: "Action"
@@ -47,7 +47,7 @@ const movieData = {
       genre: "Musical"
     },
     "Flipped": {
-      poster: "../images/flipped.jpg",
+      poster: "../images/flipped.webp",
       info: "Romance, Drama • 2010",
       duration: "1h 30m",
       genre: "Romance"
@@ -58,14 +58,8 @@ const movieData = {
       duration: "1h 30m",
       genre: "Sci-Fi"
     },
-    "Joker 2": {
-      poster: "../images/joker_2.jpeg",
-      info: "Thriller, Fantasy • 2009",
-      duration: "1h 30m",
-      genre: "Thriller"
-    },
     "Letters to Juliet": {
-      poster: "../images/letterstojuliet.jpg",
+      poster: "../images/letterstojuliet.webp",
       info: "Romance, Drama • 2009",
       duration: "1h 30m",
       genre: "Romance"
@@ -83,7 +77,7 @@ const movieData = {
       genre: "Sci-Fi"
     },
     "Twisters": {
-      poster: "../images/Twister.webp",
+      poster: "../images/twister.webp",
       info: "Sci-Fi, Thriller • 2009",
       duration: "1h 30m",
       genre: "Sci-Fi"
@@ -95,7 +89,7 @@ const movieData = {
       genre: "Sci-Fi"
     },
     "Doctor Strange": {
-      poster: "../images/doctorstrange.jpg", 
+      poster: "../images/doctorstrange.webp", 
       info: "Sci-Fi, Adventure • 2016",
       duration: "1h 55m",
       genre: "Sci-Fi"
