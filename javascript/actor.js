@@ -39,6 +39,9 @@ async function fetchAndDisplayFilmography(actorId) {
     const data = await res.json();
 
     const filmList = document.getElementById("actor-films");
+    
+    // Add Bootstrap grid classes to container
+    filmList.className = "row row-cols-1 row-cols-sm-2 row-cols-md-5 g-4 justify-content-center list-unstyled";
     filmList.innerHTML = "";
 
     const knownMovies = data.cast
@@ -48,7 +51,7 @@ async function fetchAndDisplayFilmography(actorId) {
 
     knownMovies.forEach(film => {
       const li = document.createElement("li");
-      li.classList.add("movie-card", "d-inline-block", "me-3", "text-center");
+      li.classList.add("movie-card", "col", "text-center");
 
       const movieLink = document.createElement("a");
       movieLink.classList.add("text-decoration-none");
@@ -58,7 +61,7 @@ async function fetchAndDisplayFilmography(actorId) {
         const movieData = {
           id: film.id,
           title: film.title,
-          img: `${IMAGE_BASE}${film.poster_path}` // now it matches what moviedesc.html expects
+          img: `${IMAGE_BASE}${film.poster_path}`
         };
 
         sessionStorage.setItem('selectedMovie', JSON.stringify(movieData));

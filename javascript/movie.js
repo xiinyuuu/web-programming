@@ -63,19 +63,25 @@ async function fetchAndDisplayCast(movieId) {
     const data = await response.json();
     let cast = data.cast.slice(0, 6); // Top 6 actors
 
-    const castContainer = document.querySelector('#actorSection');
-    castContainer.innerHTML = ''; // Clear existing
-
     // Filter out actors without a profile picture
     cast = cast.filter(actor => actor.profile_path);
 
-    // If there are less than 6 actors with profile pictures, fetch more actors until we have 6
+    // Filter names to only include those with English letters (a-z, A-Z, spaces, dots, apostrophes, hyphens)
+    cast = cast.filter(actor => /^[a-zA-Z\s.'-]+$/.test(actor.name));
+
+    // If there are less than 6 actors with profile pictures and English names, fetch more actors until we have 6
     while (cast.length < 6) {
-      const nextActor = data.cast.find(actor => actor.profile_path && !cast.includes(actor));
+      const nextActor = data.cast.find(actor => actor.profile_path && !cast.includes(actor) && /^[a-zA-Z\s.'-]+$/.test(actor.name));
       if (nextActor) {
         cast.push(nextActor);
+      } else {
+        // No more actors meeting criteria, break loop to avoid infinite loop
+        break;
       }
     }
+
+    const castContainer = document.querySelector('#actorSection');
+    castContainer.innerHTML = ''; // Clear existing
 
     cast.forEach(actor => {
       const profilePath = `https://image.tmdb.org/t/p/w185${actor.profile_path}`;
@@ -99,9 +105,8 @@ async function fetchAndDisplayCast(movieId) {
         sessionStorage.setItem('selectedActor', JSON.stringify({
           id: actor.id,
           name: actor.name,
-          image: `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+          image: profilePath
         }));
-
       });
 
       link.appendChild(actorCard);
@@ -112,4 +117,5 @@ async function fetchAndDisplayCast(movieId) {
     console.error('Error fetching cast:', error);
   }
 }
+
 

@@ -32,6 +32,10 @@ async function fetchActors() {
 
       for (const person of data.results) {
         if (actorIds.has(person.id)) continue;
+
+        // Only include names with English letters, spaces, dots, apostrophes, hyphens
+        if (!/^[a-zA-Z\s.'-]+$/.test(person.name)) continue;
+
         actorIds.add(person.id);
 
         actors.push({
@@ -46,6 +50,7 @@ async function fetchActors() {
     }
   }
 }
+
 
     
 
