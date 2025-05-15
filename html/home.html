@@ -58,97 +58,29 @@
     </div>    
   </nav>
 
-  <script src="../javascript/moviedata.js"></script>
+  <script src="../javascript/trendingdata.js"></script>
 
 
   <!-- Movies Section -->
   <div class="container mt-5 text-center">
-    <h3 class="section-title">Top Recommended Movies</h3>
+    <h3 class="section-title">Top 10 Movies Today</h3>
     <hr class="section-divider">
   </div>
 
   <div class="container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-4 justify-content-center" id="movie-container">
-      <!-- Movie cards will be dynamically inserted here -->
+    <div id="movie-container" class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-4 justify-content-center">
+      <!-- 10 trending movie cards will be dynamically inserted here -->
     </div>
   </div>
 
-  <script>
-    // Wait until the DOM is fully loaded before running the script
-    document.addEventListener('DOMContentLoaded', function() {
-      // Sort movies by popularity
-      const topMovies = movies.sort((a, b) => b.popularity - a.popularity).slice(0, 10);
-
-      // Get the movie container element
-      const movieContainer = document.getElementById('movie-container');
-
-      // Loop through each movie and generate the movie card
-      topMovies.forEach(movie => {
-        const movieCard = document.createElement('div');
-        movieCard.classList.add('col');
-
-        movieCard.innerHTML = `
-          <a href="../html/moviedesc.html?title=${encodeURIComponent(movie.title)}" class="text-decoration-none text-dark">
-            <div class="card movie-card text-center">
-              <img src="../images/${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
-              <div class="card-body p-1">
-                <h6 class="movie-title">${movie.title}</h6>
-              </div>
-            </div>
-          </a>
-        `;
-
-        // Append the movie card to the container
-        movieContainer.appendChild(movieCard);
-      });
-    });
-  </script>
-  
-  
- <!-- Actors Section -->
-<div class="container text-center mt-5">
-  <h3 class="section-title">Featured Actors & Actresses</h3>
-  <hr class="section-divider">
-  <div class="row row-cols-3 row-cols-md-6 g-4 justify-content-center">
-
-    <div class="col">
-      <a href="actor-profile.html?actor=liuyifei" class="text-white text-decoration-none d-block">
-        <img src="../images/liuyifei.webp" class="actor-img" alt="Liu Yi Fei"><p class="mt-2">Liu Yi Fei</p>
-      </a>
+  <!-- Actor Section -->
+  <div class="container text-center mt-5">
+    <h3 class="section-title">Featured Actors & Actresses</h3>
+    <hr class="section-divider">
+    <div id="actorSection" class="row row-cols-3 row-cols-md-6 g-4 justify-content-center">
+      <!-- 6 trending actor cards will be injected here -->
     </div>
-
-    <div class="col">
-      <a href="actor-profile.html?actor=margot" class="text-white text-decoration-none d-block">
-        <img src="../images/margot.webp" class="actor-img" alt="Margot Robbie"><p class="mt-2">Margot Robbie</p>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="actor-profile.html?actor=glen" class="text-white text-decoration-none d-block">
-        <img src="../images/glen.webp" class="actor-img" alt="Glen Powell"><p class="mt-2">Glen Powell</p>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="actor-profile.html?actor=joaquin" class="text-white text-decoration-none d-block">
-        <img src="../images/joaquin.webp" class="actor-img" alt="Joaquin Phoenix"><p class="mt-2">Joaquin Phoenix</p>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="actor-profile.html?actor=matthew " class="text-white text-decoration-none d-block">
-        <img src="../images/matthew.webp" class="actor-img" alt="Matthew McConaughey"><p class="mt-2">Matthew McConaughey</p>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="actor-profile.html?actor=millie" class="text-white text-decoration-none d-block">
-        <img src="../images/millie.webp" class="actor-img" alt="Millie Bobby Brown"><p class="mt-2">Millie Bobby Brown</p>
-      </a>
-    </div>
-
   </div>
-</div>
 
 
   <!-- Footer -->

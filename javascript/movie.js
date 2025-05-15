@@ -1,22 +1,36 @@
-// Retrieve the movie object from sessionStorage
-const movie = JSON.parse(sessionStorage.getItem('selectedMovie'));
 
-if (movie) {
-  document.querySelector('#movie-title').textContent = movie.title;
-  document.querySelector('#movie-details img').src = movie.img;
-  document.querySelector('#movie-details img').alt = movie.title;
+document.addEventListener("DOMContentLoaded", async () => {
+  const movie = JSON.parse(sessionStorage.getItem('selectedMovie'));
 
-  document.querySelector('#movie-rating').innerHTML = `${parseFloat(movie.rating).toFixed(1)} 
-    ${generateStars(movie.rating)}`;
+  if (movie) {
+    document.querySelector('#movie-title').textContent = movie.title;
+    document.querySelector('#movie-details img').src = movie.img;
+    document.querySelector('#movie-details img').alt = movie.title;
 
-  document.querySelector('#movie-duration').innerHTML = `<strong>Duration:</strong> ${movie.duration}`;
-  document.querySelector('#movie-year').innerHTML = `<strong>Year:</strong> ${movie.year}`;
-  document.querySelector('#movie-genre').innerHTML = `<strong>Genre:</strong> ${movie.genre.join(', ')}`;
-  document.querySelector('#movie-director').innerHTML = `<strong>Director:</strong> ${movie.director}`;
-  document.querySelector('#movie-synopsis').innerHTML = `<strong>Synopsis:</strong> ${movie.synopsis}`;
-} else {
-  document.querySelector('#movie-details').innerHTML = "<p class='text-light'>Movie not found.</p>";
+    // Fetch additional details like rating, duration, etc.
+    await fetchAndDisplayMovieDetails(movie.id);
+  } else {
+    document.querySelector('#movie-details').innerHTML = "<p class='text-light'>Movie not found.</p>";
+  }
+});
+
+async function fetchAndDisplayMovieDetails(movieId) {
+  try {
+    const res = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`);
+    const movieDetails = await res.json();
+
+    document.querySelector('#movie-duration').innerHTML = `<strong>Duration:</strong> ${movieDetails.runtime || 'N/A'} mins`;
+    document.querySelector('#movie-synopsis').innerHTML = `<strong>Synopsis:</strong> ${movieDetails.overview || 'No synopsis available.'}`;
+
+    // Call to fetch and display cast
+    fetchAndDisplayCast(movieId);
+
+    document.querySelector('#movie-rating').innerHTML = `<strong>Average Rating:</strong> ${(movieDetails.vote_average / 2).toFixed(1)} ${generateStars(movieDetails.vote_average / 2)}`;
+  } catch (error) {
+    console.error('Error fetching movie details:', error);
+  }
 }
+
 
 // Star generator
 function generateStars(rating) {
@@ -38,3 +52,61 @@ function generateStars(rating) {
 
   return stars.join(' ');
 }
+
+
+async function fetchAndDisplayCast(movieId) {
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`);
+    const data = await response.json();
+    let cast = data.cast.slice(0, 6); // Top 6 actors
+
+    const castContainer = document.querySelector('#actorSection');
+    castContainer.innerHTML = ''; // Clear existing
+
+    // Filter out actors without a profile picture
+    cast = cast.filter(actor => actor.profile_path);
+
+    // If there are less than 6 actors with profile pictures, fetch more actors until we have 6
+    while (cast.length < 6) {
+      const nextActor = data.cast.find(actor => actor.profile_path && !cast.includes(actor));
+      if (nextActor) {
+        cast.push(nextActor);
+      }
+    }
+
+    cast.forEach(actor => {
+      const profilePath = `https://image.tmdb.org/t/p/w185${actor.profile_path}`;
+
+      const col = document.createElement('div');
+      col.className = 'col-auto';
+
+      const actorCard = document.createElement('div');
+      actorCard.className = 'text-center';
+
+      actorCard.innerHTML = `
+        <img src="${profilePath}" alt="${actor.name}" class="actor-img">
+        <p class="mt-2">${actor.name}</p>
+      `;
+
+      const link = document.createElement('a');
+      link.href = '../html/actor-profile.html';
+      link.className = 'text-decoration-none text-light';
+
+      link.addEventListener('click', () => {
+        sessionStorage.setItem('selectedActor', JSON.stringify({
+          id: actor.id,
+          name: actor.name,
+          image: `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+        }));
+
+      });
+
+      link.appendChild(actorCard);
+      col.appendChild(link);
+      castContainer.appendChild(col);
+    });
+  } catch (error) {
+    console.error('Error fetching cast:', error);
+  }
+}
+

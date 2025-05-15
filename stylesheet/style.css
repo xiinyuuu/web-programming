@@ -77,7 +77,7 @@ main {
 
 /* Movie cards */
 .movie-img {
-  height: 260px;
+  height: 240px;
   object-fit: cover;
   border-radius: 10px;
   transition: transform 0.3s ease;
@@ -95,13 +95,44 @@ main {
   border: none !important;
 }
 
+.ranking-badge {
+  position: absolute;
+  top: -20px;
+  left: -25px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(to bottom, #3a154e, #7d02d5); /* soft purple top, deeper bottom */
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 1.8rem;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #f2cef0b0;
+  z-index: 10;
+  text-shadow: 0 0 8px #ffffffcc;  /* white number glow */
+  box-shadow:
+    0 0 10px #4d1870,
+    0 0 20px #5d009d,
+    0 0 30px #26013f;
+}
+
+
+/* When hover on .movie-card or .ranking-badge, scale both */
+.movie-card:hover .movie-img,
+.movie-card:hover .ranking-badge {
+  transform: scale(1.05);
+}
+
 /* Actor cards */
 .actor-img {
   width: 100px;
   height: 100px;
   object-fit: cover;
   border-radius: 50%;
-  border: 3px solid #ff99ff;
+  border: 3px solid #f2cef0b0;
   transition: transform 0.3s ease;
 }
 .actor-img:hover {
@@ -216,7 +247,7 @@ main {
   color: #ffcc00;
 }
 
-.average-rating .review-count {
+.average-rating .rating-count {
   font-size: 1rem;
   color: #cccccc;
 }
@@ -239,5 +270,32 @@ main {
   font-size: 1.5rem; /* Adjust the size of the stars */
   margin-right: 0.2rem; /* Space between stars */
 }
+
+#pieChart {
+  background: transparent; /* or a very dark transparent bg */
+  margin: 0 auto;
+}
+
+/* Adjust tooltip styles */
+.pieTip {
+  background: rgba(45, 0, 107, 0.9); /* dark purple, semi-transparent */
+  color: #ffccff; /* light purple/pink text */
+  font-size: 16px;
+  text-transform: none;
+  box-shadow: 0 0 8px rgba(255, 51, 204, 0.8);
+  letter-spacing: normal;
+}
+
+.pieTip:after {
+  border-top-color: rgba(45, 0, 107, 0.9);
+}
+
+/* Chart path hover */
+.chart path:hover {
+  stroke: #ff33cc;  /* bright pink stroke on hover */
+  stroke-width: 2px;
+  cursor: pointer;
+}
+
 
 

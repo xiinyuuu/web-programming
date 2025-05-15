@@ -72,86 +72,39 @@
       <!-- Movie Title -->
       <h2 class="fw-bold text-light mb-3" id="movie-title">Movie Title</h2>
 
-      <!-- Movie Rating -->
-      <p class="mb-3 text-warning small" id="movie-rating">
-        <!-- Rating number and stars will be dynamically added here -->
-      </p>
 
       <!-- Movie Details (Duration, Release Date, Genre, Director, Synopsis) -->
       <p class="text-light" id="movie-duration"><strong>Duration:</strong> 1h 55min</p>
       <p class="text-light" id="movie-year"><strong>Year:</strong> 2025</p>
       <p class="text-light" id="movie-genre"><strong>Genre:</strong> Drama, Romance</p>
-      <p class="text-light" id="movie-director"><strong>Director:</strong> Jane Doe</p>
       <p class="text-light mt-3" id="movie-synopsis"><strong>Synopsis:</strong> A young woman agrees to marry a handsome prince -- only to discover it was all a trap. She is thrown into a cave with a fire-breathing dragon and must rely solely on her wits and will to survive.</p>
 
     </div>
   </div>
 </div>
 
-<!-- Movie Details Script -->
-<script src="../javascript/moviedata.js"></script>
-<script src="../javascript/movie.js"></script>
 
-<!-- Actors Section -->
+<!-- Actor Section -->
 <div class="container text-center mt-5">
   <h3 class="section-title">Featured Actors & Actresses</h3>
   <hr class="section-divider">
-  <div class="row row-cols-3 row-cols-md-6 g-4 justify-content-center">
-
-    <div class="col">
-      <a href="actor-profile.html?actor=millie" class="text-white text-decoration-none d-block">
-        <img src="../images/millie.webp" class="actor-img" alt="Millie Bobby Brown"><p class="mt-2">Millie Bobby Brown</p>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="actor-profile.html?actor=ray"class="text-white text-decoration-none d-block">
-        <img src="../images/ray.webp" class="actor-img" alt="Ray Winstone"><p class="mt-2">Ray Winstone</p>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="actor-profile.html?actor=angela"class="text-white text-decoration-none d-block">
-        <img src="../images/angela.webp" class="actor-img" alt="Angela Bassett"><p class="mt-2">Angela Bassett</p>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="actor-profile.html?actor=brooke"class="text-white text-decoration-none d-block">
-        <img src="../images/brooke.webp" class="actor-img" alt="Brookearter"><p class="mt-2">Brooke Carter</p>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="actor-profile.html?actor=nick"class="text-white text-decoration-none d-block">
-        <img src="../images/nick.webp" class="actor-img" alt="Nick Robinson"><p class="mt-2">Nick Robinson</p>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="actor-profile.html?actor=robin"class="text-white text-decoration-none d-block">
-        <img src="../images/robin.webp" class="actor-img" alt="Robin Wright"><p class="mt-2">Robin Wright</p>
-      </a>
-    </div>
-
+  <div id="actorSection" class="row row-cols-3 row-cols-md-6 g-4 justify-content-center">
+    <!-- Actor cards will be injected here -->
   </div>
 </div>
+
 
 <!-- Reviews Section -->
 <div class="container text-center mt-5" id="review-section">
   <h3 class="section-title">User Ratings & Reviews</h3>
   <hr class="section-divider">
 
+
   <!-- Average Rating -->
-  <div class="mb-3 average-rating">
+  <div class="mb-3 average-rating" id="movie-rating">
     <strong>Average Rating:</strong>
-    <span>4.3</span>
-    <i class="bi bi-star-fill"></i>
-    <i class="bi bi-star-fill"></i>
-    <i class="bi bi-star-fill"></i>
-    <i class="bi bi-star-fill"></i>
-    <i class="bi bi-star-half"></i>
-    <span class="review-count">(based on 123 reviews)</span>
+    <span id="rating-stars"></span> 
+    <span class="rating-count" id="rating-count"></span>
   </div>
 
 
@@ -193,6 +146,11 @@
       <a href="mailto:movrec.support@example.com" class="footer-link">Contact Us</a>
     </div>
   </footer>
+
+  <!-- Movie Details Script -->
+<script src="../javascript/moviedata.js"></script>
+<script src="../javascript/movie.js"></script>
+
 
   <!-- Load roulette modal -->
   <div id="roulette-modal-container"></div>
