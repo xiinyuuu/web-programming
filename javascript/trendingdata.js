@@ -41,12 +41,18 @@ async function fetchTrendingMovies() {
 async function fetchTrendingActors() {
   const res = await fetch(`${BASE_URL}/trending/person/week?api_key=${API_KEY}`);
   const data = await res.json();
-  return (data.results || []).filter(p => p.known_for_department === "Acting").slice(0, 6).map(person => ({
-    id: person.id,
-    name: person.name,
-    image: person.profile_path ? `${IMAGE_BASE}${person.profile_path}` : "images/default-profile.webp"
-  }));
+  return (data.results || [])
+    .filter(p => p.known_for_department === "Acting")
+    // Filter names to only include those with English letters (a-z, A-Z, spaces, dots, apostrophes)
+    .filter(person => /^[a-zA-Z\s.'-]+$/.test(person.name))
+    .slice(0, 6)
+    .map(person => ({
+      id: person.id,
+      name: person.name,
+      image: person.profile_path ? `${IMAGE_BASE}${person.profile_path}` : "images/default-profile.webp"
+    }));
 }
+
 
 function renderTrendingMovies(movies) {
   const grid = document.getElementById('movie-container');
