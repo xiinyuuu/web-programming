@@ -7,8 +7,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (movie) {
     document.querySelector('#movie-title').textContent = movie.title;
-    document.querySelector('#movie-details img').src = movie.img;
-    document.querySelector('#movie-details img').alt = movie.title;
 
     // Fetch additional details like rating, duration, etc.
     await fetchAndDisplayMovieDetails(movie.id);
@@ -22,6 +20,14 @@ async function fetchAndDisplayMovieDetails(movieId) {
     const res = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`);
     const movieDetails = await res.json();
 
+    const releaseYear = movieDetails.release_date? new Date(movieDetails.release_date).getFullYear(): 'N/A';
+    document.querySelector('#movie-year').innerHTML = `<strong>Year:</strong> ${releaseYear}`;
+
+    const genres = movieDetails.genres && movieDetails.genres.length > 0? movieDetails.genres.map(g => g.name).join(', '): 'N/A';
+    document.querySelector('#movie-genre').innerHTML = `<strong>Genre:</strong> ${genres}`;
+
+    document.querySelector('#movie-details img').src = movieDetails.poster_path ? `${IMAGE_BASE}${movieDetails.poster_path}` : 'images/default-movie.jpg';
+    document.querySelector('#movie-details img').alt = movieDetails.title;
     document.querySelector('#movie-duration').innerHTML = `<strong>Duration:</strong> ${movieDetails.runtime || 'N/A'} mins`;
     document.querySelector('#movie-synopsis').innerHTML = `<strong>Synopsis:</strong> ${movieDetails.overview || 'No synopsis available.'}`;
 

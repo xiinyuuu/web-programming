@@ -236,6 +236,7 @@
 
   <!-- Movie Data Script -->
   <script src="../javascript/moviedata.js"></script>
+  <script src="../javascript/moviedetails.js"></script>
 
   <script>
     let currentPage = 1;
@@ -281,33 +282,6 @@
         // Country filter
         if (activeFilters.countries.length > 0 && 
             !activeFilters.countries.includes(movie.country)) return false;
-        return true;
-      });
-    }
-
-    // Filter and sort functions
-    function filterMovies(movies) {
-      return movies.filter(movie => {
-        if (activeFilters.genres.length > 0 && 
-            !activeFilters.genres.some(genre => movie.genre.includes(genre))) return false;
-
-        if (activeFilters.yearRange && 
-           (movie.year < activeFilters.yearRange.start || movie.year > activeFilters.yearRange.end)) return false;
-
-        if (activeFilters.popularityRange && 
-           (movie.popularity < activeFilters.popularityRange.min || 
-            movie.popularity > activeFilters.popularityRange.max)) return false;
-
-        if (activeFilters.ratingRange && 
-           (movie.rating < activeFilters.ratingRange.min || 
-            movie.rating > activeFilters.ratingRange.max)) return false;
-
-        if (activeFilters.languages.length > 0 && 
-            !activeFilters.languages.includes(movie.language)) return false;
-
-        if (activeFilters.countries.length > 0 && 
-            !activeFilters.countries.includes(movie.country)) return false;
-
         return true;
       });
     }
@@ -400,17 +374,16 @@
       sessionStorage.setItem('selectedMovie', JSON.stringify(movie));
     }
 
+
     // Rendering
     function renderMovies() {
       const grid = document.getElementById('movieGrid');
       grid.innerHTML = '';
 
-      let filteredMovies = filterMovies(movies);
-      filteredMovies = sortMovies(filteredMovies);
 
       const start = (currentPage - 1) * moviesPerPage;
       const end = start + moviesPerPage;
-      const moviesToShow = filteredMovies.slice(start, end);
+      const moviesToShow = movies.slice(start, end);
 
       moviesToShow.forEach(movie => {
         const col = document.createElement('div');
@@ -440,7 +413,66 @@
         grid.appendChild(col);
       });
 
+      document.getElementById('prevBtn').disabled = currentPage === 1;
     }
+
+
+    function displayHardcodedMovies(movies) {
+      const container = document.getElementById("movieGrid");
+      container.innerHTML = "";
+
+      let filteredMovies = filterMovies(movies);
+      filteredMovies = sortMovies(filteredMovies);
+
+      const start = (currentPage - 1) * moviesPerPage;
+      const end = start + moviesPerPage;
+      const moviesToShow = filteredMovies.slice(start, end);
+
+      moviesToShow.forEach(movie => {
+        const col = document.createElement("div");
+        col.className = 'col';
+
+        const card = document.createElement("div");
+        card.className = 'card movie-card text-center';
+
+        card.innerHTML = `
+          <img src="../images/${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
+          <div class="card-body p-1">
+            <h6 class="movie-title">${movie.title}</h6>
+          </div>
+        `;
+
+        const link = document.createElement("a");
+        link.href = "../html/moviedesc.html";
+        link.className = "text-decoration-none text-light";
+
+        link.addEventListener("click", async (e) => {
+          e.preventDefault();
+          try {
+            const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(movie.title)}`);
+            const data = await response.json();
+            const selected = data.results.find(result => result.title.toLowerCase() === movie.title.toLowerCase());
+
+            if (selected) {
+              sessionStorage.setItem("selectedMovie", JSON.stringify(selected));
+              window.location.href = link.href;
+            } else {
+              alert("Movie not found in TMDB!");
+            }
+          } catch (error) {
+            console.error("Error fetching from TMDB:", error);
+          }
+        });
+
+        link.appendChild(card);
+        col.appendChild(link);
+        container.appendChild(col);
+      });
+        document.getElementById('prevBtn').disabled = currentPage === 1;
+    }
+
+
+
 
     // Event listeners
     document.getElementById('filterGenre').addEventListener('click', () => {
@@ -452,7 +484,7 @@
       activeFilters.genres = Array.from(checkboxes).map(cb => cb.value);
       updateActiveFiltersDisplay();
       currentPage = 1;
-      renderMovies();
+      displayHardcodedMovies(hardcodedMovies);
       new bootstrap.Modal(document.getElementById('genreModal')).hide();
     });
 
@@ -474,7 +506,7 @@
       activeFilters.yearRange = { start: startYear, end: endYear };
       updateActiveFiltersDisplay();
       currentPage = 1;
-      renderMovies();
+      displayHardcodedMovies(hardcodedMovies);
       new bootstrap.Modal(document.getElementById('yearModal')).hide();
     });
 
@@ -488,7 +520,7 @@
       activeFilters.popularityRange = { min, max };
       updateActiveFiltersDisplay();
       currentPage = 1;
-      renderMovies();
+      displayHardcodedMovies(hardcodedMovies);
       new bootstrap.Modal(document.getElementById('popularModal')).hide();
     });
 
@@ -505,7 +537,7 @@
       };
       updateActiveFiltersDisplay();
       currentPage = 1;
-      renderMovies();
+      displayHardcodedMovies(hardcodedMovies);
       new bootstrap.Modal(document.getElementById('ratingModal')).hide();
     });
 
@@ -518,7 +550,7 @@
       activeFilters.languages = Array.from(checkboxes).map(cb => cb.value);
       updateActiveFiltersDisplay();
       currentPage = 1;
-      renderMovies();
+      displayHardcodedMovies(hardcodedMovies);
     });
 
     document.getElementById('filterCountry').addEventListener('click', () => {
@@ -530,7 +562,7 @@
       activeFilters.countries = Array.from(checkboxes).map(cb => cb.value);
       updateActiveFiltersDisplay();
       currentPage = 1;
-      renderMovies();
+      displayHardcodedMovies(hardcodedMovies);
       new bootstrap.Modal(document.getElementById('countryModal')).hide();
     });
 
@@ -538,7 +570,7 @@
       item.addEventListener('click', () => {
         activeFilters.sort = item.getAttribute('data-sort');
         updateActiveFiltersDisplay();
-        renderMovies();
+        displayHardcodedMovies(hardcodedMovies);
       });
     });
 
@@ -570,7 +602,7 @@
     }
 
     function populateLanguages() {
-      const allLanguages = [...new Set(movies.map(movie => movie.language))];
+      const allLanguages = [...new Set(hardcodedMovies.map(movie => movie.language))];
       const container = document.querySelector('.language-checkboxes');
       container.innerHTML = allLanguages.map(language => `
         <div class="form-check">
@@ -581,7 +613,7 @@
     }
 
     function populateCountries() {
-      const allCountries = [...new Set(movies.map(movie => movie.country))];
+      const allCountries = [...new Set(hardcodedMovies.map(movie => movie.country))];
       const container = document.querySelector('.country-checkboxes');
       container.innerHTML = allCountries.map(country => `
         <div class="form-check">
