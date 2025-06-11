@@ -7,14 +7,8 @@
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
-
-  <!-- External CSS -->
   <link rel="stylesheet" href="../stylesheet/login.css" />
 </head>
 <body>
@@ -23,7 +17,6 @@
   <nav class="navbar navbar-expand-lg custom-navbar">
     <div class="container-fluid px-4">
       <a class="navbar-brand text-light" href="#">MovRec</a>
-    
       <div class="collapse navbar-collapse justify-content-between">
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link" href="../html/home.html">Home</a></li>
@@ -31,7 +24,6 @@
           <li class="nav-item"><a class="nav-link" href="../html/actor.html">Actors</a></li>
           <li class="nav-item"><a class="nav-link" href="../html/watchlist.html">Watchlist</a></li>
         </ul>
-    
         <img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img">
       </div>
     </div>    
@@ -39,11 +31,9 @@
 
   <!-- Login Form Section -->
   <div class="container d-flex justify-content-center align-items-center min-vh-100" id="loginSection">
-    <div class="auth-container bg-dark text-light p-4 p-md-5 rounded shadow" style="background-color: rgba(255, 255, 255, 0.05);max-width: 500px; width: 100%;">  
+    <div class="auth-container bg-dark text-light p-4 p-md-5 rounded shadow" style="max-width: 500px; width: 100%;">  
       <h2 class="auth-logo text-center mb-4">Login Your MovRec Account</h2>
-      <div class="alert alert-danger d-none" id="loginError" role="alert">
-        Invalid email or password. Please try again.
-      </div>
+      <div class="alert alert-danger d-none" id="loginError" role="alert"></div>
       <form id="loginForm">
         <div class="mb-3">
           <input type="email" class="form-control" id="loginEmail" placeholder="Email address" required />
@@ -55,7 +45,7 @@
           <input type="checkbox" class="form-check-input" id="rememberMe" />
           <label class="form-check-label" for="rememberMe">Remember me</label>
         </div>
-        <button type="submit" class="btn btn-auth w-100 btn-primary">Log In</button>
+        <button type="submit" class="btn btn-primary w-100">Log In</button>
       </form>
       <div class="text-center mt-3">
         <a href="#" class="auth-link" id="forgotPassword">Forgot password?</a>
@@ -80,66 +70,74 @@
 
   <!-- Login Script -->
   <script>
-    document.getElementById("loginForm").addEventListener("submit", function(event) {
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
       event.preventDefault();
 
-      const email = document.getElementById("loginEmail").value;
+      const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
+      const errorDiv = document.getElementById("loginError");
 
-      if (email && password) {
-        localStorage.setItem("movrec_user", JSON.stringify({
-          email: email,
-          name: email.split("@")[0],
-          isLoggedIn: true
-        }));
-        window.location.href = "home.html";
-      } else {
-        document.getElementById("loginError").classList.remove("d-none");
+      errorDiv.classList.add("d-none");
+
+      if (!email || !password) {
+        errorDiv.textContent = "Please fill in all fields.";
+        errorDiv.classList.remove("d-none");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // Save JWT and user info in localStorage
+          localStorage.setItem("movrec_token", result.token);
+          localStorage.setItem("movrec_user", JSON.stringify({
+            id: result.user.id,
+            name: result.user.username,
+            email: result.user.email
+          }));
+
+          window.location.href = "home.html";
+        } else {
+          errorDiv.textContent = result.message || "Invalid credentials.";
+          errorDiv.classList.remove("d-none");
+        }
+      } catch (err) {
+        console.error(err);
+        errorDiv.textContent = "Server error. Please try again.";
+        errorDiv.classList.remove("d-none");
       }
     });
 
+    // Optional: Forgot password functionality
     document.getElementById("forgotPassword").addEventListener("click", function(event) {
       event.preventDefault();
+      const email = prompt("Enter your registered email address:");
+if (!email) return;
 
-      // Create a reset password container
-      const resetContainer = document.createElement("div");
-      resetContainer.className = "reset-password-container bg-dark text-light p-4 rounded shadow";
-      resetContainer.style = "max-width: 400px; width: 100%; margin: auto;";
+fetch("http://localhost:5000/api/auth/forgot-password", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email })
+})
+.then(res => res.json())
+.then(data => {
+  if (data.message) {
+    alert(data.message);
+  } else {
+    alert("Please check your email for a password reset link.");
+  }
+})
+.catch(() => {
+  alert("Something went wrong. Please try again later.");
+});
 
-      resetContainer.innerHTML = `
-      <h3 class="text-center mb-3">Reset Password</h3>
-      <div class="alert alert-info d-none" id="resetSuccess" role="alert">
-        Password reset link has been sent to your email.
-      </div>
-      <form id="resetPasswordForm">
-        <div class="mb-3">
-        <input type="email" class="form-control" id="resetEmail" placeholder="Enter your email address" required />
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Send Reset Link</button>
-      </form>
-      <div class="text-center mt-3">
-        <button class="btn btn-secondary btn-sm" id="cancelReset">Cancel</button>
-      </div>
-      `;
-
-      // Replace login section with reset password container
-      const loginSection = document.getElementById("loginSection");
-      loginSection.innerHTML = "";
-      loginSection.appendChild(resetContainer);
-
-      // Handle reset password form submission
-      document.getElementById("resetPasswordForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      const resetEmail = document.getElementById("resetEmail").value;
-      if (resetEmail) {
-        document.getElementById("resetSuccess").classList.remove("d-none");
-      }
-      });
-
-      // Handle cancel button
-      document.getElementById("cancelReset").addEventListener("click", function() {
-      window.location.reload();
-      });
     });
   </script>
 </body>

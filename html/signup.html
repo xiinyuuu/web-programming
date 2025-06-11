@@ -7,23 +7,16 @@
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
-
-  <!-- External CSS -->
   <link rel="stylesheet" href="../stylesheet/signup.css" />
 </head>
 <body>
 
-  <!-- Navbar (matches login page structure) -->
-  <nav class="navbar navbar-expand-lg custom-navbar">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg custom-navbar bg-dark">
     <div class="container-fluid px-4">
       <a class="navbar-brand text-light" href="#">MovRec</a>
-    
       <div class="collapse navbar-collapse justify-content-between">
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link" href="../html/home.html">Home</a></li>
@@ -36,11 +29,12 @@
     </div>    
   </nav>
 
-  <!-- Sign Up Form Section (matches login structure) -->
+  <!-- Sign Up Form -->
   <div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="auth-container bg-dark text-light p-4 p-md-5 rounded shadow" style="background-color: rgba(255, 255, 255, 0.05);max-width: 500px; width: 100%;">  
-      <h2 class="auth-logo text-center mb-4">Create Your MovRec Account</h2>
-      <div class="alert alert-danger d-none" id="signupError" role="alert"></div>
+    <div class="bg-dark text-light p-4 p-md-5 rounded shadow" style="max-width: 500px; width: 100%;">
+      <h2 class="text-center mb-4">Create Your MovRec Account</h2>
+      <div class="alert alert-danger d-none" id="signupError"></div>
+      <div class="alert alert-success d-none" id="signupSuccess"></div>
 
       <form id="signupForm" novalidate>
         <div class="mb-3">
@@ -61,47 +55,46 @@
         <div class="mb-3 form-check">
           <input class="form-check-input" type="checkbox" id="termsAgree" required />
           <label class="form-check-label" for="termsAgree">
-            I agree to the <a href="#" class="auth-link">Terms of Service</a> and <a href="#" class="auth-link">Privacy Policy</a>
+            I agree to the <a href="#" class="text-light">Terms</a> & <a href="#" class="text-light">Privacy</a>
           </label>
         </div>
-        <button type="submit" class="btn btn-auth w-100 btn-primary">Create Account</button>
+        <button type="submit" class="btn btn-primary w-100">Create Account</button>
       </form>
 
       <div class="text-center mt-3">
-        <p>Already have an account? <a href="../html/login.html" class="auth-link">Log in here</a></p>
+        <p>Already have an account? <a href="login.html" class="text-info">Log in</a></p>
       </div>
-
-      <hr class="divider" />
     </div>
   </div>
 
-  <!-- Footer (matches login page) -->
-  <footer class="text-center p-4 footer">
-    <div>
-      MovRec &copy; 2025 All Rights Reserved &bull;
-      <a href="mailto:movrec.support@example.com" class="footer-link">Contact Us</a>
-    </div>
+  <!-- Footer -->
+  <footer class="text-center p-4 text-light bg-dark">
+    MovRec &copy; 2025 &bull; <a href="mailto:movrec.support@example.com" class="text-info">Contact Us</a>
   </footer>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Signup Script (keep existing functionality) -->
+  <!-- Sign Up Script -->
   <script>
-    document.getElementById("signupForm").addEventListener("submit", function(event) {
+    document.getElementById("signupForm").addEventListener("submit", async function(event) {
       event.preventDefault();
 
       const fullName = document.getElementById("fullName").value.trim();
       const email = document.getElementById("signupEmail").value.trim();
-      const password = document.getElementById("signupPassword").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
+      const password = document.getElementById("signupPassword").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
       const termsAgree = document.getElementById("termsAgree").checked;
       const errorDiv = document.getElementById("signupError");
+      const successDiv = document.getElementById("signupSuccess");
 
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
+      errorDiv.classList.add("d-none");
+      successDiv.classList.add("d-none");
+
       if (!fullName || !email || !password || !confirmPassword || !termsAgree) {
-        errorDiv.textContent = "Please fill in all fields.";
+        errorDiv.textContent = "Please fill in all fields and agree to the terms.";
         errorDiv.classList.remove("d-none");
         return;
       }
@@ -118,13 +111,41 @@
         return;
       }
 
-      localStorage.setItem("movrec_user", JSON.stringify({
-        name: fullName,
-        email: email,
-        isLoggedIn: true
-      }));
+      try {
+        const response = await fetch("http://localhost:5000/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: fullName,
+            email,
+            password
+          }),
+        });
 
-      window.location.href = "home.html";
+        const data = await response.json();
+
+        if (!response.ok) {
+          errorDiv.textContent = data.message || "Registration failed.";
+          errorDiv.classList.remove("d-none");
+        } else {
+          successDiv.textContent = "Registration successful! Redirecting...";
+          successDiv.classList.remove("d-none");
+
+          localStorage.setItem("movrec_user", JSON.stringify({
+            name: data.user.username,
+            email: data.user.email,
+            token: data.token,
+            isLoggedIn: true
+          }));
+
+          setTimeout(() => {
+            window.location.href = "home.html";
+          }, 1500);
+        }
+      } catch (err) {
+        errorDiv.textContent = "Network error. Please try again.";
+        errorDiv.classList.remove("d-none");
+      }
     });
   </script>
 </body>
