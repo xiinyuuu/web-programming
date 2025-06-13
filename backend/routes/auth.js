@@ -50,7 +50,7 @@ router.post('/register', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-module.exports = router; 
+
 // @route   POST /api/auth/login
 // @desc    Log in user
 router.post('/login', async (req, res) => {
@@ -108,7 +108,10 @@ router.post('/forgot-password', async (req, res) => {
       const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
   
       // In production: Send this link via email
-      const resetLink = `http://127.0.0.1:5501/web-programming/html/reset-password.html?token=${resetToken}`;
+     // ✅ Use the referer or fallback to a default
+const frontendBaseUrl = req.headers.origin || 'http://127.0.0.1:5500';
+const resetLink = `${frontendBaseUrl}/html/reset-password.html?token=${resetToken}`;
+
   
       console.log("Reset link:", resetLink); // simulate email
       res.status(200).json({ message: "Password reset link sent. Check console (or your email)." });
