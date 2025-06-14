@@ -7,8 +7,10 @@ require('dotenv').config();
 
 const router = express.Router();
 
+// ============================
 // @route   POST /api/auth/register
 // @desc    Register new user
+// ============================
 router.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -51,100 +53,106 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// ============================
 // @route   POST /api/auth/login
 // @desc    Log in user
+// ============================
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-  
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Please fill in all fields.' });
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Please fill in all fields.' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid credentials.' });
     }
-  
-    try {
-      const user = await User.findOne({ email });
-  
-      if (!user) {
-        return res.status(400).json({ message: 'Invalid credentials.' });
-      }
-  
-      const isMatch = await bcrypt.compare(password, user.password);
-  
-      if (!isMatch) {
-        return res.status(400).json({ message: 'Invalid credentials.' });
-      }
-  
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: '1d',
-      });
-  
-      res.status(200).json({
-        message: 'Login successful.',
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-        },
-        token,
-      });
-    } catch (err) {
-      console.error('Login error:', err);
-      res.status(500).json({ message: 'Server error.' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials.' });
     }
-  });
-  
-  // @route POST /api/auth/forgot-password
-// @desc Handle forgot password request
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
+    });
+
+    res.status(200).json({
+      message: 'Login successful.',
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+      token,
+    });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Server error.' });
+  }
+});
+
+// ============================
+// @route   POST /api/auth/forgot-password
+// @desc    Handle forgot password request
+// ============================
 router.post('/forgot-password', async (req, res) => {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "Email is required." });
-  
-    try {
-      const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(404).json({ message: "User not found." });
-      }
-  
-      // Generate a fake reset token (in real apps, email it!)
-      const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
-  
-      // In production: Send this link via email
-     // ✅ Use the referer or fallback to a default
-const frontendBaseUrl = req.headers.origin || 'http://127.0.0.1:5500';
-const resetLink = `${frontendBaseUrl}/html/reset-password.html?token=${resetToken}`;
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: 'Email is required.' });
 
-  
-      console.log("Reset link:", resetLink); // simulate email
-      res.status(200).json({ message: "Password reset link sent. Check console (or your email)." });
-    } catch (err) {
-      console.error("Forgot password error:", err);
-      res.status(500).json({ message: "Server error." });
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
     }
-  });
 
-  // @route   POST /api/auth/reset-password
+    const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '15m',
+    });
+
+    // Use the request origin or fallback to localhost:5000
+    const frontendBaseUrl = req.headers.origin || 'http://localhost:5000';
+    const resetLink = `${frontendBaseUrl}/reset-password.html?token=${resetToken}`;
+
+    // Simulate sending email
+    console.log('🔗 Reset link:', resetLink);
+
+    res.status(200).json({
+      message: 'Password reset link sent. Check console (or your email).',
+    });
+  } catch (err) {
+    console.error('Forgot password error:', err);
+    res.status(500).json({ message: 'Server error.' });
+  }
+});
+
+// ============================
+// @route   POST /api/auth/reset-password
 // @desc    Handle password reset
+// ============================
 router.post('/reset-password', async (req, res) => {
-    const { token, newPassword } = req.body;
-  
-    if (!token || !newPassword) {
-      return res.status(400).json({ message: 'Token and new password are required.' });
-    }
-  
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userId = decoded.id;
-  
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-      await User.findByIdAndUpdate(userId, { password: hashedPassword });
-  
-      res.status(200).json({ message: 'Password reset successful.' });
-    } catch (err) {
-      console.error('Reset password error:', err);
-      res.status(400).json({ message: 'Invalid or expired token.' });
-    }
-  });
-  
+  const { token, newPassword } = req.body;
+
+  if (!token || !newPassword) {
+    return res.status(400).json({ message: 'Token and new password are required.' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await User.findByIdAndUpdate(userId, { password: hashedPassword });
+
+    res.status(200).json({ message: 'Password reset successful.' });
+  } catch (err) {
+    console.error('Reset password error:', err);
+    res.status(400).json({ message: 'Invalid or expired token.' });
+  }
+});
+
 module.exports = router;
-
-
-  

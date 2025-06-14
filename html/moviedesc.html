@@ -28,10 +28,10 @@
     
       <div class="collapse navbar-collapse justify-content-between">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="../html/home.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="../html/movies.html">Movies</a></li>
-          <li class="nav-item"><a class="nav-link" href="../html/actor.html">Actors</a></li>
-          <li class="nav-item"><a class="nav-link" href="../html/watchlist.html">Watchlist</a></li>
+          <li class="nav-item"><a class="nav-link" href="/home.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/movies.html">Movies</a></li>
+          <li class="nav-item"><a class="nav-link" href="/actor.html">Actors</a></li>
+          <li class="nav-item"><a class="nav-link" href="/watchlist.html">Watchlist</a></li>
         </ul>
     
         <form class="d-flex me-4" style="max-width: 300px;" onsubmit="handleSearch(event)">
@@ -48,11 +48,11 @@
             event.preventDefault();
             const keyword = document.getElementById('searchInput').value.trim();
             if (keyword) {
-              window.location.href = `../html/search.html?query=${encodeURIComponent(keyword)}`;
+              window.location.href = `/search.html?query=${encodeURIComponent(keyword)}`;
             }
           }
         </script>
-          <a href="../html/profile.html"><img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
+          <a href="/profile.html"><img src="/images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
         </div>
       </div>
     </div>    
@@ -63,7 +63,7 @@
   <div class="row justify-content-center align-items-start">
     <div class="col-md-5 d-flex flex-column align-items-center">
       <!-- Movie Poster -->
-      <img src="../images/damsel.webp" class="img-fluid w-75 rounded shadow mb-3" alt="Movie Poster">
+      <img src="/images/damsel.webp" class="img-fluid w-75 rounded shadow mb-3" alt="Movie Poster">
       <!-- Watchlist Button -->
       <button class="btn add-watchlist-btn" id="watchlistBtn">Add to Watchlist</button>
     </div>
@@ -148,16 +148,16 @@
   </footer>
 
   <!-- Movie Details Script -->
-<script src="../javascript/movie.js"></script>
+<script src="/javascript/movie.js"></script>
 
 
   <!-- Load roulette modal -->
   <div id="roulette-modal-container"></div>
-  <script src="../javascript/roulette.js"></script>
+  <script src="/javascript/roulette.js"></script>
 
   <!-- Floating Roulette Button -->
   <div class="roulette-button" data-bs-toggle="modal" data-bs-target="#rouletteModal">
-    <img src="../images/roulette.png" alt="Roulette" class="roulette-icon">
+    <img src="/images/roulette.png" alt="Roulette" class="roulette-icon">
   </div>
 
   <!-- Bootstrap JS -->
@@ -167,9 +167,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
   <!-- Watchlist Button -->
-  <script src="../javascript/watchlist-button.js"></script>
+  <script src="/javascript/watchlist-button.js"></script>
 
   <!-- Load external script -->
-  <script src="../javascript/reviews.js"></script>
+  <script src="/javascript/reviews.js"></script>
 </body>
 </html>
