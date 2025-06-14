@@ -127,7 +127,7 @@ const movieData = {
   };
 
 // Load the modal HTML
-fetch('../html/roulette.html')
+fetch('/roulette.html')
   .then(response => response.text())
   .then(html => {
     document.getElementById('roulette-modal-container').innerHTML = html;

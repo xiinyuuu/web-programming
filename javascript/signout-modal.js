@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Load the modal HTML
-    fetch('../html/signout-modal.html')
+    fetch('/signout-modal.html')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -29,14 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Handle confirmation
             confirmSignOutBtn.addEventListener('click', function() {
-                window.location.href = '../html/login.html?logout=true';
+                window.location.href = '/login.html?logout=true';
             });
         })
         .catch(error => {
             console.error('Error loading signout modal:', error);
             // Fallback: redirect directly if modal fails to load
             document.getElementById('triggerSignOutModal').addEventListener('click', function() {
-                window.location.href = '../html/login.html?logout=true';
+                window.location.href = '/login.html?logout=true';
             });
         });
 });

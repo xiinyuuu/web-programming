@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
-  <link rel="stylesheet" href="../stylesheet/style.css" />
+  <link rel="stylesheet" href="/stylesheet/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 </head>
@@ -19,10 +19,10 @@
       <a class="navbar-brand text-light" href="#">MovRec</a>
       <div class="collapse navbar-collapse justify-content-between">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="../html/home.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link active" href="../html/movies.html">Movies</a></li>
-          <li class="nav-item"><a class="nav-link" href="../html/actor.html">Actors</a></li>
-          <li class="nav-item"><a class="nav-link" href="../html/watchlist.html">Watchlist</a></li>
+          <li class="nav-item"><a class="nav-link" href="/home.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/movies.html">Movies</a></li>
+          <li class="nav-item"><a class="nav-link" href="/actor.html">Actors</a></li>
+          <li class="nav-item"><a class="nav-link" href="/watchlist.html">Watchlist</a></li>
         </ul>
 
         <form class="d-flex me-4" style="max-width: 300px;" onsubmit="handleSearch(event)">
@@ -45,7 +45,7 @@
           }
         </script>
         
-        <a href="../html/profile.html"><img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
+        <a href="/profile.html"><img src="/images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
       </div>
     </div>
   </nav>
@@ -148,9 +148,9 @@
   <!-- Floating Roulette Button -->
   <!-- This assumes you have a roulette.js file for its functionality -->
   <div id="roulette-modal-container"></div>
-  <script src="../javascript/roulette.js"></script>
+  <script src="/javascript/roulette.js"></script>
   <div class="roulette-button" data-bs-toggle="modal" data-bs-target="#rouletteModal">
-    <img src="../images/roulette.png" alt="Roulette" class="roulette-icon">
+    <img src="/images/roulette.png" alt="Roulette" class="roulette-icon">
   </div>
   
   <script>
@@ -230,7 +230,7 @@
             `;
 
             const link = document.createElement('a');
-            link.href = '../html/moviedesc.html';
+            link.href = '/moviedesc.html';
             link.className = 'text-decoration-none text-light';
 
             link.addEventListener('click', (e) => {
