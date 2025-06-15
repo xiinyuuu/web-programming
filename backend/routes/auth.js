@@ -114,8 +114,8 @@ router.post('/forgot-password', async (req, res) => {
       expiresIn: '15m',
     });
 
-    // Use the request origin or fallback to localhost:5000
-    const frontendBaseUrl = req.headers.origin || 'http://localhost:5000';
+    // Use the request origin or fallback to localhost:5500
+    const frontendBaseUrl = req.headers.origin || 'http://localhost:5500';
     const resetLink = `${frontendBaseUrl}/reset-password.html?token=${resetToken}`;
 
     // Simulate sending email

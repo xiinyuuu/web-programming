@@ -7,7 +7,7 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5500;
 
 // ✅ CORS: Allow localhost (e.g. from browser or Postman)
 app.use(cors({
