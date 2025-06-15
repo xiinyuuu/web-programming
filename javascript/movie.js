@@ -35,6 +35,14 @@ async function fetchAndDisplayMovieDetails(movieId) {
     fetchAndDisplayCast(movieId);
 
     document.querySelector('#movie-rating').innerHTML = `<strong>Average Rating:</strong> ${(movieDetails.vote_average / 2).toFixed(1)} ${generateStars(movieDetails.vote_average / 2)}`;
+
+    // Set data attributes for the watchlist button
+    const watchlistBtn = document.getElementById('add-to-watchlist-btn');
+    if (watchlistBtn) {
+      watchlistBtn.dataset.movieId = movieDetails.id;
+      watchlistBtn.dataset.title = movieDetails.title;
+      watchlistBtn.dataset.poster = movieDetails.poster_path ? `${IMAGE_BASE}${movieDetails.poster_path}` : 'images/default-movie.jpg';
+    }
   } catch (error) {
     console.error('Error fetching movie details:', error);
   }

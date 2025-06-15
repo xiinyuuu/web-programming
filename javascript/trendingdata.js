@@ -53,41 +53,38 @@ async function fetchTrendingActors() {
     }));
 }
 
-
 function renderTrendingMovies(movies) {
   const grid = document.getElementById('movie-container');
-    grid.innerHTML = '';
+  grid.innerHTML = '';
 
-    movies.forEach((movie, index) => {
-      const col = document.createElement('div');
-      col.className = 'col';
+  movies.forEach((movie, index) => {
+    const col = document.createElement('div');
+    col.className = 'col';
 
-      const card = document.createElement('div');
-      card.className = 'card movie-card text-center';
-      card.innerHTML = `
-        <div class="ranking-badge">${index + 1}</div>
-        <img src="${movie.img}" class="card-img-top movie-img" alt="${movie.title}">
-        <div class="card-body p-1">
-          <h6 class="movie-title">${movie.title}</h6>
-        </div>
-      `;
+    const card = document.createElement('div');
+    card.className = 'card movie-card text-center';
+    card.innerHTML = `
+      <div class="ranking-badge">${index + 1}</div>
+      <div class="card-body p-1">
+        <h6 class="movie-title">${movie.title}</h6>
+      </div>
+    `;
 
-      const link = document.createElement('a');
-      link.href = '../html/moviedesc.html';
-      link.className = 'text-decoration-none text-light';
-      link.addEventListener('click', () => {
-        sessionStorage.setItem('selectedMovie', JSON.stringify(movie));
-      });
-
-      link.appendChild(card);
-      col.appendChild(link);
-      grid.appendChild(col);
+    // Create poster link
+    const posterLink = document.createElement('a');
+    posterLink.href = '/moviedesc.html';
+    posterLink.addEventListener('click', (e) => {
+      sessionStorage.setItem('selectedMovie', JSON.stringify(movie));
     });
+    posterLink.innerHTML = `<img src="${movie.img}" class="card-img-top movie-img" alt="${movie.title}">`;
+
+    // Insert poster link at the top of the card
+    card.insertBefore(posterLink, card.firstChild.nextSibling);
+
+    col.appendChild(card);
+    grid.appendChild(col);
+  });
 }
-
-
-
-
 
 function renderTrendingActors(actors) {
   const grid = document.getElementById('actorSection'); // Make sure this matches your HTML

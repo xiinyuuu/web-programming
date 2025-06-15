@@ -131,6 +131,7 @@
           successDiv.textContent = "Registration successful! Redirecting...";
           successDiv.classList.remove("d-none");
 
+          localStorage.setItem("userId", data.user.id || data.user._id);
           localStorage.setItem("movrec_user", JSON.stringify({
             name: data.user.username,
             email: data.user.email,
