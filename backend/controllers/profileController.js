@@ -1,5 +1,7 @@
 const User = require('../models/user'); // Adjust the path as needed
+const Review = require('../models/Review');
 const bcrypt = require('bcryptjs');
+const axios = require('axios');
 
 // GET profile data
 exports.getProfile = async (req, res) => {
@@ -9,7 +11,47 @@ exports.getProfile = async (req, res) => {
 
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    res.status(200).json(user);
+    // Get review count and reviews
+    const reviews = await Review.find({ username: user.username })
+      .sort({ createdAt: -1 })
+      .limit(3);
+
+    // Fetch movie details for each review
+    const reviewsWithMovieDetails = await Promise.all(reviews.map(async (review) => {
+      try {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/${review.movieId}?api_key=${process.env.TMDB_API_KEY}`
+        );
+        const movie = response.data;
+        
+        return {
+          id: review._id,
+          movieId: review.movieId,
+          title: movie.title,
+          image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+          genre: movie.genres[0]?.name || 'Unknown',
+          year: new Date(movie.release_date).getFullYear(),
+          rating: review.rating,
+          review: review.text,
+          date: review.createdAt
+        };
+      } catch (error) {
+        console.error(`Error fetching movie details for ${review.movieId}:`, error);
+        return null;
+      }
+    }));
+
+    // Filter out any null results from failed movie fetches
+    const validReviews = reviewsWithMovieDetails.filter(review => review !== null);
+
+    // Add counts and reviews to response
+    const profileData = {
+      ...user.toJSON(),
+      reviewCount: await Review.countDocuments({ username: user.username }),
+      reviews: validReviews
+    };
+
+    res.status(200).json(profileData);
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
