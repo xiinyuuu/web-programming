@@ -44,12 +44,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     function renderProfileHeader(user) {
         document.getElementById('displayName').textContent = user.username;
         document.getElementById('displayEmail').textContent = user.email;
-        // Update profile picture everywhere it's used
         document.getElementById('displayProfilePic').src = user.profilePic || '../images/profile.jpg';
         const navProfileImg = document.querySelector('.profile-img');
         if (navProfileImg) navProfileImg.src = user.profilePic || '../images/profile.jpg';
-        // Set stats if you add them to the backend
-        // ...
+        // Set stats
+        const statValues = document.querySelectorAll('.stat-value');
+        if (user.stats) {
+          statValues[0].textContent = user.stats.moviesWatched;
+          statValues[1].textContent = user.stats.reviews;
+          statValues[2].textContent = user.stats.watchlist;
+        }
         document.getElementById('editName').value = user.username;
         document.getElementById('editEmail').value = user.email;
         document.getElementById('profilePicPreview').src = user.profilePic || '../images/profile.jpg';
@@ -147,29 +151,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Initialize reviews
     renderProfileReviews();
-
-    // Initialize the profile with current user data
-    function initializeProfile() {
-        document.getElementById('displayName').textContent = currentUser.name;
-        document.getElementById('displayEmail').textContent = currentUser.email;
-        document.getElementById('displayProfilePic').src = currentUser.profilePic;
-        document.querySelector('.profile-img').src = currentUser.profilePic;
-        
-        // Set profile stats
-        const statValues = document.querySelectorAll('.stat-value');
-        statValues[0].textContent = currentUser.stats.moviesWatched;
-        statValues[1].textContent = currentUser.stats.reviews;
-        statValues[2].textContent = currentUser.stats.watchlist;
-
-        
-        // Set initial values in edit modal
-        document.getElementById('editName').value = currentUser.name;
-        document.getElementById('editEmail').value = currentUser.email;
-        document.getElementById('profilePicPreview').src = currentUser.profilePic;
-    }
-
-    // Call the initialization function
-    initializeProfile();
 
     // Edit Profile Modal
     const editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));

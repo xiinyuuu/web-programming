@@ -1,5 +1,6 @@
 const User = require('../models/user'); // Adjust the path as needed
 const bcrypt = require('bcryptjs');
+const Review = require('../models/Review'); // Add this at the top
 
 // GET profile data
 exports.getProfile = async (req, res) => {
@@ -9,7 +10,23 @@ exports.getProfile = async (req, res) => {
 
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    res.status(200).json(user);
+    // Count reviews by username
+    const reviewCount = await Review.countDocuments({ username: user.username });
+    // Count watched movies in watchlist
+    const moviesWatched = user.watchlist.filter(item => item.watched).length;
+    // Watchlist count
+    const watchlistCount = user.watchlist.length;
+
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      profilePic: user.profilePic,
+      stats: {
+        reviews: reviewCount,
+        moviesWatched,
+        watchlist: watchlistCount
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }

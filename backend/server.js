@@ -84,6 +84,10 @@ app.get('/signup.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../html/signup.html'));
 });
 
+app.get('/login.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../html/login.html'));
+});
+
 // ✅ API routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/watchlist', require('./routes/watchlist'));
