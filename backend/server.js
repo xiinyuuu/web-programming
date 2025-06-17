@@ -76,6 +76,10 @@ app.get('/search.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../html/search.html'));
 });
 
+app.get('/profile.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../html/profile.html'));
+});
+
 // ✅ API routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/watchlist', require('./routes/watchlist'));
