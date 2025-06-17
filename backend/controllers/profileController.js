@@ -85,3 +85,18 @@ exports.deactivateAccount = async (req, res) => {
     res.status(500).json({ message: 'Deactivation failed', error: err.message });
   }
 };
+
+exports.updateProfilePic = async (req, res) => {
+  const { profilePic } = req.body;
+  try {
+    const userId = req.user.id;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePic },
+      { new: true, runValidators: true }
+    ).select('-password');
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to update profile picture', error: err.message });
+  }
+};

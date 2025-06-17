@@ -35,6 +35,12 @@ const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
+    // Reactivate account if deactivated
+    if (user.deactivated) {
+      user.deactivated = false;
+      await user.save();
+    }
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.status(200).json({ token, user: { id: user._id, username: user.username, email: user.email } });

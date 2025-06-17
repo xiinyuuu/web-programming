@@ -1,12 +1,12 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
 
     // Initialize Bootstrap toasts
-    const logoutToast = new bootstrap.Toast(document.getElementById('logoutToast'));
-    const updateToast = new bootstrap.Toast(document.getElementById('updateToast'));
-    const updateProfilePicToast = new bootstrap.Toast(document.getElementById('updateProfilePicToast'));
-    const updatePasswordToast = new bootstrap.Toast(document.getElementById('updatePasswordToast'));
-    const deactivateAccountToast = new bootstrap.Toast(document.getElementById('deactivateAccountToast'));
-    const deleteAccountToast = new bootstrap.Toast(document.getElementById('deleteAccountToast'));
+    const logoutToast = new bootstrap.Toast(document.getElementById('logoutToast'), { delay: 3000 });
+    const updateToast = new bootstrap.Toast(document.getElementById('updateToast'), { delay: 3000 });
+    const updateProfilePicToast = new bootstrap.Toast(document.getElementById('updateProfilePicToast'), { delay: 3000 });
+    const updatePasswordToast = new bootstrap.Toast(document.getElementById('updatePasswordToast'), { delay: 3000 });
+    const deactivateAccountToast = new bootstrap.Toast(document.getElementById('deactivateAccountToast'), { delay: 3000 });
+    const deleteAccountToast = new bootstrap.Toast(document.getElementById('deleteAccountToast'), { delay: 3000 });
     const reviewModal = new bootstrap.Modal(document.getElementById('reviewDetailModal'));
 
     // Inside profile.js (remove the myReviews array)
@@ -17,18 +17,51 @@ document.addEventListener('DOMContentLoaded', function() {
         logoutToast.show();
     }
 
-    // Initialize current user data
-    const currentUser = {
-        id: 1,
-        name: "John Doe",
-        email: "john.doe@example.com",
-        profilePic: "../images/sad cat.png",
-        stats: {
-            moviesWatched: 42,
-            reviews: 9,
-            watchlist: 2
+    // Helper: Get JWT token from localStorage
+    function getToken() {
+        return localStorage.getItem('movrec_token');
+    }
+
+    console.log('Token being used:', getToken());
+
+    // Fetch profile data from backend
+    async function fetchProfile() {
+        const token = getToken();
+        if (!token) return null;
+        try {
+            const res = await fetch('/api/profile', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!res.ok) throw new Error('Failed to fetch profile');
+            return await res.json();
+        } catch (err) {
+            console.error(err);
+            return null;
         }
-    };
+    }
+
+    // Render profile header with user data
+    function renderProfileHeader(user) {
+        document.getElementById('displayName').textContent = user.username;
+        document.getElementById('displayEmail').textContent = user.email;
+        // Update profile picture everywhere it's used
+        document.getElementById('displayProfilePic').src = user.profilePic || '../images/profile.jpg';
+        const navProfileImg = document.querySelector('.profile-img');
+        if (navProfileImg) navProfileImg.src = user.profilePic || '../images/profile.jpg';
+        // Set stats if you add them to the backend
+        // ...
+        document.getElementById('editName').value = user.username;
+        document.getElementById('editEmail').value = user.email;
+        document.getElementById('profilePicPreview').src = user.profilePic || '../images/profile.jpg';
+    }
+
+    // Fetch and render user profile from backend
+    const user = await fetchProfile();
+    if (user) {
+        renderProfileHeader(user);
+    }
+
+    console.log('Fetched user:', user);
 
     // Function to generate star ratings
     function generateStars(rating) {
@@ -143,19 +176,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveProfileBtn = document.getElementById('saveProfileBtn');
     
     if (saveProfileBtn) {
-      saveProfileBtn.addEventListener('click', function() {
-        // Update current user data
-        currentUser.name = document.getElementById('editName').value;
-        currentUser.email = document.getElementById('editEmail').value;
-
-        // Update the display
-        initializeProfile();
-        
-        // Show success toast
-        updateToast.show();
-        
-        // Close modal
-        editProfileModal.hide();
+      saveProfileBtn.addEventListener('click', async function() {
+        const newName = document.getElementById('editName').value;
+        const newEmail = document.getElementById('editEmail').value;
+        const token = getToken();
+        try {
+          const response = await fetch('/api/profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ username: newName, email: newEmail })
+          });
+          if (!response.ok) throw new Error('Failed to update profile');
+          const updatedUser = await response.json();
+          renderProfileHeader(updatedUser);
+          updateToast.show();
+          editProfileModal.hide();
+        } catch (err) {
+          alert('Failed to update profile: ' + err.message);
+        }
       });
     }
   
@@ -179,56 +220,73 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (saveProfilePicBtn) {
-      saveProfilePicBtn.addEventListener('click', function() {
+      saveProfilePicBtn.addEventListener('click', async function() {
         if (profilePicPreview.src) {
-          // Update current user data
-          currentUser.profilePic = profilePicPreview.src;
-                
-          // Update the display
-          initializeProfile();
-          
-          // Show success toast
-          updateProfilePicToast.show();
-          
-          // Close modal
-          profilePicModal.hide();
+          const token = getToken();
+          try {
+            const response = await fetch('/api/profile/profile-pic', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              },
+              body: JSON.stringify({ profilePic: profilePicPreview.src })
+            });
+            if (!response.ok) throw new Error('Failed to update profile picture');
+            const updatedUser = await response.json();
+            renderProfileHeader(updatedUser);
+            updateProfilePicToast.show();
+            profilePicModal.hide();
+          } catch (err) {
+            alert('Failed to update profile picture: ' + err.message);
+          }
         }
       });
     }
   
-    // Change Password Modal 
+    // Change Password Modal
     const changePasswordModal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
     const changePasswordBtn = document.getElementById('changePasswordBtn');
     const changePasswordForm = document.getElementById('changePasswordForm');
-
     if (changePasswordForm && changePasswordBtn) {
-        changePasswordBtn.addEventListener('click', function() {
+        changePasswordBtn.addEventListener('click', async function() {
             const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-
-            // Validate inputs
             if (!currentPassword || !newPassword || !confirmPassword) {
-                showError("Please fill in all fields");
+                showError('Please fill in all fields');
                 return;
             }
-
             if (newPassword.length < 8) {
-                showError("Password must be at least 8 characters");
+                showError('Password must be at least 8 characters');
                 return;
             }
-
             if (newPassword !== confirmPassword) {
                 showError("New passwords don't match");
                 return;
             }
-
-            // Here should make an API call to the backend to make sure the current password is correct
-            // For now, we'll simulate a successful password change
-            simulatePasswordChange(currentPassword, newPassword);
+            const token = getToken();
+            try {
+                const response = await fetch('/api/profile/password', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    updatePasswordToast.show();
+                    changePasswordModal.hide();
+                    changePasswordForm.reset();
+                } else {
+                    showError(result.message || 'Failed to update password');
+                }
+            } catch (err) {
+                showError('Server error. Please try again.');
+            }
         });
-
-        // Clear validation errors when modal is shown
         changePasswordModal._element.addEventListener('show.bs.modal', function() {
             clearErrors();
             changePasswordForm.reset();
@@ -238,11 +296,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Deactivate Account Modal
     const deactivateAccountModal = new bootstrap.Modal(document.getElementById('deactivateAccountModal'));
     const confirmDeactivateBtn = document.getElementById('confirmDeactivateBtn');
-
     if (confirmDeactivateBtn) {
-        confirmDeactivateBtn.addEventListener('click', function() {
-            // Here should make an API call to the backend to make sure the password is correct
-            simulateAccountDeactivation();
+        confirmDeactivateBtn.addEventListener('click', async function() {
+            const token = getToken();
+            try {
+                const response = await fetch('/api/profile/deactivate', {
+                    method: 'PUT',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    deactivateAccountToast.show();
+                    setTimeout(() => {
+                        // Log out and redirect to login
+                        localStorage.clear();
+                        window.location.href = 'login.html?accountDeactivated=true';
+                    }, 1500);
+                } else {
+                    alert(result.message || 'Failed to deactivate account');
+                }
+            } catch (err) {
+                alert('Server error. Please try again.');
+            }
         });
     }
 
@@ -252,23 +327,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
     if (deleteAccountForm && confirmDeleteBtn) {
-        confirmDeleteBtn.addEventListener('click', function() {
+        confirmDeleteBtn.addEventListener('click', async function() {
             const password = document.getElementById('deletePassword').value;
-            const confirmationCheck = document.getElementById('deleteConfirmationCheck');
-
-            // Validate inputs
             if (!password) {
-                showDeleteError("Please enter your password");
+                showDeleteError('Please enter your password');
                 return;
             }
-
-            // In a real app, you might want additional confirmation
-            if (!confirm("Are you absolutely sure you want to delete your account? This cannot be undone!")) {
+            if (!confirm('Are you absolutely sure you want to delete your account? This cannot be undone!')) {
                 return;
             }
-
-            // Here should make an API call to the backend to make sure the password is correct
-            simulateAccountDeletion(password);
+            const token = getToken();
+            try {
+                const response = await fetch('/api/profile', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ password })
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    deleteAccountToast.show();
+                    setTimeout(() => {
+                        localStorage.clear();
+                        window.location.href = 'login.html?accountDeleted=true';
+                    }, 1500);
+                } else {
+                    showDeleteError(result.message || 'Failed to delete account');
+                }
+            } catch (err) {
+                showDeleteError('Server error. Please try again.');
+            }
         });
 
         // Clear validation errors when modal is shown
@@ -276,31 +366,6 @@ document.addEventListener('DOMContentLoaded', function() {
             clearDeleteErrors();
             deleteAccountForm.reset();
         });
-    }
-
-    // Change Password Functionality
-    function simulatePasswordChange(currentPassword, newPassword) {
-        // Make an API call here
-        console.log("Attempting to change password...");
-        
-        // Simulate API call delay
-        setTimeout(function() {
-            // This would come from API response in a real app
-            const success = true; // Simulate success
-            
-            if (success) {
-                // Show success message
-                document.querySelector('#updatePasswordToast .toast-body').innerHTML = 
-                    '<i class="bi bi-check-circle me-2"></i> Password changed successfully!';
-                updatePasswordToast.show();
-                
-                // Close modal and reset form
-                changePasswordModal.hide();
-                changePasswordForm.reset();
-            } else {
-                showError("Current password is incorrect");
-            }
-        }, 1000);
     }
 
     function showError(message) {
@@ -320,69 +385,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function clearErrors() {
         const existingAlerts = changePasswordForm.querySelectorAll('.alert-danger');
         existingAlerts.forEach(alert => alert.remove());
-    }
-
-    // Deactivate Account Functionality
-    function simulateAccountDeactivation() {
-        // Show loading state
-        confirmDeactivateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deactivating...';
-        confirmDeactivateBtn.disabled = true;
-
-        // In a real app, you would make an API call here
-        console.log("Attempting to delete account...");
-
-        setTimeout(function() {
-            document.querySelector('#deactivateAccountToast .toast-body').innerHTML = 
-            '<i class="bi bi-check-circle me-2"></i> Account deactivated successfully!';
-            deactivateAccountToast.show();
-                    
-            // Reset button state
-            confirmDeactivateBtn.innerHTML = 'Deactivate Account';
-            confirmDeactivateBtn.disabled = false;
-                    
-            // Close modal and redirect after delay
-            deactivateAccountModal.hide();
-            setTimeout(() => {
-                window.location.href = '../html/login.html?accountDeactivated=true';
-            }, 1500);
-        }, 1500);
-    }
-
-    // Delete Account Functionality
-    function simulateAccountDeletion(password) {
-        // Show loading state
-        confirmDeleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
-        confirmDeleteBtn.disabled = true;
-
-        // In a real app, you would make an API call here
-        console.log("Attempting to delete account...");
-        
-        // Simulate API call delay
-        setTimeout(function() {
-            // This would come from your API response in a real app
-            const success = true; // Simulate success
-            
-            if (success) {
-                // Show success message
-                document.querySelector('#deleteAccountToast .toast-body').innerHTML = 
-                    '<i class="bi bi-check-circle me-2"></i> Account deleted successfully!';
-                deleteAccountToast.show();
-                
-                // Reset button state
-                confirmDeleteBtn.innerHTML = 'Delete Account';
-                confirmDeleteBtn.disabled = false;
-                
-                // Close modal and redirect after delay
-                deleteAccountModal.hide();
-                setTimeout(() => {
-                    window.location.href = '../html/login.html?accountDeleted=true';
-                }, 1500);
-            } else {
-                showDeleteError("Incorrect password");
-                confirmDeleteBtn.innerHTML = 'Delete Account';
-                confirmDeleteBtn.disabled = false;
-            }
-        }, 1500);
     }
 
     function showDeleteError(message) {
