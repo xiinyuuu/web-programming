@@ -26,4 +26,7 @@ router.get('/actors/:id', tmdbController.getActorDetails);
 // Route for actor filmography
 router.get('/actors/:id/movies', tmdbController.getActorFilmography);
 
+// Route for search
+router.get('/search', tmdbController.search);
+
 module.exports = router;

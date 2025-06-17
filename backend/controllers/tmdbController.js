@@ -280,3 +280,74 @@ exports.getActorFilmography = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch actor filmography' });
     }
 };
+
+// Search endpoint
+exports.search = async (req, res) => {
+    try {
+        const { query, page = 1 } = req.query;
+        console.log('Searching for:', query, 'page:', page);
+
+        if (!query) {
+            return res.status(400).json({ error: 'Search query is required' });
+        }
+
+        // Search for movies
+        const moviesResponse = await axios.get(`${BASE_URL}/search/movie`, {
+            params: {
+                api_key: API_KEY,
+                query: query,
+                page: page,
+                language: 'en-US'
+            }
+        });
+
+        // Search for actors
+        const actorsResponse = await axios.get(`${BASE_URL}/search/person`, {
+            params: {
+                api_key: API_KEY,
+                query: query,
+                page: page,
+                language: 'en-US'
+            }
+        });
+
+        // Process movies - only include movies with poster_path
+        const movies = (moviesResponse.data.results || [])
+            .filter(movie => movie.poster_path) // Filter out movies without posters
+            .map(movie => ({
+                id: movie.id,
+                title: movie.title,
+                img: `${IMAGE_BASE}${movie.poster_path}`,
+                type: 'movie',
+                popularity: movie.popularity || 0
+            }));
+
+        // Process actors - only include actors with profile_path
+        const actors = (actorsResponse.data.results || [])
+            .filter(person => person.profile_path && person.known_for_department === "Acting") // Filter out actors without photos
+            .filter(person => /^[a-zA-Z\s.'-]+$/.test(person.name))
+            .map(person => ({
+                id: person.id,
+                name: person.name,
+                image: `${IMAGE_BASE}${person.profile_path}`,
+                type: 'actor',
+                popularity: person.popularity || 0
+            }));
+
+        // Combine and sort results by popularity
+        const results = [...movies, ...actors].sort((a, b) => b.popularity - a.popularity);
+
+        res.json({
+            page: parseInt(page),
+            total_pages: Math.max(moviesResponse.data.total_pages, actorsResponse.data.total_pages),
+            total_results: results.length, // Update total_results to reflect filtered results
+            results: results
+        });
+    } catch (error) {
+        console.error('Error performing search:', error.message);
+        if (error.response) {
+            console.error('TMDB API Error Response:', error.response.data);
+        }
+        res.status(500).json({ error: 'Failed to perform search' });
+    }
+};

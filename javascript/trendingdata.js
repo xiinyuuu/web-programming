@@ -107,7 +107,7 @@ function renderTrendingActors(actors) {
     card.innerHTML = `
       <div class="actor-card text-center">
         <img src="${actor.image}" class="card-img-top actor-img" alt="${actor.name}">
-        <p class="actor-name text-light">${actor.name}</p>
+      <p class="actor-name text-light">${actor.name}</p>
       </div>
     `;
 
