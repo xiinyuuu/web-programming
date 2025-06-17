@@ -24,9 +24,23 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  function getCurrentUser() {
+    const userData = localStorage.getItem('movrec_user');
+    if (!userData) {
+      return null;
+    }
+    return JSON.parse(userData);
+  }
+
   // Form submission
   document.getElementById('review-form').addEventListener('submit', function (e) {
     e.preventDefault();
+
+    const user = getCurrentUser();
+    if (!user) {
+      alert("Please log in to submit a review.");
+      return;
+    }
 
     if (reviewSelectedRating === 0) {
       alert("Please select a star rating.");
@@ -34,70 +48,86 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const reviewText = document.getElementById('review-text').value;
-    const username = "@username"; // Replace with actual user later
+    const movieId = sessionStorage.getItem('selectedMovie')?.id;
 
-    reviewList.unshift({
-      username: username,
-      rating: reviewSelectedRating,
-      text: reviewText
-    });
+    if (!movieId) {
+      alert("Movie information not found. Please try again.");
+      return;
+    }
+
+    fetch('/api/reviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: user.id,
+        username: user.name,
+        movieId: movieId,
+        rating: reviewSelectedRating,
+        text: reviewText
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      reviewList.unshift(data);
+      renderReviewList();
+    })
+    .catch(err => console.error('Failed to submit review:', err));
 
     this.reset();
     updateReviewStars(0);
     reviewSelectedRating = 0;
 
     reviewCurrentDisplayed = 0;
-    renderReviewList();
   });
 
   function renderReviewList() {
-  reviewContainer.innerHTML = "";
+    reviewContainer.innerHTML = "";
 
-  let reviewsToDisplay = expanded
-    ? reviewList
-    : reviewList.slice(0, REVIEWS_TO_SHOW);
+    let reviewsToDisplay = expanded
+      ? reviewList
+      : reviewList.slice(0, REVIEWS_TO_SHOW);
 
-  reviewsToDisplay.forEach(review => {
-    const starsHTML = '<i class="bi bi-star-fill text-warning"></i>'.repeat(review.rating) +
-      '<i class="bi bi-star text-warning"></i>'.repeat(5 - review.rating);
+    reviewsToDisplay.forEach(review => {
+      const starsHTML = '<i class="bi bi-star-fill text-warning"></i>'.repeat(review.rating) +
+        '<i class="bi bi-star text-warning"></i>'.repeat(5 - review.rating);
 
-    const reviewHTML = `
-      <div class="d-flex gap-3 align-items-start mb-4 review-entry">
-        <img src="../images/profile.jpg" class="rounded-circle" width="40" height="40" alt="Profile">
-        <div>
-          <div class="d-flex align-items-center gap-2 mb-1">
-            <strong class="text-light">${review.username}</strong>
-            <span class="text-warning small">${starsHTML}</span>
+      const reviewHTML = `
+        <div class="d-flex gap-3 align-items-start mb-4 review-entry">
+          <img src="../images/profile.jpg" class="rounded-circle" width="40" height="40" alt="Profile">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <strong class="text-light">${review.username}</strong>
+              <span class="text-warning small">${starsHTML}</span>
+            </div>
+            <p class="text-light mb-0 fs-6">${review.text}</p>
           </div>
-          <p class="text-light mb-0 fs-6">${review.text}</p>
         </div>
-      </div>
-    `;
-    reviewContainer.innerHTML += reviewHTML;
-  });
+      `;
+      reviewContainer.innerHTML += reviewHTML;
+    });
 
-  // Show or hide the button
-  if (reviewList.length <= REVIEWS_TO_SHOW) {
-    reviewSeeMoreBtn.classList.add("d-none");
-  } else {
-    reviewSeeMoreBtn.classList.remove("d-none");
-    reviewSeeMoreBtn.textContent = expanded ? "See Less" : "See More";
+    if (reviewList.length <= REVIEWS_TO_SHOW) {
+      reviewSeeMoreBtn.classList.add("d-none");
+    } else {
+      reviewSeeMoreBtn.classList.remove("d-none");
+      reviewSeeMoreBtn.textContent = expanded ? "See Less" : "See More";
+    }
   }
-}
 
   reviewSeeMoreBtn.addEventListener('click', () => {
     expanded = !expanded;
     renderReviewList();
   });
 
-  // Dummy reviews for testing
-  for (let i = 1; i <= 15; i++) {
-    reviewList.unshift({
-      username: `@user${i}`,
-      rating: Math.floor(Math.random() * 5) + 1,
-      text: `This is review number ${i}.`
-    });
-  }
-
-  renderReviewList();
+  // Fetch initial reviews from backend
+  fetch('/api/reviews')
+    .then(res => res.json())
+    .then(data => {
+      reviewList = data;
+      renderReviewList();
+    })
+    .catch(err => console.error('Failed to fetch reviews:', err));
 });
+

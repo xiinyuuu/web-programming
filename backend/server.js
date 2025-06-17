@@ -39,6 +39,7 @@ app.get('/', (req, res) => {
 // ✅ API routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/watchlist', require('./routes/watchlist'));
+app.use('/api/reviews', require('./routes/reviews'));
 
 // ❌ Catch-all for undefined API routes
 app.use((req, res) => {
