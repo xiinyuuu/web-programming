@@ -1,12 +1,13 @@
-const API_KEY = 'b855267d7a05ecc45792618a1e73a27b';
-const BASE_URL = 'https://api.themoviedb.org/3';
+const BASE_URL = '/api/tmdb';
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const actor = JSON.parse(sessionStorage.getItem('selectedActor'));
 
   if (actor) {
-    document.getElementById("actor-img").src = actor.image;
+    // Handle both image and profile_path properties
+    const actorImage = actor.image || actor.profile_path || 'images/default-profile.webp';
+    document.getElementById("actor-img").src = actorImage;
     document.getElementById("actor-img").alt = actor.name;
     document.getElementById("actor-name").textContent = actor.name;
 
@@ -18,7 +19,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function fetchAndDisplayActorDetails(actorId) {
   try {
-    const res = await fetch(`${BASE_URL}/person/${actorId}?api_key=${API_KEY}&language=en-US`);
+    const res = await fetch(`${BASE_URL}/actors/${actorId}`);
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
     const actorDetails = await res.json();
 
     document.getElementById("actor-bio").textContent = actorDetails.biography || "Biography not available.";
@@ -30,12 +34,17 @@ async function fetchAndDisplayActorDetails(actorId) {
     fetchAndDisplayFilmography(actorId);
   } catch (error) {
     console.error('Error fetching actor details:', error);
+    document.getElementById("actor-bio").textContent = "Error loading actor biography.";
+    document.getElementById("actor-born").innerHTML = "Error loading actor details.";
   }
 }
 
 async function fetchAndDisplayFilmography(actorId) {
   try {
-    const res = await fetch(`${BASE_URL}/person/${actorId}/movie_credits?api_key=${API_KEY}&language=en-US`);
+    const res = await fetch(`${BASE_URL}/actors/${actorId}/movies`);
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
     const data = await res.json();
 
     const filmList = document.getElementById("actor-films");
@@ -44,12 +53,12 @@ async function fetchAndDisplayFilmography(actorId) {
     filmList.className = "row row-cols-1 row-cols-sm-2 row-cols-md-5 g-4 justify-content-center list-unstyled";
     filmList.innerHTML = "";
 
-    const knownMovies = data.cast
-      .filter(movie => movie.poster_path) // only include movies with posters
-      .sort((a, b) => (b.popularity || 0) - (a.popularity || 0)) // sort by popularity
-      .slice(0, 10); // limit to top 10
+    if (!data.cast || data.cast.length === 0) {
+      filmList.innerHTML = "<p class='text-light'>No filmography available.</p>";
+      return;
+    }
 
-    knownMovies.forEach(film => {
+    data.cast.forEach(film => {
       const li = document.createElement("li");
       li.classList.add("movie-card", "col", "text-center");
 
@@ -61,14 +70,14 @@ async function fetchAndDisplayFilmography(actorId) {
         const movieData = {
           id: film.id,
           title: film.title,
-          img: `${IMAGE_BASE}${film.poster_path}`
+          img: film.poster_path
         };
 
         sessionStorage.setItem('selectedMovie', JSON.stringify(movieData));
       });
 
       const img = document.createElement("img");
-      img.src = `${IMAGE_BASE}${film.poster_path}`;
+      img.src = film.poster_path;
       img.alt = film.title;
       img.classList.add("movie-img");
 
@@ -81,11 +90,9 @@ async function fetchAndDisplayFilmography(actorId) {
       li.appendChild(movieLink);
       filmList.appendChild(li);
     });
-
-    if (knownMovies.length === 0) {
-      filmList.innerHTML = "<p class='text-light'>No filmography available.</p>";
-    }
   } catch (error) {
     console.error('Error fetching filmography:', error);
+    const filmList = document.getElementById("actor-films");
+    filmList.innerHTML = "<p class='text-light'>Error loading filmography.</p>";
   }
 }

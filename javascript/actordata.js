@@ -1,5 +1,4 @@
-const API_KEY = 'b855267d7a05ecc45792618a1e73a27b';
-const BASE_URL = 'https://api.themoviedb.org/3';
+const BASE_URL = '/api/tmdb';
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
 
 let actors = [];
@@ -26,29 +25,78 @@ async function fetchActors() {
 
   for (let page = 1; page <= 30; page++) {
     try {
-      const res = await fetch(`${BASE_URL}/person/popular?api_key=${API_KEY}&language=en-US&page=${page}`);
+      const res = await fetch(`${BASE_URL}/actors/popular?page=${page}`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      
       const data = await res.json();
-      if (!data.results) continue;
+      if (!data.results || data.results.length === 0) break;
 
       for (const person of data.results) {
         if (actorIds.has(person.id)) continue;
-
-        // Only include names with English letters, spaces, dots, apostrophes, hyphens
-        if (!/^[a-zA-Z\s.'-]+$/.test(person.name)) continue;
-
         actorIds.add(person.id);
-
         actors.push({
           id: person.id,
-          name: person.name || "Unknown",
-          image: person.profile_path ? `${IMAGE_BASE}${person.profile_path}` : "images/default-profile.webp"
+          name: person.name,
+          image: person.image
         });
       }
 
+      // If we've reached the last page, stop fetching
+      if (page >= data.total_pages) {
+        break;
+      }
+
     } catch (error) {
-      console.warn("Error fetching actors:", error);
+      console.error("Error fetching actors:", error);
+      break; // Stop on error
     }
   }
+
+  console.log("Total actors fetched:", actors.length);
+}
+
+function renderActors() {
+  const container = document.querySelector('#actorGridContainer');
+  if (!container) {
+    console.error('Actor grid container not found');
+    return;
+  }
+
+  container.innerHTML = '';
+
+  // Get the current page from the global variable (set in actor.html)
+  const start = ((window.currentPage || 1) - 1) * (window.actorsPerPage || 25);
+  const end = start + (window.actorsPerPage || 25);
+  const actorsToShow = actors.slice(start, end);
+
+  actorsToShow.forEach(actor => {
+    const col = document.createElement('div');
+    col.className = 'col';
+
+    const card = document.createElement('div');
+    card.className = 'card actor-card text-center';
+
+    const link = document.createElement('a');
+    link.href = 'actor-profile.html';
+    link.className = 'text-decoration-none text-light';
+
+    link.addEventListener('click', () => {
+      sessionStorage.setItem('selectedActor', JSON.stringify(actor));
+    });
+
+    card.innerHTML = `
+      <img src="${actor.image}" class="card-img-top actor-img" alt="${actor.name}">
+      <div class="card-body p-2">
+        <h6 class="actor-name">${actor.name}</h6>
+      </div>
+    `;
+
+    link.appendChild(card);
+    col.appendChild(link);
+    container.appendChild(col);
+  });
 }
 
 

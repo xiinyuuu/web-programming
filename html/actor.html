@@ -30,8 +30,28 @@
       transform: scale(1.05);
     }
 
+    .actor-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
     .actor-name {
+      display: block;
+      text-align: center !important;
+      width: 100%;
+      margin-top: 10px;
       color: white !important;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .col > .actor-name, .actor-name {
+      display: block;
+      text-align: center !important;
+      width: 100%;
     }
   </style>
 
@@ -116,40 +136,6 @@
     let currentPage = 1;
     const actorsPerPage = 25;
 
-    function renderActors() {
-      const grid = document.getElementById('actorGridContainer');
-      grid.innerHTML = '';
-
-      const start = (currentPage - 1) * actorsPerPage;
-      const end = start + actorsPerPage;
-      const actorsToShow = actors.slice(start, end); 
-
-      actorsToShow.forEach(actor => {
-        const col = document.createElement('div');
-        col.className = 'col';
-
-        const card = document.createElement('div');
-        card.className = 'card actor-card text-center';
-        card.innerHTML = `
-          <div class="actor-card text-center">
-            <img src="${actor.image}" class="card-img-top actor-img" alt="${actor.name}">
-            <p class="actor-name">${actor.name}</p>
-          </div>
-        `;
-
-        const link = document.createElement('a');
-        link.href = '/actor-profile.html';
-        link.className = 'text-decoration-none text-light';
-        link.addEventListener('click', () => {
-          sessionStorage.setItem('selectedActor', JSON.stringify(actor));
-        });
-
-        link.appendChild(card);
-        col.appendChild(link);
-        grid.appendChild(col);
-      });
-    }
-
     document.getElementById('prevBtn').addEventListener('click', () => {
       if (currentPage > 1) {
         currentPage--;
@@ -163,8 +149,6 @@
         renderActors();
       }
     });
-
-    renderActors();
   </script>
 </body>
 </html>
