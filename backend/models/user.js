@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  deactivated: { 
+    type: Boolean, 
+    default: false 
+  },
   watchlist: [watchlistSchema]
 }, { collection: 'user' });
 
