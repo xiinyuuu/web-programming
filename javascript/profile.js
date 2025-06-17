@@ -40,23 +40,85 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
+    // Function to format date
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+        const diffMinutes = Math.floor(diffTime / (1000 * 60));
+
+        if (diffMinutes < 60) {
+            return diffMinutes === 0 ? 'Just now' : `${diffMinutes} minute${diffMinutes === 1 ? '' : 's'} ago`;
+        } else if (diffHours < 24) {
+            return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+        } else if (diffDays === 0) {
+            return 'Today';
+        } else if (diffDays === 1) {
+            return 'Yesterday';
+        } else if (diffDays < 7) {
+            return `${diffDays} days ago`;
+        } else {
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+    }
+
+    // Function to render reviews
+    function renderProfileReviews(reviews) {
+        const container = document.getElementById('reviews-container');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        reviews.forEach(review => {
+            container.innerHTML += `
+                <div class="activity-item" data-review-id="${review.id}">
+                    <span class="activity-date">${formatDate(review.date)}</span>
+                    <div class="activity-content">
+                        <img src="${review.image}" alt="${review.title}" class="activity-movie-img">
+                        <div>
+                            <div class="activity-movie-title">${review.title}</div>
+                            <div class="activity-movie-info">${review.genre} • ${review.year}</div>
+                            <div class="text-warning mb-1">${generateStars(review.rating)}</div>
+                            <p class="small text activity-movie-review">"${review.review}"</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        attachReviewClickHandlers();
+    }
+
     // Render profile header with user data
     function renderProfileHeader(user) {
         document.getElementById('displayName').textContent = user.username;
         document.getElementById('displayEmail').textContent = user.email;
+        // Update profile picture everywhere it's used
         document.getElementById('displayProfilePic').src = user.profilePic || '../images/profile.jpg';
         const navProfileImg = document.querySelector('.profile-img');
         if (navProfileImg) navProfileImg.src = user.profilePic || '../images/profile.jpg';
-        // Set stats
+        
+        // Update stats
         const statValues = document.querySelectorAll('.stat-value');
-        if (user.stats) {
-          statValues[0].textContent = user.stats.moviesWatched;
-          statValues[1].textContent = user.stats.reviews;
-          statValues[2].textContent = user.stats.watchlist;
-        }
+        statValues[0].textContent = user.moviesWatchedCount || 0;
+        statValues[1].textContent = user.reviewCount || 0;
+        statValues[2].textContent = user.watchlistCount || 0;
+        
+        // Set initial values in edit modal
         document.getElementById('editName').value = user.username;
         document.getElementById('editEmail').value = user.email;
         document.getElementById('profilePicPreview').src = user.profilePic || '../images/profile.jpg';
+
+        // Render reviews if available
+        if (user.reviews) {
+            renderProfileReviews(user.reviews);
+        }
     }
 
     // Fetch and render user profile from backend
@@ -111,46 +173,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
         });
     }
-
-    // Function to render reviews
-    function renderProfileReviews() {
-        const container = document.getElementById('reviews-container');
-        if (!container) return;
-        
-        container.innerHTML = '';
-        
-        // Sort by date (newest first) and take first 3
-        const latestReviews = [...myReviews]
-            .sort((a, b) => {
-                // Simple date comparison for "X days/weeks ago" format
-                if (a.date.includes('day') && !b.date.includes('day')) return -1;
-                if (!a.date.includes('day') && b.date.includes('day')) return 1;
-                return parseInt(a.date) - parseInt(b.date);
-            })
-            .slice(0, 3);
-        
-        latestReviews.forEach(review => {
-            container.innerHTML += `
-                <div class="activity-item" data-review-id="${review.id}">
-                    <span class="activity-date">${review.date}</span>
-                    <div class="activity-content">
-                        <img src="${review.image}" alt="${review.title}" class="activity-movie-img">
-                        <div>
-                            <div class="activity-movie-title">${review.title}</div>
-                            <div class="activity-movie-info">${review.info}</div>
-                            <div class="text-warning mb-1">${generateStars(review.rating)}</div>
-                            <p class="small text activity-movie-review">"${review.review}"</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        
-        attachReviewClickHandlers();
-    }
-
-    // Initialize reviews
-    renderProfileReviews();
 
     // Edit Profile Modal
     const editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));

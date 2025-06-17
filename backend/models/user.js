@@ -54,6 +54,20 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   }
-}, { collection: 'user' });
+}, { 
+  collection: 'user',
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
+
+// Virtual for movies watched count
+userSchema.virtual('moviesWatchedCount').get(function() {
+  return this.watchlist.filter(movie => movie.watched).length;
+});
+
+// Virtual for watchlist count
+userSchema.virtual('watchlistCount').get(function() {
+  return this.watchlist.length;
+});
 
 module.exports = mongoose.model('User', userSchema);
