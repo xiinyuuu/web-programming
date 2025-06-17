@@ -80,6 +80,10 @@ app.get('/profile.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../html/profile.html'));
 });
 
+app.get('/signup.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../html/signup.html'));
+});
+
 // ✅ API routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/watchlist', require('./routes/watchlist'));
