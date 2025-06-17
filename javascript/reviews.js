@@ -3,11 +3,19 @@ document.addEventListener("DOMContentLoaded", function () {
   const reviewStars = document.querySelectorAll('#review-star-rating i');
   const reviewContainer = document.getElementById('review-user-reviews');
   const reviewSeeMoreBtn = document.getElementById('review-see-more-btn');
+  const movieData = JSON.parse(sessionStorage.getItem('selectedMovie'));
 
   let reviewList = [];
   const REVIEWS_TO_SHOW = 5;
   let reviewCurrentDisplayed = 0;
   let expanded = false;
+
+  // Generate stars HTML helper function
+  function generateStarsHTML(rating) {
+    return '<i class="bi bi-star-fill text-warning"></i>'.repeat(Math.floor(rating)) +
+           (rating % 1 >= 0.5 ? '<i class="bi bi-star-half text-warning"></i>' : '') +
+           '<i class="bi bi-star text-warning"></i>'.repeat(5 - Math.ceil(rating));
+  }
 
   // Handle star selection
   reviewStars.forEach(star => {
@@ -32,13 +40,35 @@ document.addEventListener("DOMContentLoaded", function () {
     return JSON.parse(userData);
   }
 
+  // Function to fetch all reviews for the current movie
+  async function fetchMovieReviews() {
+    if (!movieData || !movieData.id) return;
+    
+    try {
+      const response = await fetch(`/api/reviews/movie/${movieData.id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch reviews');
+      }
+      const data = await response.json();
+      reviewList = data;
+      renderReviewList();
+    } catch (err) {
+      console.error('Failed to fetch reviews:', err);
+    }
+  }
+
   // Form submission
-  document.getElementById('review-form').addEventListener('submit', function (e) {
+  document.getElementById('review-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const user = getCurrentUser();
     if (!user) {
       alert("Please log in to submit a review.");
+      return;
+    }
+
+    if (!movieData || !movieData.id) {
+      alert("Movie information not found. Please try again.");
       return;
     }
 
@@ -48,38 +78,42 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const reviewText = document.getElementById('review-text').value;
-    const movieId = sessionStorage.getItem('selectedMovie')?.id;
 
-    if (!movieId) {
-      alert("Movie information not found. Please try again.");
-      return;
+    try {
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: user.name,
+          movieId: movieData.id.toString(),
+          rating: reviewSelectedRating,
+          text: reviewText
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to submit review');
+      }
+
+      // Reset form first
+      this.reset();
+      updateReviewStars(0);
+      reviewSelectedRating = 0;
+      reviewCurrentDisplayed = 0;
+
+      // Then fetch updated data
+      await Promise.all([
+        fetchMovieReviews(),
+        updateMovieStats()
+      ]);
+
+    } catch (err) {
+      console.error('Failed to submit review:', err);
+      alert(err.message || 'Failed to submit review. Please try again.');
     }
-
-    fetch('/api/reviews', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        userId: user.id,
-        username: user.name,
-        movieId: movieId,
-        rating: reviewSelectedRating,
-        text: reviewText
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      reviewList.unshift(data);
-      renderReviewList();
-    })
-    .catch(err => console.error('Failed to submit review:', err));
-
-    this.reset();
-    updateReviewStars(0);
-    reviewSelectedRating = 0;
-
-    reviewCurrentDisplayed = 0;
   });
 
   function renderReviewList() {
@@ -90,18 +124,16 @@ document.addEventListener("DOMContentLoaded", function () {
       : reviewList.slice(0, REVIEWS_TO_SHOW);
 
     reviewsToDisplay.forEach(review => {
-      const starsHTML = '<i class="bi bi-star-fill text-warning"></i>'.repeat(review.rating) +
-        '<i class="bi bi-star text-warning"></i>'.repeat(5 - review.rating);
-
       const reviewHTML = `
         <div class="d-flex gap-3 align-items-start mb-4 review-entry">
           <img src="../images/profile.jpg" class="rounded-circle" width="40" height="40" alt="Profile">
           <div>
             <div class="d-flex align-items-center gap-2 mb-1">
               <strong class="text-light">${review.username}</strong>
-              <span class="text-warning small">${starsHTML}</span>
+              <span class="text-warning small">${generateStarsHTML(review.rating)}</span>
             </div>
             <p class="text-light mb-0 fs-6">${review.text}</p>
+            <small class="text-muted">${new Date(review.createdAt).toLocaleDateString()}</small>
           </div>
         </div>
       `;
@@ -116,18 +148,41 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  async function updateMovieStats() {
+    if (!movieData || !movieData.id) return;
+
+    try {
+      const response = await fetch(`/api/reviews/movie/${movieData.id}/stats`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch movie stats');
+      }
+      const stats = await response.json();
+      
+      // Update movie rating display if you have one
+      const ratingDisplay = document.getElementById('movie-rating');
+      if (ratingDisplay) {
+        const starsHtml = generateStarsHTML(stats.averageRating);
+        ratingDisplay.innerHTML = `
+          <span class="text-warning">${starsHtml}</span>
+          <span>Average Rating: ${stats.averageRating.toFixed(1)} (${stats.totalReviews} reviews)</span>
+        `;
+      }
+    } catch (err) {
+      console.error('Failed to fetch movie stats:', err);
+    }
+  }
+
   reviewSeeMoreBtn.addEventListener('click', () => {
     expanded = !expanded;
     renderReviewList();
   });
 
-  // Fetch initial reviews from backend
-  fetch('/api/reviews')
-    .then(res => res.json())
-    .then(data => {
-      reviewList = data;
-      renderReviewList();
-    })
-    .catch(err => console.error('Failed to fetch reviews:', err));
+  // Initial load of reviews and stats
+  if (movieData && movieData.id) {
+    Promise.all([
+      fetchMovieReviews(),
+      updateMovieStats()
+    ]).catch(err => console.error('Error loading initial data:', err));
+  }
 });
 
