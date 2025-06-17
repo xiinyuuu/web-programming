@@ -1,5 +1,4 @@
-const API_KEY = 'b855267d7a05ecc45792618a1e73a27b';
-const BASE_URL = 'https://api.themoviedb.org/3';
+const BASE_URL = '/api/tmdb';
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
 
 let movies = [];
@@ -9,7 +8,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const cached = sessionStorage.getItem("tmdbMovies");
 
   if (cached) {
-    movies = JSON.parse(cached);
+    movies.length = 0; // Clear existing array
+    movies.push(...JSON.parse(cached));
     renderMovies();
     return;
   }
@@ -28,23 +28,27 @@ async function fetchMovies() {
 
   for (let page = 1; page <= 40; page++) {
     try {
-      const res = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`);
+      const res = await fetch(`${BASE_URL}/movies/popular?page=${page}`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      
       const data = await res.json();
       if (!data.results) continue;
 
       for (const movie of data.results) {
         if (movieIds.has(movie.id)) continue;
         movieIds.add(movie.id);
+        movies.push(movie);
+      }
 
-        // Store only basic information (id, title, image)
-        movies.push({
-          id: movie.id,
-          title: movie.title,
-          img: movie.poster_path ? `${IMAGE_BASE}${movie.poster_path}` : 'images/damsel.webp'
-        });
+      // If we've reached the last page, stop fetching
+      if (page >= data.total_pages) {
+        break;
       }
     } catch (error) {
       console.error(`Error fetching page ${page}:`, error);
+      break; // Stop on error
     }
   }
 

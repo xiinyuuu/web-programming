@@ -1,5 +1,4 @@
-const API_KEY = 'b855267d7a05ecc45792618a1e73a27b';
-const BASE_URL = 'https://api.themoviedb.org/3';
+const BASE_URL = '/api/tmdb';
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -17,16 +16,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function fetchAndDisplayMovieDetails(movieId) {
   try {
-    const res = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`);
+    const res = await fetch(`${BASE_URL}/movies/${movieId}`);
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
     const movieDetails = await res.json();
 
-    const releaseYear = movieDetails.release_date? new Date(movieDetails.release_date).getFullYear(): 'N/A';
+    const releaseYear = movieDetails.release_date ? new Date(movieDetails.release_date).getFullYear() : 'N/A';
     document.querySelector('#movie-year').innerHTML = `<strong>Year:</strong> ${releaseYear}`;
 
-    const genres = movieDetails.genres && movieDetails.genres.length > 0? movieDetails.genres.map(g => g.name).join(', '): 'N/A';
+    const genres = movieDetails.genres && movieDetails.genres.length > 0 ? movieDetails.genres.map(g => g.name).join(', ') : 'N/A';
     document.querySelector('#movie-genre').innerHTML = `<strong>Genre:</strong> ${genres}`;
 
-    document.querySelector('#movie-details img').src = movieDetails.poster_path ? `${IMAGE_BASE}${movieDetails.poster_path}` : 'images/default-movie.jpg';
+    document.querySelector('#movie-details img').src = movieDetails.poster_path;
     document.querySelector('#movie-details img').alt = movieDetails.title;
     document.querySelector('#movie-duration').innerHTML = `<strong>Duration:</strong> ${movieDetails.runtime || 'N/A'} mins`;
     document.querySelector('#movie-synopsis').innerHTML = `<strong>Synopsis:</strong> ${movieDetails.overview || 'No synopsis available.'}`;
@@ -41,13 +43,13 @@ async function fetchAndDisplayMovieDetails(movieId) {
     if (watchlistBtn) {
       watchlistBtn.dataset.movieId = movieDetails.id;
       watchlistBtn.dataset.title = movieDetails.title;
-      watchlistBtn.dataset.poster = movieDetails.poster_path ? `${IMAGE_BASE}${movieDetails.poster_path}` : 'images/default-movie.jpg';
+      watchlistBtn.dataset.poster = movieDetails.poster_path;
     }
   } catch (error) {
     console.error('Error fetching movie details:', error);
+    document.querySelector('#movie-details').innerHTML = "<p class='text-light'>Error loading movie details.</p>";
   }
 }
-
 
 // Star generator
 function generateStars(rating) {
@@ -70,36 +72,19 @@ function generateStars(rating) {
   return stars.join(' ');
 }
 
-
 async function fetchAndDisplayCast(movieId) {
   try {
-    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`);
-    const data = await response.json();
-    let cast = data.cast.slice(0, 6); // Top 6 actors
-
-    // Filter out actors without a profile picture
-    cast = cast.filter(actor => actor.profile_path);
-
-    // Filter names to only include those with English letters (a-z, A-Z, spaces, dots, apostrophes, hyphens)
-    cast = cast.filter(actor => /^[a-zA-Z\s.'-]+$/.test(actor.name));
-
-    // If there are less than 6 actors with profile pictures and English names, fetch more actors until we have 6
-    while (cast.length < 6) {
-      const nextActor = data.cast.find(actor => actor.profile_path && !cast.includes(actor) && /^[a-zA-Z\s.'-]+$/.test(actor.name));
-      if (nextActor) {
-        cast.push(nextActor);
-      } else {
-        // No more actors meeting criteria, break loop to avoid infinite loop
-        break;
-      }
+    const response = await fetch(`${BASE_URL}/movies/${movieId}/credits`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    const data = await response.json();
+    const cast = data.cast;
 
     const castContainer = document.querySelector('#actorSection');
     castContainer.innerHTML = ''; // Clear existing
 
     cast.forEach(actor => {
-      const profilePath = `https://image.tmdb.org/t/p/w185${actor.profile_path}`;
-
       const col = document.createElement('div');
       col.className = 'col-auto';
 
@@ -107,7 +92,7 @@ async function fetchAndDisplayCast(movieId) {
       actorCard.className = 'text-center';
 
       actorCard.innerHTML = `
-        <img src="${profilePath}" alt="${actor.name}" class="actor-img">
+        <img src="${actor.profile_path}" alt="${actor.name}" class="actor-img">
         <p class="mt-2">${actor.name}</p>
       `;
 
@@ -119,7 +104,7 @@ async function fetchAndDisplayCast(movieId) {
         sessionStorage.setItem('selectedActor', JSON.stringify({
           id: actor.id,
           name: actor.name,
-          image: profilePath
+          image: actor.profile_path
         }));
       });
 
@@ -129,6 +114,7 @@ async function fetchAndDisplayCast(movieId) {
     });
   } catch (error) {
     console.error('Error fetching cast:', error);
+    document.querySelector('#actorSection').innerHTML = "<p class='text-light'>Error loading cast information.</p>";
   }
 }
 
