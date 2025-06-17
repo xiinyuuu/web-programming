@@ -72,11 +72,16 @@ app.get('/watchlist.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../html/watchlist.html'));
 });
 
+app.get('/search.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../html/search.html'));
+});
+
 // ✅ API routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/watchlist', require('./routes/watchlist'));
 app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/tmdb', require('./routes/tmdb'));
+app.use('/api/profile', require('./routes/profile'));
 
 // ❌ Catch-all for undefined API routes
 app.use((req, res) => {

@@ -49,7 +49,11 @@ const userSchema = new mongoose.Schema({
     type: Boolean, 
     default: false 
   },
-  watchlist: [watchlistSchema]
+  watchlist: [watchlistSchema],
+  profilePic: {
+    type: String,
+    default: ''
+  }
 }, { collection: 'user' });
 
 module.exports = mongoose.model('User', userSchema);
