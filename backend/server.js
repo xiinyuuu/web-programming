@@ -94,6 +94,7 @@ app.use('/api/watchlist', require('./routes/watchlist'));
 app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/tmdb', require('./routes/tmdb'));
 app.use('/api/profile', require('./routes/profile'));
+app.use('/api/filter', require('./routes/filter'));
 
 // ❌ Catch-all for undefined API routes
 app.use((req, res) => {

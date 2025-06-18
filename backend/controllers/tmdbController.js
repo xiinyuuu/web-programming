@@ -56,6 +56,7 @@ exports.getTrendingActors = async (req, res) => {
         const actors = (response.data.results || [])
             .filter(p => p.known_for_department === "Acting")
             .filter(person => /^[a-zA-Z\s.'-]+$/.test(person.name))
+            .filter(person => person.profile_path) // Only include actors with images
             .slice(0, 6)
             .map(person => ({
                 id: person.id,
@@ -189,6 +190,7 @@ exports.getPopularActors = async (req, res) => {
         // Filter and process actors
         const actors = response.data.results
             .filter(person => /^[a-zA-Z\s.'-]+$/.test(person.name))
+            .filter(person => person.profile_path) // Only include actors with images
             .map(person => ({
                 id: person.id,
                 name: person.name || "Unknown",

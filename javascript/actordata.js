@@ -3,6 +3,10 @@ const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
 
 let actors = [];
 
+// Set default values if not already set
+window.currentPage = window.currentPage || 1;
+window.actorsPerPage = window.actorsPerPage || 25;
+
 document.addEventListener("DOMContentLoaded", async () => {
   const cached = sessionStorage.getItem("tmdbActors");
 
@@ -66,10 +70,13 @@ function renderActors() {
 
   container.innerHTML = '';
 
-  // Get the current page from the global variable (set in actor.html)
+  // Filter out actors without images first
+  const filteredActors = actors.filter(actor => actor.image && !actor.image.includes('default-profile.webp'));
+
+  // Paginate the filtered list
   const start = ((window.currentPage || 1) - 1) * (window.actorsPerPage || 25);
   const end = start + (window.actorsPerPage || 25);
-  const actorsToShow = actors.slice(start, end);
+  const actorsToShow = filteredActors.slice(start, end);
 
   actorsToShow.forEach(actor => {
     const col = document.createElement('div');
@@ -98,6 +105,44 @@ function renderActors() {
     container.appendChild(col);
   });
 }
+
+// Add event listeners for pagination buttons
+// Make sure these IDs exist in your actor.html
+
+document.addEventListener('DOMContentLoaded', () => {
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const pageIndicator = document.getElementById('pageIndicator');
+
+  function updatePaginationButtons() {
+    if (prevBtn) prevBtn.disabled = window.currentPage === 1;
+    if (nextBtn) nextBtn.disabled = window.currentPage >= Math.ceil(actors.length / window.actorsPerPage);
+    if (pageIndicator) pageIndicator.textContent = `Page ${window.currentPage}`;
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      if (window.currentPage > 1) {
+        window.currentPage--;
+        renderActors();
+        updatePaginationButtons();
+      }
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      if (window.currentPage < Math.ceil(actors.length / window.actorsPerPage)) {
+        window.currentPage++;
+        renderActors();
+        updatePaginationButtons();
+      }
+    });
+  }
+
+  // Initial update
+  updatePaginationButtons();
+});
 
 
     
