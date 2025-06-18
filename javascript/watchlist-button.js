@@ -5,10 +5,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Always attach the click handler, even if userId or data attributes are not set yet
   watchlistBtn.addEventListener("click", async () => {
-    const userId = localStorage.getItem("userId");
-    const movieId = watchlistBtn.dataset.movieId;
-    const title = watchlistBtn.dataset.title;
-    const poster = watchlistBtn.dataset.poster;
+  const userId = localStorage.getItem("userId");
+  const movieId = watchlistBtn.dataset.movieId;
+  const title = watchlistBtn.dataset.title;
+  const poster = watchlistBtn.dataset.poster;
 
     if (!userId) {
       alert("You must be logged in to add to your watchlist.");

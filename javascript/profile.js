@@ -19,7 +19,15 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Helper: Get JWT token from localStorage
     function getToken() {
-        return localStorage.getItem('movrec_token');
+        const userData = localStorage.getItem('movrec_user');
+        if (!userData) return null;
+        try {
+            const parsed = JSON.parse(userData);
+            return parsed.token;
+        } catch (e) {
+            console.error('Error parsing user data:', e);
+            return null;
+        }
     }
 
     console.log('Token being used:', getToken());
@@ -27,15 +35,57 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Fetch profile data from backend
     async function fetchProfile() {
         const token = getToken();
-        if (!token) return null;
+        if (!token) {
+            console.error('No token found, redirecting to login');
+            window.location.href = '/login.html';
+            return null;
+        }
+
+        console.log('🔵 Fetching profile with token:', token);
+
         try {
-            const res = await fetch('/api/profile', {
-                headers: { 'Authorization': 'Bearer ' + token }
+            // First verify token
+            const verifyRes = await fetch('/api/auth/verify', {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (!res.ok) throw new Error('Failed to fetch profile');
-            return await res.json();
+
+            if (!verifyRes.ok) {
+                console.error('❌ Token verification failed:', verifyRes.status);
+                localStorage.removeItem('movrec_user');
+                localStorage.removeItem('userId');
+                window.location.href = '/login.html';
+                return null;
+            }
+
+            const verifiedUser = await verifyRes.json();
+            console.log('✅ Token verified, user:', verifiedUser);
+
+            // Then fetch profile
+            const profileRes = await fetch('/api/profile', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!profileRes.ok) {
+                throw new Error(`Profile fetch failed: ${profileRes.status}`);
+            }
+
+            const profileData = await profileRes.json();
+            console.log('✅ Profile data fetched:', profileData);
+
+            // Update localStorage with verified user data
+            const userData = JSON.parse(localStorage.getItem('movrec_user') || '{}');
+            localStorage.setItem('movrec_user', JSON.stringify({
+                ...userData,
+                ...verifiedUser,
+                deactivated: false,
+                id: profileData._id,
+                username: profileData.username,
+                email: profileData.email
+            }));
+
+            return profileData;
         } catch (err) {
-            console.error(err);
+            console.error('❌ Error fetching profile:', err);
             return null;
         }
     }
@@ -97,23 +147,26 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Render profile header with user data
     function renderProfileHeader(user) {
+        if (!user) return;
+        
         document.getElementById('displayName').textContent = user.username;
         document.getElementById('displayEmail').textContent = user.email;
+        
         // Update profile picture everywhere it's used
-        document.getElementById('displayProfilePic').src = user.profilePic || '../images/profile.jpg';
-        const navProfileImg = document.querySelector('.profile-img');
-        if (navProfileImg) navProfileImg.src = user.profilePic || '../images/profile.jpg';
+        const profilePicUrl = user.profilePic || '../images/profile.jpg';
+        document.getElementById('displayProfilePic').src = profilePicUrl;
+        document.querySelector('.profile-img').src = profilePicUrl;
         
         // Update stats
         const statValues = document.querySelectorAll('.stat-value');
         statValues[0].textContent = user.moviesWatchedCount || 0;
         statValues[1].textContent = user.reviewCount || 0;
-        statValues[2].textContent = user.watchlistCount || 0;
+        statValues[2].textContent = user.watchlist?.length || 0;
         
         // Set initial values in edit modal
         document.getElementById('editName').value = user.username;
         document.getElementById('editEmail').value = user.email;
-        document.getElementById('profilePicPreview').src = user.profilePic || '../images/profile.jpg';
+        document.getElementById('profilePicPreview').src = profilePicUrl;
 
         // Render reviews if available
         if (user.reviews) {
@@ -124,6 +177,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Fetch and render user profile from backend
     const user = await fetchProfile();
     if (user) {
+        // Update localStorage with latest user data
+        const userData = JSON.parse(localStorage.getItem('movrec_user') || '{}');
+        localStorage.setItem('movrec_user', JSON.stringify({
+            ...userData,
+            deactivated: false, // Force deactivated to false when profile is loaded
+            id: user._id,
+            username: user.username,
+            email: user.email
+        }));
+
         renderProfileHeader(user);
     }
 
@@ -183,6 +246,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         const newName = document.getElementById('editName').value;
         const newEmail = document.getElementById('editEmail').value;
         const token = getToken();
+        
+        if (!token) {
+            alert('Please log in again');
+            window.location.href = '/login.html';
+            return;
+        }
+
         try {
           const response = await fetch('/api/profile', {
             method: 'PUT',
@@ -192,13 +262,23 @@ document.addEventListener('DOMContentLoaded', async function() {
             },
             body: JSON.stringify({ username: newName, email: newEmail })
           });
-          if (!response.ok) throw new Error('Failed to update profile');
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to update profile');
+          }
           const updatedUser = await response.json();
           renderProfileHeader(updatedUser);
+          
+          // Update stored user data
+          const userData = JSON.parse(localStorage.getItem('movrec_user'));
+          userData.name = newName;
+          userData.email = newEmail;
+          localStorage.setItem('movrec_user', JSON.stringify(userData));
+          
           updateToast.show();
           editProfileModal.hide();
         } catch (err) {
-          alert('Failed to update profile: ' + err.message);
+          alert(err.message);
         }
       });
     }
@@ -233,7 +313,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
               },
-              body: JSON.stringify({ profilePic: profilePicPreview.src })
+              body: JSON.stringify({ image: profilePicPreview.src })
             });
             if (!response.ok) throw new Error('Failed to update profile picture');
             const updatedUser = await response.json();

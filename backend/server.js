@@ -33,8 +33,9 @@ app.use(cors({
   credentials: true
 }));
 
-// ✅ Body parser
-app.use(express.json());
+// ✅ Body parser with increased limit for file uploads
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // ✅ Serve static assets
 app.use('/html', express.static(path.join(__dirname, '../html')));
@@ -108,12 +109,12 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => {
-  console.log('✅ Connected to MongoDB Atlas');
-  app.listen(PORT, () =>
-    console.log(`🚀 Server running: http://localhost:${PORT}`)
-  );
-})
-.catch(err => {
-  console.error('❌ MongoDB connection failed:', err.message);
-});
+  .then(() => {
+    console.log('✅ Connected to MongoDB Atlas');
+    app.listen(PORT, () =>
+      console.log(`🚀 Server running: http://localhost:${PORT}`)
+    );
+  })
+  .catch(err => {
+    console.error('❌ MongoDB connection failed:', err.message);
+  });

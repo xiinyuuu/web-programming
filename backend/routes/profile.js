@@ -1,31 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const profileController = require('../controllers/profileController');
-const jwt = require('jsonwebtoken');
-
-// JWT authentication middleware
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.status(401).json({ message: 'No token provided' });
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: 'Invalid token' });
-    req.user = user;
-    next();
-  });
-}
+const auth = require('../middleware/auth');
 
 // GET profile
-router.get('/', authenticateToken, profileController.getProfile);
+router.get('/', auth, profileController.getProfile);
 // UPDATE profile info
-router.put('/', authenticateToken, profileController.updateProfile);
+router.put('/', auth, profileController.updateProfile);
 // UPDATE password
-router.put('/password', authenticateToken, profileController.changePassword);
+router.put('/password', auth, profileController.changePassword);
 // DEACTIVATE account
-router.put('/deactivate', authenticateToken, profileController.deactivateAccount);
+router.put('/deactivate', auth, profileController.deactivateAccount);
 // DELETE account
-router.delete('/', authenticateToken, profileController.deleteAccount);
+router.delete('/', auth, profileController.deleteAccount);
 // UPDATE profile picture
-router.put('/profile-pic', authenticateToken, profileController.updateProfilePic);
+router.put('/profile-pic', auth, profileController.updateProfilePic);
 
 module.exports = router;

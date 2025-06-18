@@ -82,27 +82,38 @@
       }
 
       try {
-        const response = await fetch("http://localhost:5500/api/auth/login", {
+        console.log('🔵 Attempting login for:', email);
+        
+        const response = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
         });
 
         const result = await response.json();
+        console.log('📝 Login response:', result);
 
         if (response.ok) {
-          const userId = result.user.id || result.user._id; // Fallback for MongoDB users
+          const userId = result.user.id || result.user._id;
 
-          // ✅ Store user info
+          // Store complete user info including deactivated status
           localStorage.setItem("userId", userId);
-          localStorage.setItem("movrec_token", result.token);
           localStorage.setItem("movrec_user", JSON.stringify({
             id: userId,
             name: result.user.username,
-            email: result.user.email
+            email: result.user.email,
+            token: result.token,
+            deactivated: result.user.deactivated,
+            isLoggedIn: true
           }));
 
-          // ✅ Redirect back to movie page if needed
+          console.log('✅ Login successful, stored user data:', {
+            id: userId,
+            email: result.user.email,
+            deactivated: result.user.deactivated
+          });
+
+          // Redirect back to movie page if needed
           const redirect = sessionStorage.getItem("redirectAfterLogin");
           if (redirect) {
             sessionStorage.removeItem("redirectAfterLogin");
@@ -111,11 +122,12 @@
             window.location.href = "home.html";
           }
         } else {
+          console.error('❌ Login failed:', result.message);
           errorDiv.textContent = result.message || "Invalid credentials.";
           errorDiv.classList.remove("d-none");
         }
       } catch (err) {
-        console.error(err);
+        console.error('❌ Login error:', err);
         errorDiv.textContent = "Server error. Please try again.";
         errorDiv.classList.remove("d-none");
       }

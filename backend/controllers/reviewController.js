@@ -5,8 +5,17 @@ const User = require('../models/user');
 exports.getMovieReviews = async (req, res) => {
   try {
     const movieId = req.params.movieId;
-    const reviews = await Review.find({ movieId })
-      .sort({ createdAt: -1 });
+    
+    // Get all users with their IDs to filter reviews
+    const users = await User.find({}, '_id username');
+    const validUserIds = users.map(user => user._id.toString());
+
+    // Only get reviews from users that still exist
+    const reviews = await Review.find({ 
+      movieId,
+      userId: { $in: validUserIds }
+    }).sort({ createdAt: -1 });
+
     res.json(reviews);
   } catch (error) {
     console.error('Error fetching movie reviews:', error);
@@ -34,39 +43,62 @@ exports.getAllReviews = async (req, res) => {
 // Create a new review
 exports.createReview = async (req, res) => {
   try {
-    const { username, movieId, rating, text } = req.body;
-
-    // Validate required fields
-    if (!username || !movieId || !rating || !text) {
-      return res.status(400).json({ message: 'All fields are required' });
+    const { movieId, rating, text } = req.body;
+    
+    // Log the entire user object from the token
+    console.log('🔵 Creating review with user:', req.user);
+    
+    // Get userId from the token payload
+    const userId = req.user.id;
+    
+    if (!userId) {
+      console.error('❌ No user ID in token:', req.user);
+      return res.status(401).json({ message: 'Invalid user ID in token' });
     }
 
-    // Validate rating is between 1 and 5
-    if (rating < 1 || rating > 5) {
-      return res.status(400).json({ message: 'Rating must be between 1 and 5' });
+    // Get username from user document
+    const user = await User.findById(userId);
+    if (!user) {
+      console.error('❌ User not found:', userId);
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if user already reviewed this movie
-    const existingReview = await Review.findOne({ movieId, username });
-    if (existingReview) {
-      return res.status(400).json({ message: 'You have already reviewed this movie' });
-    }
-
-    const newReview = new Review({
-      username,
-      movieId,
-      rating,
-      text
+    console.log('✅ Found user:', {
+      id: user._id,
+      username: user.username
     });
 
-    await newReview.save();
-    res.status(201).json(newReview);
-  } catch (error) {
-    if (error.code === 11000) { // Duplicate key error
+    // Check if user already reviewed this movie
+    const existingReview = await Review.findOne({ userId, movieId });
+    if (existingReview) {
+      console.log('⚠️ User already reviewed this movie:', {
+        userId,
+        movieId,
+        existingReview: existingReview._id
+      });
       return res.status(400).json({ message: 'You have already reviewed this movie' });
     }
-    console.error('Error creating review:', error);
-    res.status(400).json({ message: 'Error creating review' });
+
+    const review = new Review({
+      userId,
+      username: user.username,
+      movieId,
+      rating,
+      text,
+      createdAt: new Date()
+    });
+
+    await review.save();
+    console.log('✅ Review created:', {
+      id: review._id,
+      movieId,
+      rating
+    });
+
+    res.status(201).json(review);
+  } catch (err) {
+    console.error('❌ Error creating review:', err);
+    res.status(500).json({ message: 'Error creating review', error: err.message });
   }
 };
 
@@ -109,13 +141,51 @@ exports.getMovieStats = async (req, res) => {
 // Get reviews by user ID
 exports.getUserReviews = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const reviews = await Review.find({ user: userId })
-      .sort({ createdAt: -1 })
-      .populate('user', 'username email');
+    const userId = req.user.id;  // Updated to match token structure
+    const reviews = await Review.find({ userId })
+      .sort({ createdAt: -1 });
     res.json(reviews);
-  } catch (error) {
-    console.error('Error fetching user reviews:', error);
-    res.status(500).json({ message: 'Failed to fetch user reviews' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching user reviews', error: err.message });
+  }
+};
+
+// Update a review
+exports.updateReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const { rating, text } = req.body;
+    const userId = req.user.id;  // Updated to match token structure
+
+    const review = await Review.findOne({ _id: reviewId, userId });
+    if (!review) {
+      return res.status(404).json({ message: 'Review not found or not authorized' });
+    }
+
+    review.rating = rating;
+    review.text = text;
+    await review.save();
+
+    res.json(review);
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating review', error: err.message });
+  }
+};
+
+// Delete a review
+exports.deleteReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const userId = req.user.id;  // Updated to match token structure
+
+    const review = await Review.findOne({ _id: reviewId, userId });
+    if (!review) {
+      return res.status(404).json({ message: 'Review not found or not authorized' });
+    }
+
+    await review.deleteOne();
+    res.json({ message: 'Review deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting review', error: err.message });
   }
 }; 

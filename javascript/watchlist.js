@@ -47,14 +47,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       const cardBody = document.createElement('div');
       cardBody.className = 'card-body p-2';
       cardBody.innerHTML = `
-        <h6 class="movie-title">${movie.title}</h6>
-        <button class="btn ${movie.watched ? 'btn-success' : 'btn-outline-success'} btn-sm mt-2 toggle-watched">
-          ${movie.watched ? 'Watched' : 'Mark as Watched'}
-        </button>
-        <button class="btn btn-danger btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#removeModal"
-          data-movie-title="${movie.title}" data-movie-id="${movie.movieId}">
-          Remove
-        </button>
+            <h6 class="movie-title">${movie.title}</h6>
+            <button class="btn ${movie.watched ? 'btn-success' : 'btn-outline-success'} btn-sm mt-2 toggle-watched">
+              ${movie.watched ? 'Watched' : 'Mark as Watched'}
+            </button>
+            <button class="btn btn-danger btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#removeModal"
+              data-movie-title="${movie.title}" data-movie-id="${movie.movieId}">
+              Remove
+            </button>
       `;
 
       // Assemble card

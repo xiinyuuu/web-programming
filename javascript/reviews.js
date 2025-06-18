@@ -37,7 +37,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!userData) {
       return null;
     }
-    return JSON.parse(userData);
+    const user = JSON.parse(userData);
+    return user.isLoggedIn ? user : null;
+  }
+
+  function getAuthToken() {
+    const userData = getCurrentUser();
+    return userData ? userData.token : null;
   }
 
   // Function to fetch all reviews for the current movie
@@ -62,12 +68,18 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
 
     const user = getCurrentUser();
-    if (!user) {
+    const token = getAuthToken();
+    
+    console.log('User data:', user);
+    console.log('Token:', token);
+    
+    if (!user || !token) {
       alert("Please log in to submit a review.");
       return;
     }
 
     if (!movieData || !movieData.id) {
+      console.error('Movie data missing:', movieData);
       alert("Movie information not found. Please try again.");
       return;
     }
@@ -78,24 +90,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const reviewText = document.getElementById('review-text').value;
+    const requestData = {
+      movieId: movieData.id.toString(),
+      rating: reviewSelectedRating,
+      text: reviewText
+    };
+
+    console.log('Submitting review:', requestData);
+    console.log('Headers:', {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
 
     try {
       const response = await fetch('/api/reviews', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
         },
-        body: JSON.stringify({
-          username: user.name,
-          movieId: movieData.id.toString(),
-          rating: reviewSelectedRating,
-          text: reviewText
-        })
+        body: JSON.stringify(requestData)
       });
 
+      console.log('Response status:', response.status);
+      const responseData = await response.json();
+      console.log('Response data:', responseData);
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to submit review');
+        throw new Error(responseData.message || 'Failed to submit review');
       }
 
       // Reset form first
@@ -177,12 +199,8 @@ document.addEventListener("DOMContentLoaded", function () {
     renderReviewList();
   });
 
-  // Initial load of reviews and stats
-  if (movieData && movieData.id) {
-    Promise.all([
-      fetchMovieReviews(),
-      updateMovieStats()
-    ]).catch(err => console.error('Error loading initial data:', err));
-  }
+  // Initial load
+  fetchMovieReviews();
+  updateMovieStats();
 });
 
