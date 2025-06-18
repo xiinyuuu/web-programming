@@ -5,18 +5,31 @@ const User = require('../models/user');
 exports.getMovieReviews = async (req, res) => {
   try {
     const movieId = req.params.movieId;
-    
-    // Get all users with their IDs to filter reviews
-    const users = await User.find({}, '_id username');
-    const validUserIds = users.map(user => user._id.toString());
+    // Fetch all reviews for the movie
+    const reviews = await Review.find({ movieId }).sort({ createdAt: -1 });
 
-    // Only get reviews from users that still exist
-    const reviews = await Review.find({ 
-      movieId,
-      userId: { $in: validUserIds }
-    }).sort({ createdAt: -1 });
+    // Fetch all userIds in one go
+    const userIds = reviews.map(r => r.userId);
+    const users = await User.find({ _id: { $in: userIds } }, '_id username deactivated');
+    const userMap = {};
+    users.forEach(user => {
+      userMap[user._id.toString()] = user;
+    });
 
-    res.json(reviews);
+    // Map reviews to include username as 'Unknown' if deactivated
+    const reviewsWithUserStatus = reviews.map(review => {
+      const user = userMap[review.userId.toString()];
+      let username = 'Unknown';
+      if (user && user.deactivated === false) {
+        username = user.username;
+      }
+      return {
+        ...review.toObject(),
+        username,
+      };
+    });
+
+    res.json(reviewsWithUserStatus);
   } catch (error) {
     console.error('Error fetching movie reviews:', error);
     res.status(500).json({ message: 'Failed to fetch movie reviews' });
