@@ -121,11 +121,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Function to render reviews
     function renderProfileReviews(reviews) {
         const container = document.getElementById('reviews-container');
-        if (!container) return;
+        if (!container) {
+            console.error('Reviews container not found!');
+            return;
+        }
         
+        console.log('Rendering reviews:', reviews);
+        console.log('Review IDs in array:', reviews.map(r => r.id));
         container.innerHTML = '';
         
+        // Store the reviews globally for click handler access
+        window.renderedReviews = reviews;
+        
         reviews.forEach(review => {
+            console.log(`Setting data-review-id="${review.id}" for review:`, review.title);
             container.innerHTML += `
                 <div class="activity-item" data-review-id="${review.id}">
                     <span class="activity-date">${formatDate(review.date)}</span>
@@ -142,6 +151,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             `;
         });
         
+        console.log('Reviews rendered, attaching click handlers...');
         attachReviewClickHandlers();
     }
 
@@ -170,7 +180,23 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         // Render reviews if available
         if (user.reviews) {
+            console.log('Rendering user reviews:', user.reviews);
             renderProfileReviews(user.reviews);
+        } else {
+            console.log('No user reviews found, rendering test data');
+            // Test with dummy data to ensure click functionality works
+            renderProfileReviews([
+                {
+                    id: 1,
+                    title: "Test Movie",
+                    genre: "Drama",
+                    year: 2023,
+                    image: "/images/barbie.webp",
+                    rating: 4,
+                    review: "This is a test review to verify click functionality.",
+                    date: new Date().toISOString()
+                }
+            ]);
         }
     }
 
@@ -216,25 +242,47 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Function to attach click handlers to reviews
     function attachReviewClickHandlers() {
-        document.querySelectorAll('.activity-item').forEach(item => {
+        const activityItems = document.querySelectorAll('.activity-item');
+        console.log('Found activity items:', activityItems.length);
+        
+        activityItems.forEach((item, index) => {
+            console.log(`Attaching click handler to item ${index + 1}:`, item);
+            const dataReviewId = item.getAttribute('data-review-id');
+            console.log(`Item ${index + 1} has data-review-id:`, dataReviewId);
+            
             item.style.cursor = 'pointer';
             item.addEventListener('click', function() {
-                const reviewId = parseInt(this.getAttribute('data-review-id'));
-                const review = myReviews.find(r => r.id === reviewId);
+                console.log('Review item clicked!');
+                // Use the full string ID instead of parseInt for MongoDB ObjectIds
+                const reviewId = this.getAttribute('data-review-id');
+                console.log('Review ID:', reviewId);
+                
+                // Use the globally stored reviews array
+                const reviewsArr = window.renderedReviews || [];
+                console.log('Available reviews:', reviewsArr);
+                console.log('Available review IDs:', reviewsArr.map(r => r.id));
+                const review = reviewsArr.find(r => r.id === reviewId);
                 
                 if (review) {
+                    console.log('Found review data:', review);
                     document.getElementById('modalMovieImage').src = review.image;
                     document.getElementById('modalMovieTitle').textContent = review.title;
-                    document.getElementById('modalMovieInfo').textContent = review.info;
-                    document.getElementById('modalMovieDuration').textContent = review.duration;
+                    document.getElementById('modalMovieInfo').textContent = review.info || (review.genre ? `${review.genre} • ${review.year}` : '');
+                    document.getElementById('modalMovieDuration').textContent = review.duration || '';
                     document.getElementById('modalMovieRating').innerHTML = generateStars(review.rating);
                     document.getElementById('modalMovieReview').textContent = review.review;
-                    document.getElementById('modalReviewDate').textContent = review.date;
+                    document.getElementById('modalReviewDate').textContent = formatDate(review.date);
                     
+                    console.log('Showing review modal...');
                     reviewModal.show();
+                } else {
+                    console.error('Review not found for ID:', reviewId);
+                    console.error('Available IDs:', reviewsArr.map(r => r.id));
                 }
             });
         });
+        
+        console.log('Click handlers attached to', activityItems.length, 'items');
     }
 
     // Edit Profile Modal
@@ -267,12 +315,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             throw new Error(error.message || 'Failed to update profile');
           }
           const updatedUser = await response.json();
-          renderProfileHeader(updatedUser);
+          
+          // Only update the specific fields that were changed
+          // This preserves the existing reviews and other profile data
+          document.getElementById('displayName').textContent = updatedUser.username;
+          document.getElementById('displayEmail').textContent = updatedUser.email;
           
           // Update stored user data
-          const userData = JSON.parse(localStorage.getItem('movrec_user'));
-          userData.name = newName;
-          userData.email = newEmail;
+          const userData = JSON.parse(localStorage.getItem('movrec_user') || '{}');
+          userData.username = updatedUser.username;
+          userData.email = updatedUser.email;
           localStorage.setItem('movrec_user', JSON.stringify(userData));
           
           updateToast.show();
@@ -317,7 +369,19 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
             if (!response.ok) throw new Error('Failed to update profile picture');
             const updatedUser = await response.json();
-            renderProfileHeader(updatedUser);
+            
+            // Only update the profile picture without re-rendering everything
+            // This preserves the existing reviews and other profile data
+            const profilePicUrl = updatedUser.profilePic || '../images/profile.jpg';
+            document.getElementById('displayProfilePic').src = profilePicUrl;
+            document.querySelector('.profile-img').src = profilePicUrl;
+            document.getElementById('profilePicPreview').src = profilePicUrl;
+            
+            // Update stored user data
+            const userData = JSON.parse(localStorage.getItem('movrec_user') || '{}');
+            userData.profilePic = profilePicUrl;
+            localStorage.setItem('movrec_user', JSON.stringify(userData));
+            
             updateProfilePicToast.show();
             profilePicModal.hide();
           } catch (err) {
@@ -488,31 +552,4 @@ document.addEventListener('DOMContentLoaded', async function() {
         const existingAlerts = deleteAccountForm.querySelectorAll('.alert-danger');
         existingAlerts.forEach(alert => alert.remove());
     }
-
-    // Make each activity item clickable
-    document.querySelectorAll('.activity-item').forEach(item => {
-        item.style.cursor = 'pointer';
-        item.addEventListener('click', function() {
-        // Get data from the clicked item
-        const movieImg = this.querySelector('.activity-movie-img').src;
-        const movieTitle = this.querySelector('.activity-movie-title').textContent;
-        const movieInfo = this.querySelector('.activity-movie-info').textContent;
-        const movieDuration = this.querySelector('.activity-movie-duration').textContent;
-        const movieRating = this.querySelector('.text-warning').innerHTML;
-        const movieReview = this.querySelector('.small.text').textContent;
-        const reviewDate = this.querySelector('.activity-date').textContent;
-        
-        // Populate modal with data
-        document.getElementById('modalMovieImage').src = movieImg;
-        document.getElementById('modalMovieTitle').textContent = movieTitle;
-        document.getElementById('modalMovieInfo').textContent = movieInfo;
-        document.getElementById('modalMovieDuration').textContent = movieDuration;
-        document.getElementById('modalMovieRating').innerHTML = movieRating;
-        document.getElementById('modalMovieReview').textContent = movieReview;
-        document.getElementById('modalReviewDate').textContent = reviewDate;
-        
-        // Show the modal
-        reviewModal.show();
-        });
-    });
 });
