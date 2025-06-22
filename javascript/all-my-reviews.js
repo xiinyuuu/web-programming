@@ -1,102 +1,46 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const reviewModal = new bootstrap.Modal(document.getElementById('reviewDetailModal'));
 
-    // Review data (same as in profile.js)
-    const myReviews = [
-        {
-            id: 1,
-            title: "Interstellar",
-            info: "Sci-Fi, Adventure • 2014",
-            duration: "2h 49m",
-            image: "../images/interstellar.webp",
-            rating: 4.5,
-            review: "Nolan is simply the Picasso of film industry",
-            date: "2 days ago"
-        },
-        {
-            id: 2,
-            title: "Barbie",
-            info: "Comedy, Adventure • 2023",
-            duration: "1h 54m",
-            image: "../images/barbie.webp",
-            rating: 3,
-            review: "This movie just slay. Absolute 10/10",
-            date: "2 weeks ago"
-        },
-        {
-            id: 3,
-            title: "Amazing Spiderman",
-            info: "Action, Drama • 2020",
-            duration: "2h 16m",
-            image: "../images/theamazingspiderman.webp",
-            rating: 4.5,
-            review: "We love ANDREW GARFIELD <3",
-            date: "5 days ago"
-        },
-        {
-            id: 4,
-            title: "Black Panther",
-            info: "Action, Drama • 2020",
-            duration: "2h 14m",
-            image: "../images/blackpanther.jpg",
-            rating: 4.5,
-            review: "Wakanda forever!",
-            date: "1 week ago"
-        },
-        {
-            id: 5,
-            title: "Cruella",
-            info: "Action, Drama • 2020",
-            duration: "2h 14m",
-            image: "../images/cruella.jpg",
-            rating: 2,
-            review: "Emma Stone is a queen!",
-            date: "2 weeks ago"
-        },
-        {
-            id: 6,
-            title: "Doctor Strange",
-            info: "Action, Drama • 2020",
-            duration: "2h 14m",
-            image: "../images/doctorstrange.webp",
-            rating: 5,
-            review: "Doctor Strange is a must-watch for Marvel fans!",
-            date: "2 weeks ago"
-        },
-        {
-            id: 7,
-            title: "Enola Holmes",
-            info: "Action, Drama • 2020",
-            duration: "2h 14m",
-            image: "../images/enolaholmes.webp",
-            rating: 1.2,
-            review: "Millie Bobby Brown is a star!",
-            date: "2 weeks ago"
-        },
-        {
-            id: 8,
-            title: "Five Feet Apart",
-            info: "Action, Drama • 2020",
-            duration: "2h 14m",
-            image: "../images/fivefeetapart.jpg",
-            rating: 1,
-            review: "I cried so much watching this movie...",
-            date: "2 weeks ago"
-        },
-        {
-            id: 9,
-            title: "Maleficent",
-            info: "Action, Drama • 2020",
-            duration: "2h 14m",
-            image: "../images/maleficent.webp",
-            rating: 5,
-            review: "A dark twist on a classic tale, with stunning visuals and a very powerful performance by Angelina Jolie.",
-            date: "1 day ago"
+    // Helper: Get JWT token from localStorage
+    function getToken() {
+        const userData = localStorage.getItem('movrec_user');
+        if (!userData) return null;
+        try {
+            const parsed = JSON.parse(userData);
+            return parsed.token;
+        } catch (e) {
+            console.error('Error parsing user data:', e);
+            return null;
         }
-    ];
+    }
 
-    // Make it globally accessible
-    window.myReviews = myReviews; 
+    // Function to format date
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+        const diffMinutes = Math.floor(diffTime / (1000 * 60));
+
+        if (diffMinutes < 60) {
+            return diffMinutes === 0 ? 'Just now' : `${diffMinutes} minute${diffMinutes === 1 ? '' : 's'} ago`;
+        } else if (diffHours < 24) {
+            return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+        } else if (diffDays === 0) {
+            return 'Today';
+        } else if (diffDays === 1) {
+            return 'Yesterday';
+        } else if (diffDays < 7) {
+            return `${diffDays} days ago`;
+        } else {
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+    }
 
     // Function to generate star ratings
     function generateStars(rating) {
@@ -120,57 +64,128 @@ document.addEventListener('DOMContentLoaded', function() {
         return stars;
     }
 
-function attachReviewClickHandlers() {
-    document.querySelectorAll('.activity-item').forEach(item => {
-        item.style.cursor = 'pointer';
-        item.addEventListener('click', function() {
-            const reviewId = parseInt(this.getAttribute('data-review-id'));
-            const review = myReviews.find(r => r.id === reviewId);
-            
-            if (review) {
-                // Reset modal scroll position
-                document.querySelector('.modal-body').scrollTop = 0;
-                
-                // Populate modal
-                document.getElementById('modalMovieImage').src = review.image;
-                document.getElementById('modalMovieTitle').textContent = review.title;
-                document.getElementById('modalMovieInfo').textContent = review.info;
-                document.getElementById('modalMovieDuration').textContent = review.duration;
-                document.getElementById('modalMovieRating').innerHTML = generateStars(review.rating);
-                document.getElementById('modalMovieReview').textContent = review.review;
-                document.getElementById('modalReviewDate').textContent = review.date;
-                
-                // Show modal
-                reviewModal.show();
+    // Fetch user reviews from backend
+    async function fetchUserReviews() {
+        const token = getToken();
+        if (!token) {
+            console.error('No token found, redirecting to login');
+            window.location.href = '/login.html';
+            return [];
+        }
+
+        console.log('🔵 Fetching all user reviews with token:', token.substring(0, 20) + '...');
+
+        try {
+            const response = await fetch('/api/profile/reviews', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            console.log('📡 Response status:', response.status);
+            console.log('📡 Response headers:', response.headers);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ Response not ok:', response.status, errorText);
+                throw new Error(`Failed to fetch reviews: ${response.status} - ${errorText}`);
             }
+
+            const data = await response.json();
+            console.log('✅ All user reviews fetched:', data.reviews);
+            return data.reviews || [];
+        } catch (err) {
+            console.error('❌ Error fetching reviews:', err);
+            console.error('❌ Error details:', err.message);
+            return [];
+        }
+    }
+
+    function attachReviewClickHandlers() {
+        const activityItems = document.querySelectorAll('.activity-item');
+        console.log('Found activity items:', activityItems.length);
+        
+        activityItems.forEach((item, index) => {
+            console.log(`Attaching click handler to item ${index + 1}:`, item);
+            const dataReviewId = item.getAttribute('data-review-id');
+            console.log(`Item ${index + 1} has data-review-id:`, dataReviewId);
+            
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', function() {
+                console.log('Review item clicked!');
+                // Use the full string ID instead of parseInt for MongoDB ObjectIds
+                const reviewId = this.getAttribute('data-review-id');
+                console.log('Review ID:', reviewId);
+                
+                // Use the globally stored reviews array
+                const reviewsArr = window.renderedReviews || [];
+                console.log('Available reviews:', reviewsArr);
+                console.log('Available review IDs:', reviewsArr.map(r => r.id));
+                const review = reviewsArr.find(r => r.id === reviewId);
+                
+                if (review) {
+                    console.log('Found review data:', review);
+                    // Reset modal scroll position
+                    document.querySelector('.modal-body').scrollTop = 0;
+                    
+                    document.getElementById('modalMovieImage').src = review.image;
+                    document.getElementById('modalMovieTitle').textContent = review.title;
+                    document.getElementById('modalMovieInfo').textContent = review.info || (review.genre ? `${review.genre} • ${review.year}` : '');
+                    document.getElementById('modalMovieDuration').textContent = review.duration || '';
+                    document.getElementById('modalMovieRating').innerHTML = generateStars(review.rating);
+                    document.getElementById('modalMovieReview').textContent = review.review;
+                    document.getElementById('modalReviewDate').textContent = formatDate(review.date);
+                    
+                    console.log('Showing review modal...');
+                    reviewModal.show();
+                } else {
+                    console.error('Review not found for ID:', reviewId);
+                    console.error('Available IDs:', reviewsArr.map(r => r.id));
+                }
+            });
         });
-    });
-}
+        
+        console.log('Click handlers attached to', activityItems.length, 'items');
+    }
 
     // Function to render ALL reviews
-    function renderAllReviews() {
+    function renderAllReviews(reviews) {
         const container = document.getElementById('all-reviews-container');
-        if (!container) return;
+        if (!container) {
+            console.error('All reviews container not found!');
+            return;
+        }
         
+        console.log('Rendering all reviews:', reviews);
         container.innerHTML = '';
         
+        // Store the reviews globally for click handler access
+        window.renderedReviews = reviews;
+        
+        if (reviews.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="bi bi-chat-square-text" style="font-size: 3rem; color: #6c757d;"></i>
+                    <h4 class="mt-3 text-muted">No reviews yet</h4>
+                    <p class="text-muted">Start reviewing movies to see them here!</p>
+                    <a href="/movies.html" class="btn btn-primary">Browse Movies</a>
+                </div>
+            `;
+            return;
+        }
+        
         // Sort by date (newest first)
-        const sortedReviews = [...myReviews].sort((a, b) => {
-            // Simple date comparison for "X days/weeks ago" format
-            if (a.date.includes('day') && !b.date.includes('day')) return -1;
-            if (!a.date.includes('day') && b.date.includes('day')) return 1;
-            return parseInt(a.date) - parseInt(b.date);
+        const sortedReviews = [...reviews].sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
         });
         
         sortedReviews.forEach(review => {
             container.innerHTML += `
                 <div class="activity-item" data-review-id="${review.id}">
-                    <span class="activity-date">${review.date}</span>
+                    <span class="activity-date">${formatDate(review.date)}</span>
                     <div class="activity-content">
                         <img src="${review.image}" alt="${review.title}" class="activity-movie-img">
                         <div>
                             <div class="activity-movie-title">${review.title}</div>
-                            <div class="activity-movie-info">${review.info}</div>
+                            <div class="activity-movie-info">${review.genre} • ${review.year}</div>
                             <div class="text-warning mb-1">${generateStars(review.rating)}</div>
                             <p class="small text activity-movie-review">"${review.review}"</p>
                         </div>
@@ -179,35 +194,58 @@ function attachReviewClickHandlers() {
             `;
         });
 
+        console.log('All reviews rendered, attaching click handlers...');
         attachReviewClickHandlers();
     }
 
-    // Initialize all reviews
-    renderAllReviews();
+    // Show loading state initially
+    function showLoadingState() {
+        const container = document.getElementById('all-reviews-container');
+        if (container) {
+            container.innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Loading your reviews...</p>
+                </div>
+            `;
+        }
+    }
 
-    // Make each activity item clickable
-    document.querySelectorAll('.activity-item').forEach(item => {
-        item.style.cursor = 'pointer';
-        item.addEventListener('click', function() {
-        // Get data from the clicked item
-        const movieImg = this.querySelector('.activity-movie-img').src;
-        const movieTitle = this.querySelector('.activity-movie-title').textContent;
-        const movieInfo = this.querySelector('.activity-movie-info').textContent;
-        const movieDuration = this.querySelector('.activity-movie-duration').textContent;
-        const movieRating = this.querySelector('.text-warning').innerHTML;
-        const movieReview = this.querySelector('.small.text').textContent;
-        const reviewDate = this.querySelector('.activity-date').textContent;
+    // Show error state
+    function showErrorState(error) {
+        const container = document.getElementById('all-reviews-container');
+        if (container) {
+            container.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
+                    <h4 class="mt-3 text-danger">Error Loading Reviews</h4>
+                    <p class="text-muted">${error}</p>
+                    <button onclick="location.reload()" class="btn btn-primary">Try Again</button>
+                </div>
+            `;
+        }
+    }
+
+    // Initialize: Fetch and render all reviews
+    async function initializePage() {
+        showLoadingState();
         
-        // Populate modal with data
-        document.getElementById('modalMovieImage').src = movieImg;
-        document.getElementById('modalMovieTitle').textContent = movieTitle;
-        document.getElementById('modalMovieInfo').textContent = movieInfo;
-        document.getElementById('modalMovieRating').innerHTML = movieRating;
-        document.getElementById('modalMovieReview').textContent = movieReview;
-        document.getElementById('modalReviewDate').textContent = reviewDate;
-        
-        // Show the modal
-        reviewModal.show();
-        });
-    });
+        try {
+            const userReviews = await fetchUserReviews();
+            if (userReviews.length === 0 && window.renderedReviews === undefined) {
+                // This means there was an error fetching reviews
+                showErrorState('Unable to load reviews. Please check your connection and try again.');
+                return;
+            }
+            renderAllReviews(userReviews);
+        } catch (error) {
+            console.error('Failed to initialize page:', error);
+            showErrorState('Failed to load reviews. Please try again later.');
+        }
+    }
+
+    // Start the initialization
+    initializePage();
 });

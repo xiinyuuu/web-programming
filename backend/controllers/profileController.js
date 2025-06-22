@@ -24,7 +24,7 @@ exports.getProfile = async (req, res) => {
       deactivated: user.deactivated
     });
 
-    // Get review count and reviews
+    // Get review count and reviews (limited to 3 for profile page)
     const reviews = await Review.find({ userId })
       .sort({ createdAt: -1 })
       .limit(3);
@@ -66,6 +66,55 @@ exports.getProfile = async (req, res) => {
 
     res.status(200).json(profileData);
   } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+// GET all reviews for a user (for All My Reviews page)
+exports.getAllReviews = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    console.log('🔵 Getting all reviews for user:', userId);
+
+    // Get all reviews without limit
+    const reviews = await Review.find({ userId })
+      .sort({ createdAt: -1 });
+
+    console.log(`📊 Found ${reviews.length} reviews for user ${userId}`);
+
+    // Fetch movie details for each review
+    const reviewsWithMovieDetails = await Promise.all(reviews.map(async (review) => {
+      try {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/${review.movieId}?api_key=${process.env.TMDB_API_KEY}`
+        );
+        const movie = response.data;
+        
+        return {
+          id: review._id,
+          movieId: review.movieId,
+          title: movie.title,
+          image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+          genre: movie.genres[0]?.name || 'Unknown',
+          year: new Date(movie.release_date).getFullYear(),
+          rating: review.rating,
+          review: review.text,
+          date: review.createdAt
+        };
+      } catch (error) {
+        console.error(`Error fetching movie details for ${review.movieId}:`, error);
+        return null;
+      }
+    }));
+
+    // Filter out any null results from failed movie fetches
+    const validReviews = reviewsWithMovieDetails.filter(review => review !== null);
+
+    console.log(`✅ Returning ${validReviews.length} valid reviews`);
+
+    res.status(200).json({ reviews: validReviews });
+  } catch (err) {
+    console.error('❌ Error getting all reviews:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
@@ -302,5 +351,6 @@ module.exports = {
   changePassword: exports.changePassword,
   deleteAccount: exports.deleteAccount,
   deactivateAccount: exports.deactivateAccount,
-  updateProfilePic: exports.updateProfilePic
+  updateProfilePic: exports.updateProfilePic,
+  getAllReviews: exports.getAllReviews
 };

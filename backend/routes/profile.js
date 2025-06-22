@@ -5,6 +5,8 @@ const auth = require('../middleware/auth');
 
 // GET profile
 router.get('/', auth, profileController.getProfile);
+// GET all reviews
+router.get('/reviews', auth, profileController.getAllReviews);
 // UPDATE profile info
 router.put('/', auth, profileController.updateProfile);
 // UPDATE password
