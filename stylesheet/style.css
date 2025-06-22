@@ -297,5 +297,14 @@ main {
   cursor: pointer;
 }
 
+.bio-collapse {
+  max-height: 6em; /* Show ~4 lines */
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  position: relative;
+}
 
+.bio-expanded {
+  max-height: none;
+}
 
