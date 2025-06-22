@@ -92,6 +92,9 @@ app.get('/signup.html', (req, res) => {
 app.get('/login.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../html/login.html'));
 });
+app.get('/reset-password.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../html/reset-password.html'));
+});
 
 // ✅ API routes
 app.use('/api/auth', require('./routes/auth'));

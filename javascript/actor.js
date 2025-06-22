@@ -26,6 +26,23 @@ async function fetchAndDisplayActorDetails(actorId) {
     const actorDetails = await res.json();
 
     document.getElementById("actor-bio").textContent = actorDetails.biography || "Biography not available.";
+    const bioElement = document.getElementById("actor-bio");
+const toggleLink = document.getElementById("bio-toggle");
+
+// Check if biography is long (more than 300 characters)
+if (actorDetails.biography && actorDetails.biography.length > 300) {
+  toggleLink.style.display = "block"; // Show the toggle link
+  let expanded = false;
+
+  toggleLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    expanded = !expanded;
+    bioElement.classList.toggle("bio-expanded", expanded);
+    toggleLink.textContent = expanded ? "▲ Less" : "▼ More";
+  });
+} else {
+  toggleLink.style.display = "none"; // Hide the toggle link if short bio
+}
     document.getElementById("actor-born").innerHTML = actorDetails.birthday
       ? `Born: ${actorDetails.birthday}`
       : "Birth date not available.";
