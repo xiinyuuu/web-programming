@@ -107,7 +107,7 @@ app.use('/api/filter', require('./routes/filter'));
 // ❌ Catch-all for undefined API routes
 app.use((req, res) => {
   console.log('❌ 404 Not Found:', req.method, req.url);
-  res.status(404).json({ message: 'Endpoint not found' });
+  res.status(404).json();
 });
 
 // ✅ Connect to MongoDB and start server
