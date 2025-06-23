@@ -162,9 +162,15 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.8); /* dark transparent layer */
+    background: rgba(0, 0, 0, 0.85); /* dark, highly visible overlay */
     z-index: 1050; /* below Bootstrap modal which uses 1055+ */
     display: none;
+  }
+
+  .roulette-modal-dimmed {
+    opacity: 0.3;
+    pointer-events: none;
+    transition: opacity 0.2s;
   }
   
 .hidden {

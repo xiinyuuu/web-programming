@@ -103,7 +103,15 @@ function createRouletteModal() {
 
   // Attach event listeners
     const resultModalEl = document.getElementById("resultModal");
-    const rouletteDimOverlay = document.getElementById("rouletteDimOverlay");
+    // const rouletteDimOverlay = document.getElementById("rouletteDimOverlay");
+    let rouletteDimOverlay = document.getElementById('rouletteDimOverlay');
+  if (!rouletteDimOverlay) {
+    rouletteDimOverlay = document.createElement('div');
+    rouletteDimOverlay.id = 'rouletteDimOverlay';
+    rouletteDimOverlay.className = 'roulette-dim-overlay';
+    rouletteDimOverlay.style.display = 'none';
+    document.body.appendChild(rouletteDimOverlay);
+  }
   const modalFooter = document.querySelector('#rouletteModal .modal-footer');
 
   if (!resultModalEl) {
@@ -111,8 +119,8 @@ function createRouletteModal() {
   }
 
     resultModalEl.addEventListener("shown.bs.modal", () => {
+      console.log("Result modal shown, overlay:", rouletteDimOverlay);
       if (rouletteDimOverlay) rouletteDimOverlay.style.display = "block";
-
       // Fire confetti
       confetti({
         particleCount: 100,
@@ -122,8 +130,9 @@ function createRouletteModal() {
     });
 
     resultModalEl.addEventListener("hidden.bs.modal", () => {
-    if (rouletteDimOverlay) rouletteDimOverlay.style.display = "none";
-    });
+      console.log("Result modal hidden, overlay:", rouletteDimOverlay);
+      if (rouletteDimOverlay) rouletteDimOverlay.style.display = "none";
+      });
 
   // Reset modal title when modal is opened
   const rouletteModal = document.getElementById('rouletteModal');
@@ -151,6 +160,15 @@ function createRouletteModal() {
       console.log('Roulette button not found after modal creation');
     }
   }, 500);
+
+  // Ensure the overlay is present in the body (not just inside the modal)
+  if (!document.getElementById('rouletteDimOverlay')) {
+    const overlay = document.createElement('div');
+    overlay.id = 'rouletteDimOverlay';
+    overlay.className = 'roulette-dim-overlay';
+    overlay.style.display = 'none';
+    document.body.appendChild(overlay);
+  }
 }
 
 // Initialize when DOM is ready
@@ -540,33 +558,64 @@ function setupEventListeners() {
       console.log('Available movies titles:', availableMovies.map(m => m.title));
       console.log('Winning movie found:', winningMovie ? winningMovie.title : 'Not found');
 
-      setTimeout(() => {
+      setTimeout(async () => {
         if (winningMovie) {
           console.log('Showing result modal for:', winningMovie.title);
           document.getElementById("resultPoster").src = winningMovie.img;
           document.getElementById("resultTitle").textContent = winningMovie.title;
-          document.getElementById("resultInfo").textContent = `${winningMovie.release_date ? winningMovie.release_date.split('-')[0] : 'N/A'} • Rating: ${winningMovie.vote_average ? winningMovie.vote_average.toFixed(1) : 'N/A'}/10`;
-          document.getElementById("resultDuration").textContent = "Click to view details";
+
+          // Fetch additional details for duration, genre, year
+          let durationText = '';
+          let genreText = '';
+          let yearText = '';
+          try {
+            const res = await fetch(`/api/tmdb/movies/${winningMovie.id}`);
+            if (res.ok) {
+              const details = await res.json();
+              // Format duration as '1h 53m'
+              if (details.runtime && !isNaN(details.runtime)) {
+                const hours = Math.floor(details.runtime / 60);
+                const minutes = details.runtime % 60;
+                durationText = `${hours > 0 ? hours + 'h ' : ''}${minutes}m`;
+              } else {
+                durationText = 'N/A';
+              }
+              // Format genres as 'Sci-Fi, Action'
+              if (details.genres && details.genres.length > 0) {
+                genreText = details.genres.map(g => g.name).join(', ');
+              } else {
+                genreText = 'N/A';
+              }
+              // Year
+              yearText = details.release_date ? details.release_date.split('-')[0] : 'N/A';
+            } else {
+              durationText = 'N/A';
+              genreText = 'N/A';
+              yearText = winningMovie.release_date ? winningMovie.release_date.split('-')[0] : 'N/A';
+            }
+          } catch (err) {
+            durationText = 'N/A';
+            genreText = 'N/A';
+            yearText = winningMovie.release_date ? winningMovie.release_date.split('-')[0] : 'N/A';
+          }
+
+          // Set modal info in the requested format
+          document.getElementById("resultDuration").textContent = durationText;
+          document.getElementById("resultInfo").textContent = `${genreText} • ${yearText}`;
 
           // Add click handler to navigate to movie details
           const resultModalBody = document.querySelector('#resultModal .modal-body');
           if (resultModalBody) {
             resultModalBody.style.cursor = 'pointer';
             resultModalBody.style.transition = 'transform 0.2s ease';
-            
-            // Add hover effect
             resultModalBody.onmouseenter = () => {
               resultModalBody.style.transform = 'scale(1.02)';
             };
-            
             resultModalBody.onmouseleave = () => {
               resultModalBody.style.transform = 'scale(1)';
             };
-            
             resultModalBody.onclick = () => {
-              // Store movie data in sessionStorage for the movie details page
               sessionStorage.setItem('selectedMovie', JSON.stringify(winningMovie));
-              // Close the modal and navigate to movie details
               bootstrap.Modal.getInstance(document.getElementById("resultModal")).hide();
               window.location.href = '/moviedesc.html';
             };
