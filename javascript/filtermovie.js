@@ -1,9 +1,4 @@
 const BASE_URL = '/api/filter';
-const MOVIE_GRID = document.getElementById('movieGrid');
-const PREV_BTN = document.getElementById('prevBtn');
-const NEXT_BTN = document.getElementById('nextBtn');
-const PAGE_INDICATOR = document.getElementById('pageIndicator');
-const ACTIVE_FILTERS_DISPLAY = document.getElementById('activeFiltersDisplay');
 
 let currentPage = 1;
 let totalPages = 1;
@@ -14,6 +9,9 @@ let activeFilters = {
     yearRange: null,
     sort: 'popularity.desc'
 };
+
+// DOM elements - will be initialized when DOM is ready
+let MOVIE_GRID, PREV_BTN, NEXT_BTN, PAGE_INDICATOR, ACTIVE_FILTERS_DISPLAY;
 
 // Fetch and display movies with current filters
 async function fetchAndDisplayMovies() {
@@ -122,8 +120,29 @@ function updatePagination() {
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
+    MOVIE_GRID = document.getElementById('movieGrid');
+    PREV_BTN = document.getElementById('prevBtn');
+    NEXT_BTN = document.getElementById('nextBtn');
+    PAGE_INDICATOR = document.getElementById('pageIndicator');
+    ACTIVE_FILTERS_DISPLAY = document.getElementById('activeFiltersDisplay');
+    
     populateGenreFilter();
     fetchAndDisplayMovies();
+    
+    // Pagination event listeners
+    PREV_BTN.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            fetchAndDisplayMovies();
+        }
+    });
+
+    NEXT_BTN.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            fetchAndDisplayMovies();
+        }
+    });
 });
 
 // Filter Apply Buttons
@@ -173,20 +192,5 @@ document.querySelectorAll('[data-sort]').forEach(item => {
         currentPage = 1;
         fetchAndDisplayMovies();
     });
-});
-
-// Pagination
-PREV_BTN.addEventListener('click', () => {
-    if (currentPage > 1) {
-        currentPage--;
-        fetchAndDisplayMovies();
-    }
-});
-
-NEXT_BTN.addEventListener('click', () => {
-    if (currentPage < totalPages) {
-        currentPage++;
-        fetchAndDisplayMovies();
-    }
 });
 
