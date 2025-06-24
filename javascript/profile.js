@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', async function() {
 
     // Initialize Bootstrap toasts
-    const logoutToastEl = document.getElementById('logoutToast');
+    const logoutToast = new bootstrap.Toast(document.getElementById('logoutToast'), { delay: 3000 });
     const updateToast = new bootstrap.Toast(document.getElementById('updateToast'), { delay: 3000 });
     const updateProfilePicToast = new bootstrap.Toast(document.getElementById('updateProfilePicToast'), { delay: 3000 });
     const updatePasswordToast = new bootstrap.Toast(document.getElementById('updatePasswordToast'), { delay: 3000 });
@@ -13,13 +13,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Inside profile.js (remove the myReviews array)
     const myReviews = window.myReviews || []; // Fallback to empty array if not loaded yet
-    const logoutToast = logoutToastEl ? new bootstrap.Toast(logoutToastEl, { delay: 3000 }) : null;
-    
-    // Check for URL parameters to show toasts on page load
-    if (window.location.search.includes('logout=true') && logoutToast) {
+
+    // Check if we should show logout toast (from URL parameter)
+    if (window.location.search.includes('logout=true')) {
         logoutToast.show();
     }
-
 
     // Helper: Get JWT token from localStorage
     function getToken() {
@@ -248,34 +246,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         return stars;
     }
-    function addSignOutButton() {
-        const userNavSection = document.querySelector("#user-nav-section");
-        if (!userNavSection) {
-            setTimeout(addSignOutButton, 100); // Wait for navbar to load
-            return;
-        }
-        // Prevent adding the button twice
-        if (document.getElementById('triggerSignOutModal')) return;
-
-        const signOutButton = document.createElement('button');
-        signOutButton.id = 'triggerSignOutModal';
-        signOutButton.className = 'btn btn-outline-light btn-sm ms-2';
-        signOutButton.innerHTML = 'Sign Out <i class="bi bi-box-arrow-right ms-1"></i>';
-        
-        signOutButton.addEventListener('click', (event) => {
-            event.preventDefault();
-            if (confirm('Are you sure you want to sign out?')) {
-                localStorage.removeItem('movrec_user');
-                localStorage.removeItem('userId');
-                sessionStorage.clear();
-                window.location.href = '/login.html?logout=true';
-            }
-        });
-        userNavSection.appendChild(signOutButton);
-    }
-
-    // Call the function to add the sign-out button
-    addSignOutButton();
 
     // Function to attach click handlers to reviews
     function attachReviewClickHandlers() {

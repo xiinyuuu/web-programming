@@ -70,14 +70,35 @@
       box-shadow: none;
     }
   </style>
-  <!-- Load the navbar script first -->
-  <script src="/javascript/navbar.js" defer></script>
 </head>
 <body>
 
   <!-- Navbar -->
-  <!-- Navbar Placeholder -->
-  <div id="navbar-placeholder"></div>
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand text-light" href="#">MovRec</a>
+    
+      <div class="collapse navbar-collapse justify-content-between">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/home.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/movies.html">Movies</a></li>
+          <li class="nav-item"><a class="nav-link" href="/actor.html">Actors</a></li>
+          <li class="nav-item"><a class="nav-link" href="/watchlist.html">Watchlist</a></li>
+        </ul>
+    
+        <form id="searchForm" class="d-flex me-4" style="max-width: 300px;">
+          <div class="input-group">
+            <input id="searchInput" class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-search" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+
+        <a href="/profile.html"><img src="/images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
+      </div>
+    </div>    
+  </nav>
 
   <!-- Search Results Section -->
   <div class="container mt-5">

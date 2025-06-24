@@ -10,14 +10,24 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../stylesheet/signup.css" />
-  <!-- Load the navbar script first -->
-  <script src="/javascript/navbar.js" defer></script>
 </head>
 <body>
 
   <!-- Navbar -->
-  <!-- Navbar Placeholder -->
-  <div id="navbar-placeholder"></div>
+  <nav class="navbar navbar-expand-lg custom-navbar bg-dark">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand text-light" href="#">MovRec</a>
+      <div class="collapse navbar-collapse justify-content-between">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="../html/home.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="../html/movies.html">Movies</a></li>
+          <li class="nav-item"><a class="nav-link" href="../html/actor.html">Actors</a></li>
+          <li class="nav-item"><a class="nav-link" href="../html/watchlist.html">Watchlist</a></li>
+        </ul>
+        <img src="../images/profile.jpg" alt="Profile" class="rounded-circle profile-img">
+      </div>
+    </div>    
+  </nav>
 
   <!-- Sign Up Form -->
   <div class="container d-flex justify-content-center align-items-center min-vh-100">
