@@ -6,23 +6,23 @@ const reviewSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  username: {
-    type: String,
-    required: true
+  username: { 
+    type: String, 
+    required: true 
   },
   movieId: {
     type: String,
     required: true
   },
-  rating: {
-    type: Number,
+  rating: { 
+    type: Number, 
     required: true,
     min: 0,
     max: 5
   },
-  text: {
-    type: String,
-    required: true
+  text: { 
+    type: String, 
+    required: true 
   }
 }, {
   timestamps: true
