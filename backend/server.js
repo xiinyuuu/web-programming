@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5500;
 // =========================================================================
 
 // This one line will handle ALL requests for HTML files (e.g., /login.html, /home.html)
-app.use(express.static(path.join(__dirname, '../html')));
+app.use(express.static(path.join(__dirname, '..', 'html')));
 
 // These lines handle requests for CSS, JS, and images
 app.use('/stylesheet', express.static(path.join(__dirname, '..', 'stylesheet')));
@@ -60,9 +60,6 @@ app.use('/api/tmdb', require('./routes/tmdb'));
 app.use('/api/profile', require('./routes/profile'));
 app.use('/api/filter', require('./routes/filter'));
 
-app.get('/', (req, res) => {
-  res.redirect('/home.html');
-});
 
 // =========================================================================
 //  4. CONNECT TO DATABASE AND START SERVER
