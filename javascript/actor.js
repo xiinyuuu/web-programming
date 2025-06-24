@@ -94,20 +94,20 @@ async function fetchAndDisplayFilmography(actorId) {
 
       const movieLink = document.createElement("a");
       movieLink.classList.add("text-decoration-none");
-      movieLink.href = '/moviedesc.html';
+      movieLink.href = '../html/moviedesc.html';
 
       movieLink.addEventListener('click', () => {
         const movieData = {
           id: film.id,
           title: film.title,
-          poster_path: film.poster_path ? IMAGE_BASE + film.poster_path : '/images/default-movie.webp'
+          img: film.poster_path
         };
 
         sessionStorage.setItem('selectedMovie', JSON.stringify(movieData));
       });
 
       const img = document.createElement("img");
-      img.src = film.poster_path ? IMAGE_BASE + film.poster_path : '/images/default-movie.webp';
+      img.src = film.poster_path;
       img.alt = film.title;
       img.classList.add("movie-img");
 
