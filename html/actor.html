@@ -57,45 +57,14 @@
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Load the navbar script first -->
+  <script src="/javascript/navbar.js" defer></script>
 </head>
 
 <body>
-   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg custom-navbar">
-    <div class="container-fluid px-4">
-      <a class="navbar-brand text-light" href="#">MovRec</a>
-    
-      <div class="collapse navbar-collapse justify-content-between">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="/home.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/movies.html">Movies</a></li>
-          <li class="nav-item"><a class="nav-link active" href="/actor.html">Actors</a></li>
-          <li class="nav-item"><a class="nav-link" href="/watchlist.html">Watchlist</a></li>
-        </ul>
-    
-        <form class="d-flex me-4" style="max-width: 300px;" onsubmit="handleSearch(event)">
-          <div class="input-group">
-            <input id="searchInput" class="form-control search-box" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-search" type="submit">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
-        </form>
-
-        <script>
-          function handleSearch(event) {
-            event.preventDefault();
-            const keyword = document.getElementById('searchInput').value.trim();
-            if (keyword) {
-              window.location.href = `/search.html?query=${encodeURIComponent(keyword)}`;
-            }
-          }
-        </script>
-        <a href="/login.html" id="login-logout-link" class="nav-link text-light me-3">Login</a>
-        <a href="/profile.html"><img src="/images/profile.jpg" alt="Profile" class="rounded-circle profile-img"></a>
-      </div>
-    </div>    
-  </nav>
+  <!-- Navbar -->
+  <!-- Navbar Placeholder -->
+  <div id="navbar-placeholder"></div>
 
   <!-- Actor Section -->
   <div class="container text-center mt-5">

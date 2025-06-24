@@ -16,32 +16,14 @@
   <!-- External CSS -->
   <link rel="stylesheet" href="../stylesheet/profile.css" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Load the navbar script first -->
+  <script src="/javascript/navbar.js" defer></script>
 </head>
 <body>
-  <!-- Navbar (matches login page structure) -->
-  <nav class="navbar navbar-expand-lg custom-navbar">
-    <div class="container-fluid px-4">
-      <a class="navbar-brand text-light" href="#">MovRec</a>
-    
-      <div class="collapse navbar-collapse justify-content-between">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="/home.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/movies.html">Movies</a></li>
-          <li class="nav-item"><a class="nav-link" href="/actor.html">Actors</a></li>
-          <li class="nav-item"><a class="nav-link" href="/watchlist.html">Watchlist</a></li>
-        </ul>
-          
-          <a href="login.html" id="login-logout-link" class="nav-link text-light me-3">Login</a>
 
-          <!-- Navigation to profile -->
-          <a href="/profile.html"><img src="/images/profile.jpg" alt="Profile" class="rounded-circle profile-img me-1"></a>
-
-          <!-- Add a container for the modal (empty at first) -->
-          <div id="signout-modal-container"></div>
-        </div>
-      </div>
-    </div>    
-  </nav>
+  <!-- Navbar -->
+  <!-- Navbar Placeholder -->
+  <div id="navbar-placeholder"></div>
 
   <!-- Logout Success Toast -->
   <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" id="logoutToast">
