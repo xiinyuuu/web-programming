@@ -6,7 +6,6 @@ const User = require('../models/user');
 require('dotenv').config();
 const { registerUser, loginUser, verifyUser } = require('../controllers/authController');
 const auth = require('../middleware/auth');
-const { sendPasswordResetEmail } = require('../services/mailService'); 
 
 const router = express.Router();
 
@@ -58,33 +57,26 @@ router.post('/forgot-password', async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      // Security best practice: Don't reveal if an email exists or not.
-      // Send a generic success message either way.
-      console.log(`Password reset requested for non-existent email: ${email}`);
-      return res.status(200).json({
-        message: 'If an account with this email exists, a password reset link has been sent.',
-      });
+      return res.status(404).json({ message: 'User not found.' });
     }
 
     const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '15m', // Link is valid for 15 minutes
+      expiresIn: '15m',
     });
 
-    const frontendBaseUrl = req.headers.origin || 'http://localhost:5500/html';
+    // Use the request origin or fallback to localhost:5500
+    const frontendBaseUrl = req.headers.origin || 'http://localhost:5500';
     const resetLink = `${frontendBaseUrl}/reset-password.html?token=${resetToken}`;
 
-    // --- THIS IS THE UPDATED PART ---
-    // Instead of console.log, we call our email function.
-    await sendPasswordResetEmail(user.email, resetLink);
+    // Simulate sending email
+    console.log('🔗 Reset link:', resetLink);
 
     res.status(200).json({
-      message: 'If an account with this email exists, a password reset link has been sent.',
+      message: 'Password reset link sent. Check console (or your email).',
     });
-
   } catch (err) {
     console.error('Forgot password error:', err);
-    // Don't leak specific error details to the client
-    res.status(500).json({ message: 'An internal server error occurred. Please try again later.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 });
 
