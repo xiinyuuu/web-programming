@@ -308,3 +308,17 @@ main {
   max-height: none;
 }
 
+.btn-play-trailer {
+  background: #a020f0;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  padding: 8px 20px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.btn-play-trailer:hover, .btn-play-trailer:focus {
+  background: #7c13c5;
+  color: #fff;
+}
+

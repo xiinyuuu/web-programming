@@ -29,4 +29,7 @@ router.get('/actors/:id/movies', tmdbController.getActorFilmography);
 // Route for search
 router.get('/search', tmdbController.search);
 
+// Route for movie trailers
+router.get('/movies/:id/trailers', tmdbController.getMovieTrailers);
+
 module.exports = router;

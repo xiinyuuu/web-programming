@@ -353,3 +353,24 @@ exports.search = async (req, res) => {
         res.status(500).json({ error: 'Failed to perform search' });
     }
 };
+
+// Get movie trailers (videos)
+exports.getMovieTrailers = async (req, res) => {
+    try {
+        const movieId = req.params.id;
+        const response = await axios.get(`${BASE_URL}/movie/${movieId}/videos`, {
+            params: {
+                api_key: API_KEY,
+                language: 'en-US'
+            }
+        });
+        // Only return YouTube trailers
+        const trailers = (response.data.results || []).filter(
+            v => v.site === 'YouTube' && v.type === 'Trailer'
+        );
+        res.json(trailers);
+    } catch (error) {
+        console.error('Error fetching movie trailers:', error.message);
+        res.status(500).json({ error: 'Failed to fetch movie trailers' });
+    }
+};

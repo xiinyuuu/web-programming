@@ -45,6 +45,9 @@ async function fetchAndDisplayMovieDetails(movieId) {
       watchlistBtn.dataset.title = movieDetails.title;
       watchlistBtn.dataset.poster = movieDetails.poster_path;
     }
+
+    // After rendering movie details, fetch trailers:
+    await fetchAndDisplayTrailerButton(movieId);
   } catch (error) {
     console.error('Error fetching movie details:', error);
     document.querySelector('#movie-details').innerHTML = "<p class='text-light'>Error loading movie details.</p>";
@@ -116,6 +119,57 @@ async function fetchAndDisplayCast(movieId) {
     console.error('Error fetching cast:', error);
     document.querySelector('#actorSection').innerHTML = "<p class='text-light'>Error loading cast information.</p>";
   }
+}
+
+async function fetchAndDisplayTrailerButton(movieId) {
+  const trailerContainer = document.getElementById('trailer-container');
+  trailerContainer.innerHTML = ''; // Clear previous
+
+  try {
+    const res = await fetch(`/api/tmdb/movies/${movieId}/trailers`);
+    const trailers = await res.json();
+    if (trailers.length > 0) {
+      // Use the first trailer with type 'Trailer' and site 'YouTube'
+      const trailer = trailers.find(t => t.site === 'YouTube' && t.type === 'Trailer');
+      if (trailer) {
+        trailerContainer.innerHTML = `
+          <button class="btn btn-play-trailer mb-3" id="playTrailerBtn">
+            <i class="bi bi-play-fill"></i> Play Trailer
+          </button>
+        `;
+        document.getElementById('playTrailerBtn').onclick = function() {
+          showTrailerModal(trailer.key);
+        };
+      }
+    }
+  } catch (err) {
+    // Optionally handle error
+  }
+}
+
+// Show trailer in modal
+function showTrailerModal(youtubeKey) {
+  const modalBody = document.getElementById('trailerModalBody');
+  modalBody.innerHTML = `
+    <div style="position:relative; width:100%; height:400px;">
+      <iframe width="100%" height="400" src="https://www.youtube.com/embed/${youtubeKey}?autoplay=1"
+        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <a href="https://www.youtube.com/watch?v=${youtubeKey}" target="_blank" 
+         style="position:absolute; bottom:16px; right:16px; z-index:10; background:rgba(0,0,0,0.7); border-radius:50%; padding:8px;"
+         title="Open on YouTube">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff">
+          <path d="M23.498 6.186a2.994 2.994 0 0 0-2.112-2.12C19.163 3.5 12 3.5 12 3.5s-7.163 0-9.386.566a2.994 2.994 0 0 0-2.112 2.12C0 8.41 0 12 0 12s0 3.59.502 5.814a2.994 2.994 0 0 0 2.112 2.12C4.837 20.5 12 20.5 12 20.5s7.163 0 9.386-.566a2.994 2.994 0 0 0 2.112-2.12C24 15.59 24 12 24 12s0-3.59-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </a>
+    </div>
+  `;
+  const trailerModal = new bootstrap.Modal(document.getElementById('trailerModal'));
+  trailerModal.show();
+}
+
+// Stop trailer when modal closes
+function stopTrailer() {
+  document.getElementById('trailerModalBody').innerHTML = '';
 }
 
 
