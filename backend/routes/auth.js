@@ -6,6 +6,7 @@ const User = require('../models/user');
 require('dotenv').config();
 const { registerUser, loginUser, verifyUser } = require('../controllers/authController');
 const auth = require('../middleware/auth');
+const nodemailer = require('nodemailer');
 
 const router = express.Router();
 
@@ -27,6 +28,28 @@ const authMiddleware = (req, res, next) => {
     res.status(401).json({ message: 'Token is not valid' });
   }
 };
+
+// Setup nodemailer transporter for Gmail
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: process.env.RESET_EMAIL || 'movrec.team@gmail.com',
+//     pass: process.env.RESET_EMAIL_PASS || 'knwtakupcvgonmeg',
+//   },
+// });
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'movrec.team@gmail.com',
+    pass: 'knwtakupcvgonmeg', // <-- App Password, no spaces
+  },
+});
+
+console.log('Sending email with:', {
+  user: 'movrec.team@gmail.com',
+  pass: 'knwtakupcvgonmeg'
+});
 
 // ============================
 // @route   POST /api/auth/register
@@ -68,11 +91,26 @@ router.post('/forgot-password', async (req, res) => {
     const frontendBaseUrl = req.headers.origin || 'http://localhost:5500';
     const resetLink = `${frontendBaseUrl}/reset-password.html?token=${resetToken}`;
 
-    // Simulate sending email
-    console.log('🔗 Reset link:', resetLink);
+    // Send email using nodemailer
+    const mailOptions = {
+      from: 'MovRec <movrec.team@gmail.com>',
+      to: email,
+      subject: 'Your Password Reset Link for MovRec',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Password Reset Request</h2>
+          <p>You requested a password reset for your MovRec account.</p>
+          <p>Please click the button below to set a new password. This link is valid for 15 minutes.</p>
+          <a href="${resetLink}" style="display: inline-block; padding: 12px 24px; background: #1677ff; color: #fff; text-decoration: none; border-radius: 5px; font-size: 16px; margin: 16px 0;">Reset Password</a>
+          <p style="margin-top: 24px;">If you did not request this, please ignore this email.</p>
+          <p style="color: #888; font-style: italic; margin-top: 32px;">MovRec Team</p>
+        </div>
+      `
+    };
+    await transporter.sendMail(mailOptions);
 
     res.status(200).json({
-      message: 'Password reset link sent. Check console (or your email).',
+      message: 'Password reset link sent. Check your email.',
     });
   } catch (err) {
     console.error('Forgot password error:', err);
