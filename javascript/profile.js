@@ -1,3 +1,5 @@
+// Find this existing event listener in your profile.js file
+
 document.addEventListener('DOMContentLoaded', async function() {
 
     // Initialize Bootstrap toasts
@@ -167,6 +169,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         document.getElementById('displayProfilePic').src = profilePicUrl;
         document.querySelector('.profile-img').src = profilePicUrl;
         
+        const navbarProfileImg = document.querySelector('nav .profile-img');
+        if (navbarProfileImg) {
+            navbarProfileImg.src = profilePicUrl;
+        }
+        
         // Update stats
         const statValues = document.querySelectorAll('.stat-value');
         statValues[0].textContent = user.moviesWatchedCount || 0;
@@ -324,7 +331,9 @@ document.addEventListener('DOMContentLoaded', async function() {
           // Update stored user data
           const userData = JSON.parse(localStorage.getItem('movrec_user') || '{}');
           userData.username = updatedUser.username;
+          userData.profilePic = updatedUser.profilePic;
           userData.email = updatedUser.email;
+
           localStorage.setItem('movrec_user', JSON.stringify(userData));
           
           updateToast.show();
@@ -379,7 +388,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             
             // Update stored user data
             const userData = JSON.parse(localStorage.getItem('movrec_user') || '{}');
-            userData.profilePic = profilePicUrl;
+            userData.profilePic = updatedUser.profilePic;
             localStorage.setItem('movrec_user', JSON.stringify(userData));
             
             updateProfilePicToast.show();

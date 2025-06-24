@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <title>MovRec | My Profile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <script src="/javascript/auth.js"></script>
+
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Bootstrap Icons -->
@@ -27,15 +30,11 @@
           <li class="nav-item"><a class="nav-link" href="/actor.html">Actors</a></li>
           <li class="nav-item"><a class="nav-link" href="/watchlist.html">Watchlist</a></li>
         </ul>
-        
+          
+          <a href="login.html" id="login-logout-link" class="nav-link text-light me-3">Login</a>
+
           <!-- Navigation to profile -->
           <a href="/profile.html"><img src="/images/profile.jpg" alt="Profile" class="rounded-circle profile-img me-1"></a>
-
-          <!-- Sign Out button -->
-          <button id="triggerSignOutModal" class="btn btn-outline-secondary btn-sm" 
-          style="margin-left: 0; background-color: #00000000; border-color: #00000000; font-size: 0.9rem;">
-          Sign Out <i class="bi bi-box-arrow-right ms-1"></i>
-          </button>
 
           <!-- Add a container for the modal (empty at first) -->
           <div id="signout-modal-container"></div>
@@ -385,8 +384,6 @@
   <!-- Custom Scripts (in correct order) -->
   <script src="/javascript/user-status.js"></script>
   <script src="/javascript/profile.js"></script>
-  <script src="/javascript/signout-modal.js"></script>
-  <script src="/javascript/roulette.js"></script>
 
   <!-- Footer -->
   <footer class="text-center p-4 footer">
@@ -402,6 +399,7 @@
   <div class="roulette-button" data-bs-toggle="modal" data-bs-target="#rouletteModal">
     <img src="/images/roulette.png" alt="Roulette" class="roulette-icon">
   </div>
+  <script src="/javascript/main.js"></script>
         
 </body>
 </html>          
