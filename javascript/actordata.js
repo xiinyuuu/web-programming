@@ -6,11 +6,20 @@ let actorBuffer = []; // Only actors with images
 let apiPageFetched = 0; // Last API page fetched
 let currentDisplayPage = 1; // 1-based
 
+function showActorLoadingSpinner() {
+  const container = document.querySelector('#actorGridContainer');
+  if (container) {
+    container.innerHTML = `<div class="text-light text-center w-100"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   // Reset state
   actorBuffer = [];
   apiPageFetched = 0;
   currentDisplayPage = 1;
+  // Show loading spinner
+  showActorLoadingSpinner();
   // Fetch enough actors to fill the first page
   await ensureActorBufferFilled(currentDisplayPage);
   renderActors(currentDisplayPage);
@@ -29,6 +38,7 @@ async function ensureActorBufferFilled(page) {
   const needed = page * ACTORS_PER_PAGE;
   while (actorBuffer.length < needed) {
     apiPageFetched++;
+    showActorLoadingSpinner(); // Show spinner while fetching
     const newActors = await fetchActorsFromApi(apiPageFetched);
     actorBuffer = actorBuffer.concat(newActors);
     // If API returns no more actors, break to avoid infinite loop
@@ -84,6 +94,7 @@ function setupActorPagination() {
     prevBtn.onclick = async () => {
       if (currentDisplayPage > 1) {
         currentDisplayPage--;
+        showActorLoadingSpinner();
         renderActors(currentDisplayPage);
       }
     };
@@ -92,6 +103,7 @@ function setupActorPagination() {
   if (nextBtn) {
     nextBtn.onclick = async () => {
       currentDisplayPage++;
+      showActorLoadingSpinner();
       await ensureActorBufferFilled(currentDisplayPage);
       renderActors(currentDisplayPage);
     };
