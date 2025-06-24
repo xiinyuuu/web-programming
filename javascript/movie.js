@@ -92,19 +92,19 @@ async function fetchAndDisplayCast(movieId) {
       actorCard.className = 'text-center';
 
       actorCard.innerHTML = `
-        <img src="${actor.profile_path}" alt="${actor.name}" class="actor-img">
+        <img src="${actor.profile_path ? IMAGE_BASE + actor.profile_path : '/images/default-profile.webp'}" alt="${actor.name}" class="actor-img">
         <p class="mt-2">${actor.name}</p>
       `;
 
       const link = document.createElement('a');
-      link.href = '../html/actor-profile.html';
+      link.href = '/actor-profile.html';
       link.className = 'text-decoration-none text-light';
 
       link.addEventListener('click', () => {
         sessionStorage.setItem('selectedActor', JSON.stringify({
           id: actor.id,
           name: actor.name,
-          image: actor.profile_path
+          profile_path: actor.profile_path ? IMAGE_BASE + actor.profile_path : '/images/default-profile.webp'
         }));
       });
 
