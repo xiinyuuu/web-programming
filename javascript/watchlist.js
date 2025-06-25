@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (cardToRemove) cardToRemove.remove();
     } catch (err) {
       console.error("❌ Error removing movie:", err);
-      alert("Failed to remove the movie. Please try again.");
+      showCustomMessage("Failed to remove the movie. Please try again.");
     }
   });
 
@@ -122,8 +122,16 @@ document.addEventListener("DOMContentLoaded", async function () {
         button.classList.toggle("btn-outline-success", !data.watched);
       } catch (err) {
         console.error("❌ Failed to toggle watched status:", err);
-        alert("Could not update watched status.");
+        showCustomMessage("Could not update watched status.");
       }
     }
   });
 });
+function showCustomMessage(message, title = "Message") {
+  // Set the modal title and body
+  document.getElementById('customMessageModalBody').textContent = message;
+
+  // Show the modal (Bootstrap 5)
+  const modal = new bootstrap.Modal(document.getElementById('customMessageModal'));
+  modal.show();
+}

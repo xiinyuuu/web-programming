@@ -171,7 +171,7 @@ document.getElementById('applyYearFilter').addEventListener('click', () => {
         fetchAndDisplayMovies();
         updateActiveFiltersDisplay();
     } else if (startYear || endYear) {
-        alert("Please enter a valid start and end year.");
+        showCustomMessage("Please enter a valid start and end year.");
     }
 });
 
@@ -193,4 +193,13 @@ document.querySelectorAll('[data-sort]').forEach(item => {
         fetchAndDisplayMovies();
     });
 });
+
+function showCustomMessage(message, title = "Message") {
+    // Set the modal title and body
+    document.getElementById('customMessageModalBody').textContent = message;
+  
+    // Show the modal (Bootstrap 5)
+    const modal = new bootstrap.Modal(document.getElementById('customMessageModal'));
+    modal.show();
+  }
 

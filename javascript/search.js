@@ -52,7 +52,7 @@ function showSearchLoadingSpinner() {
     const actorContainer = document.querySelector('#actorResults .row');
     if (movieContainer) {
         movieContainer.innerHTML = `<div class="text-light text-center w-100"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
-    }
+        }
     if (actorContainer) {
         actorContainer.innerHTML = `<div class="text-light text-center w-100"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
     }

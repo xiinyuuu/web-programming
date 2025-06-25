@@ -146,5 +146,14 @@
       </div>
     </div>
   </div>
+
+  <div id="custom-message-modal-container"></div>
+  <script>
+    fetch('/html/custom-message-modal.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('custom-message-modal-container').innerHTML = html;
+      });
+  </script>
 </body>
 </html>

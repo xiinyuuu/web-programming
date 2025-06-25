@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const token = getToken();
         
         if (!token) {
-            alert('Please log in again');
+            showCustomMessage('Please log in again');
             window.location.href = '/login.html';
             return;
         }
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           updateToast.show();
           editProfileModal.hide();
         } catch (err) {
-          alert(err.message);
+          showCustomMessage(err.message);
         }
       });
     }
@@ -385,7 +385,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             updateProfilePicToast.show();
             profilePicModal.hide();
           } catch (err) {
-            alert('Failed to update profile picture: ' + err.message);
+            showCustomMessage('Failed to update profile picture: ' + err.message);
           }
         }
       });
@@ -460,10 +460,10 @@ document.addEventListener('DOMContentLoaded', async function() {
                         window.location.href = 'login.html?accountDeactivated=true';
                     }, 1500);
                 } else {
-                    alert(result.message || 'Failed to deactivate account');
+                    showCustomMessage(result.message || 'Failed to deactivate account');
                 }
             } catch (err) {
-                alert('Server error. Please try again.');
+                showCustomMessage('Server error. Please try again.');
             }
         });
     }
@@ -553,3 +553,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         existingAlerts.forEach(alert => alert.remove());
     }
 });
+
+function showCustomMessage(message, title = "Message") {
+    // Set the modal title and body
+    document.getElementById('customMessageModalBody').textContent = message;
+  
+    // Show the modal (Bootstrap 5)
+    const modal = new bootstrap.Modal(document.getElementById('customMessageModal'));
+    modal.show();
+  }

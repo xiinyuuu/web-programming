@@ -11,11 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const poster = watchlistBtn.dataset.poster;
 
     if (!userId) {
-      alert("You must be logged in to add to your watchlist.");
+      showCustomMessage("You must be logged in to add to your watchlist.");
       return;
     }
     if (!movieId || !title) {
-      alert("Movie details are missing. Please try again later.");
+      showCustomMessage("Movie details are missing. Please try again later.");
       return;
     }
     if (watchlistBtn.disabled) return;
@@ -33,11 +33,11 @@ document.addEventListener("DOMContentLoaded", function () {
         updateButtonUI(true);
         console.log("✅ Movie added to watchlist:", data.message);
       } else {
-        alert(data.message || "Could not add movie.");
+        showCustomMessage(data.message || "Could not add movie.");
       }
     } catch (err) {
       console.error("❌ Error adding movie to watchlist:", err);
-      alert("An error occurred while adding the movie.");
+      showCustomMessage("An error occurred while adding the movie.");
     }
   });
 
@@ -70,3 +70,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
+
+function showCustomMessage(message, title = "Message") {
+  // Set the modal title and body
+  document.getElementById('customMessageModalBody').textContent = message;
+
+  // Show the modal (Bootstrap 5)
+  const modal = new bootstrap.Modal(document.getElementById('customMessageModal'));
+  modal.show();
+}
