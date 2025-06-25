@@ -10,7 +10,7 @@ exports.getMovieReviews = async (req, res) => {
 
     // Fetch all userIds in one go
     const userIds = reviews.map(r => r.userId);
-    const users = await User.find({ _id: { $in: userIds } }, '_id username deactivated');
+    const users = await User.find({ _id: { $in: userIds } }, '_id username deactivated profilePic');
     const userMap = {};
     users.forEach(user => {
       userMap[user._id.toString()] = user;
@@ -20,12 +20,15 @@ exports.getMovieReviews = async (req, res) => {
     const reviewsWithUserStatus = reviews.map(review => {
       const user = userMap[review.userId.toString()];
       let username = 'Unknown';
+      let profilePic = '/images/profile.jpg';
       if (user && user.deactivated === false) {
         username = user.username;
+        profilePic = user.profilePic && user.profilePic.trim() !== '' ? user.profilePic : '/images/profile.jpg';
       }
       return {
         ...review.toObject(),
         username,
+        profilePic,
       };
     });
 
@@ -119,7 +122,8 @@ exports.createReview = async (req, res) => {
 exports.getMovieStats = async (req, res) => {
   try {
     const movieId = req.params.movieId;
-    const reviews = await Review.find({ movieId });
+    const reviews = await Review.find({ movieId }).lean();
+    console.log('Reviews for stats:', reviews);
     
     if (reviews.length === 0) {
       return res.json({

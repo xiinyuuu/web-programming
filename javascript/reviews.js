@@ -12,9 +12,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Generate stars HTML helper function
   function generateStarsHTML(rating) {
-    return '<i class="bi bi-star-fill text-warning"></i>'.repeat(Math.floor(rating)) +
-           (rating % 1 >= 0.5 ? '<i class="bi bi-star-half text-warning"></i>' : '') +
-           '<i class="bi bi-star text-warning"></i>'.repeat(5 - Math.ceil(rating));
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5;
+    let stars = '';
+    for (let i = 0; i < fullStars; i++) {
+      stars += '<i class="bi bi-star-fill text-warning"></i>';
+    }
+    if (halfStar) {
+      stars += '<i class="bi bi-star-half text-warning"></i>';
+    }
+    for (let i = fullStars + (halfStar ? 1 : 0); i < 5; i++) {
+      stars += '<i class="bi bi-star text-warning"></i>';
+    }
+    return stars;
   }
 
   // Handle star selection
@@ -127,10 +137,8 @@ document.addEventListener("DOMContentLoaded", function () {
       reviewCurrentDisplayed = 0;
 
       // Then fetch updated data
-      await Promise.all([
-        fetchMovieReviews(),
-        updateMovieStats()
-      ]);
+      await fetchMovieReviews();
+      await updateMovieStats();
 
     } catch (err) {
       console.error('Failed to submit review:', err);
@@ -148,14 +156,14 @@ document.addEventListener("DOMContentLoaded", function () {
     reviewsToDisplay.forEach(review => {
       const reviewHTML = `
         <div class="d-flex gap-3 align-items-start mb-4 review-entry">
-          <img src="../images/profile.jpg" class="rounded-circle" width="40" height="40" alt="Profile">
+          <img src="${review.profilePic || '../images/profile.jpg'}" class="rounded-circle" width="40" height="40" alt="Profile">
           <div>
             <div class="d-flex align-items-center gap-2 mb-1">
               <strong class="text-light">${review.username}</strong>
               <span class="text-warning small">${generateStarsHTML(review.rating)}</span>
+              <span class="review-date">${new Date(review.createdAt).toLocaleDateString()}</span>
             </div>
             <p class="text-light mb-0 fs-6">${review.text}</p>
-            <small class="text-muted">${new Date(review.createdAt).toLocaleDateString()}</small>
           </div>
         </div>
       `;
@@ -171,26 +179,27 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function updateMovieStats() {
-    if (!movieData || !movieData.id) return;
-
-    try {
-      const response = await fetch(`/api/reviews/movie/${movieData.id}/stats`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch movie stats');
-      }
-      const stats = await response.json();
-      
-      // Update movie rating display if you have one
-      const ratingDisplay = document.getElementById('movie-rating');
-      if (ratingDisplay) {
-        const starsHtml = generateStarsHTML(stats.averageRating);
-        ratingDisplay.innerHTML = `
-          <span class="text-warning">${starsHtml}</span>
-          <span>Average Rating: ${stats.averageRating.toFixed(1)} (${stats.totalReviews} reviews)</span>
-        `;
-      }
-    } catch (err) {
-      console.error('Failed to fetch movie stats:', err);
+    // Get TMDB average from sessionStorage
+    const tmdbAvg = parseFloat(sessionStorage.getItem('tmdbAvg'));
+    // Get all user ratings from reviewList
+    const userRatings = reviewList.map(r => r.rating);
+    const sum = userRatings.reduce((a, b) => a + b, 0);
+    // Calculate the combined average
+    let combinedAvg;
+    if (userRatings.length === 0 || isNaN(tmdbAvg)) {
+      combinedAvg = tmdbAvg;
+    } else {
+      combinedAvg = (tmdbAvg + sum) / (userRatings.length + 1);
+    }
+    // Debug logging
+    console.log('TMDB avg:', tmdbAvg);
+    console.log('User ratings:', userRatings);
+    console.log('Combined avg:', combinedAvg);
+    // Display the combined average
+    const ratingDisplay = document.getElementById('movie-rating');
+    if (ratingDisplay) {
+      ratingDisplay.innerHTML = `<strong>Average Rating:</strong> ${combinedAvg.toFixed(1)} ${generateStarsHTML(combinedAvg)}`;
+      ratingDisplay.classList.remove('d-none');
     }
   }
 
@@ -199,9 +208,21 @@ document.addEventListener("DOMContentLoaded", function () {
     renderReviewList();
   });
 
+  // Wait for tmdbAvg to be set in sessionStorage before initial load
+  async function waitForTmdbAvg() {
+    let tries = 0;
+    while (!sessionStorage.getItem('tmdbAvg') && tries < 20) {
+      await new Promise(res => setTimeout(res, 100));
+      tries++;
+    }
+  }
+
   // Initial load
-  fetchMovieReviews();
-  updateMovieStats();
+  (async function() {
+    await waitForTmdbAvg();
+    await fetchMovieReviews();
+    await updateMovieStats();
+  })();
 });
 
 function showCustomMessage(message, title = "Message") {

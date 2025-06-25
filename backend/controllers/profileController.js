@@ -37,6 +37,8 @@ exports.getProfile = async (req, res) => {
         );
         const movie = response.data;
         
+        // Fetch the user for profilePic
+        const reviewUser = await User.findById(review.userId);
         return {
           id: review._id,
           movieId: review.movieId,
@@ -48,6 +50,7 @@ exports.getProfile = async (req, res) => {
           review: review.text,
           date: review.createdAt,
           duration: movie.runtime ? formatDuration(movie.runtime) : '',
+          profilePic: reviewUser && reviewUser.profilePic ? reviewUser.profilePic : '/images/profile.jpg',
         };
       } catch (error) {
         console.error(`Error fetching movie details for ${review.movieId}:`, error);
@@ -91,6 +94,8 @@ exports.getAllReviews = async (req, res) => {
         );
         const movie = response.data;
         
+        // Fetch the user for profilePic
+        const reviewUser = await User.findById(review.userId);
         return {
           id: review._id,
           movieId: review.movieId,
@@ -102,6 +107,7 @@ exports.getAllReviews = async (req, res) => {
           review: review.text,
           date: review.createdAt,
           duration: movie.runtime ? formatDuration(movie.runtime) : '',
+          profilePic: reviewUser && reviewUser.profilePic ? reviewUser.profilePic : '/images/profile.jpg',
         };
       } catch (error) {
         console.error(`Error fetching movie details for ${review.movieId}:`, error);

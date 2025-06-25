@@ -36,8 +36,6 @@ async function fetchAndDisplayMovieDetails(movieId) {
     // Call to fetch and display cast
     fetchAndDisplayCast(movieId);
 
-    document.querySelector('#movie-rating').innerHTML = `<strong>Average Rating:</strong> ${(movieDetails.vote_average / 2).toFixed(1)} ${generateStars(movieDetails.vote_average / 2)}`;
-
     // Set data attributes for the watchlist button
     const watchlistBtn = document.getElementById('add-to-watchlist-btn');
     if (watchlistBtn) {
@@ -48,6 +46,9 @@ async function fetchAndDisplayMovieDetails(movieId) {
 
     // After rendering movie details, fetch trailers:
     await fetchAndDisplayTrailerButton(movieId);
+
+    // Only set tmdbAvg in sessionStorage
+    sessionStorage.setItem('tmdbAvg', (movieDetails.vote_average / 2).toString());
   } catch (error) {
     console.error('Error fetching movie details:', error);
     document.querySelector('#movie-details').innerHTML = "<p class='text-light'>Error loading movie details.</p>";

@@ -252,6 +252,14 @@ main {
   color: #cccccc;
 }
 
+/* Brighter review date next to star rating */
+.review-date {
+  color: #e0e0e0; /* light grey */
+  font-weight: 600;
+  margin-left: 12px;
+  font-size: 0.98rem;
+  align-self: center;
+}
 
 /* Footer */
 .footer {
