@@ -64,7 +64,7 @@ main {
 /* Section titles */
 .section-title {
   font-weight: bold;
-  color: #ffccff;
+  color: #e295e2;
 }
 .section-divider {
   width: 160px;
@@ -306,5 +306,39 @@ main {
 
 .bio-expanded {
   max-height: none;
+}
+
+.btn-play-trailer {
+  background: #a020f0;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  padding: 8px 20px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.btn-play-trailer:hover, .btn-play-trailer:focus {
+  background: #7c13c5;
+  color: #fff;
+}
+
+#customMessageModalBody {
+  color: #fff;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 0.01rem; 
+  padding-bottom: 0;    
+}
+
+#customMessageModal .modal-footer {
+  border: none;
+  justify-content: center;
+  padding-top: 0.5rem;   
+  padding-bottom: 1rem;
+}
+
+#customMessageModal .modal-content {
+  border: 1.5px solid #cc99ff;   
+  border-radius: 16px;         /* Rounded corners */
 }
 

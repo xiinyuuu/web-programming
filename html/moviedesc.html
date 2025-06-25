@@ -63,6 +63,7 @@
       </div>
       <div class="col-md-7 text-start">
         <h2 class="fw-bold text-light mb-3" id="movie-title">Loading...</h2>
+        <div id="trailer-container"></div>
         <p class="text-light" id="movie-duration"><strong>Duration:</strong> </p>
         <p class="text-light" id="movie-year"><strong>Year:</strong> </p>
         <p class="text-light" id="movie-genre"><strong>Genre:</strong> </p>
@@ -111,7 +112,7 @@
   <footer class="text-center mt-5 p-4 footer">
     <div>
       MovRec &copy; 2025 All Rights Reserved &bull;
-      <a href="mailto:movrec.support@example.com" class="footer-link">Contact Us</a>
+      <a href="mailto:movrec.team@gmail.com" class="footer-link">Contact Us</a>
     </div>
   </footer>
 
@@ -129,5 +130,30 @@
   </div>
 
   <script src="/javascript/user-profile-pic.js"></script>
+
+  <!-- Trailer Modal -->
+  <div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-0">
+          <h5 class="modal-title text-light" id="trailerModalLabel">Movie Trailer</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+            onclick="stopTrailer()"></button>
+        </div>
+        <div class="modal-body p-0" id="trailerModalBody" style="height:400px;">
+          <!-- YouTube iframe will be injected here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="custom-message-modal-container"></div>
+  <script>
+    fetch('/html/custom-message-modal.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('custom-message-modal-container').innerHTML = html;
+      });
+  </script>
 </body>
 </html>

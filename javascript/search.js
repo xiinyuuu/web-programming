@@ -1,6 +1,10 @@
 const BASE_URL = '/api/tmdb';
+let allMovies = [];
+let allActors = [];
 let currentMoviePage = 1;
 let currentActorPage = 1;
+const MOVIES_PER_PAGE = 15;
+const ACTORS_PER_PAGE = 15;
 let totalMoviePages = 1;
 let totalActorPages = 1;
 let currentQuery = '';
@@ -24,51 +28,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-async function performSearch(query, moviePage = 1, actorPage = 1) {
-    try {
-        console.log('Performing search for:', query, 'moviePage:', moviePage, 'actorPage:', actorPage);
-        const response = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(query)}&page=${moviePage}`);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+async function performSearch(query) {
+    showSearchLoadingSpinner();
+    await fetchAllResults(query);
+    currentMoviePage = 1;
+    currentActorPage = 1;
+    renderMoviesPage(currentMoviePage);
+    renderActorsPage(currentActorPage);
+
+    // Show "no results" message if both are empty
+    if (allMovies.length === 0 && allActors.length === 0) {
+        showNoResultsMessage(query);
+    } else {
+        // Remove the message if it exists and there are results
+        let existing = document.getElementById('no-results-message');
+        if (existing) existing.remove();
+    }
+}
+
+function showSearchLoadingSpinner() {
+    // Show spinner in both movie and actor sections
+    const movieContainer = document.querySelector('#movieResults .row');
+    const actorContainer = document.querySelector('#actorResults .row');
+    if (movieContainer) {
+        movieContainer.innerHTML = `<div class="text-light text-center w-100"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
         }
-        
-        const data = await response.json();
-        console.log('Search results:', data);
-
-        // Separate movies and actors
-        const movies = data.results.filter(item => item.type === 'movie');
-        const actors = data.results.filter(item => item.type === 'actor');
-
-        // Update pagination info
-        currentMoviePage = moviePage;
-        currentActorPage = actorPage;
-        totalMoviePages = Math.ceil(movies.length / 10);
-        totalActorPages = Math.ceil(actors.length / 10);
-        
-        renderMovies(movies);
-        renderActors(actors);
-        updateMoviePagination();
-        updateActorPagination();
-
-        // Show/hide sections based on results
-        const movieSection = document.getElementById('movieResults');
-        const actorSection = document.getElementById('actorResults');
-        
-        movieSection.style.display = movies.length > 0 ? 'block' : 'none';
-        actorSection.style.display = actors.length > 0 ? 'block' : 'none';
-
-        // Show no results message if both sections are empty
-        if (movies.length === 0 && actors.length === 0) {
-            const container = document.querySelector('.container');
-            const noResults = document.createElement('div');
-            noResults.className = 'text-center mt-4';
-            noResults.innerHTML = '<p class="text-light">No results found with images. Try a different search term.</p>';
-            container.appendChild(noResults);
-        }
-    } catch (error) {
-        console.error('Error performing search:', error);
-        showError('Error performing search. Please try again.');
+    if (actorContainer) {
+        actorContainer.innerHTML = `<div class="text-light text-center w-100"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
     }
 }
 
@@ -151,11 +137,13 @@ function renderActors(actors) {
 }
 
 function updateMoviePagination() {
-    updatePagination('moviePagination', currentMoviePage, totalMoviePages, changeMoviePage);
+    const totalPages = Math.ceil(allMovies.length / MOVIES_PER_PAGE);
+    updatePagination('moviePagination', currentMoviePage, totalPages, changeMoviePage);
 }
 
 function updateActorPagination() {
-    updatePagination('actorPagination', currentActorPage, totalActorPages, changeActorPage);
+    const totalPages = Math.ceil(allActors.length / ACTORS_PER_PAGE);
+    updatePagination('actorPagination', currentActorPage, totalPages, changeActorPage);
 }
 
 function updatePagination(containerId, currentPage, totalPages, changePageFunc) {
@@ -164,53 +152,48 @@ function updatePagination(containerId, currentPage, totalPages, changePageFunc) 
 
     if (totalPages <= 1) return;
 
-    // Previous button
-    const prevLi = document.createElement('li');
-    prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-    prevLi.innerHTML = `
-        <button class="page-link" ${currentPage === 1 ? 'disabled' : ''} onclick="${changePageFunc.name}(${currentPage - 1})">
-            <i class="bi bi-arrow-left"></i>
-        </button>
-    `;
-    pagination.appendChild(prevLi);
+    // Create a flex container
+    const flex = document.createElement('div');
+    flex.className = 'd-flex justify-content-center align-items-center gap-2';
 
-    // Page numbers
-    for (let i = 1; i <= totalPages; i++) {
-        if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-            const li = document.createElement('li');
-            li.className = `page-item ${i === currentPage ? 'active' : ''}`;
-            li.innerHTML = `
-                <button class="page-link" onclick="${changePageFunc.name}(${i})">${i}</button>
-            `;
-            pagination.appendChild(li);
-        } else if (i === currentPage - 3 || i === currentPage + 3) {
-            const li = document.createElement('li');
-            li.className = 'page-item disabled';
-            li.innerHTML = '<span class="page-link">...</span>';
-            pagination.appendChild(li);
-        }
-    }
+    // Previous button
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'btn btn-outline-light';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.innerHTML = '<i class="bi bi-arrow-left"></i>';
+    prevBtn.onclick = () => changePageFunc(currentPage - 1);
+    flex.appendChild(prevBtn);
+
+    // Page indicator
+    const pageIndicator = document.createElement('span');
+    pageIndicator.className = 'text-light mx-2 fw-bold';
+    pageIndicator.textContent = `Page ${currentPage}`;
+    flex.appendChild(pageIndicator);
 
     // Next button
-    const nextLi = document.createElement('li');
-    nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-    nextLi.innerHTML = `
-        <button class="page-link" ${currentPage === totalPages ? 'disabled' : ''} onclick="${changePageFunc.name}(${currentPage + 1})">
-            <i class="bi bi-arrow-right"></i>
-        </button>
-    `;
-    pagination.appendChild(nextLi);
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn btn-outline-light';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.innerHTML = '<i class="bi bi-arrow-right"></i>';
+    nextBtn.onclick = () => changePageFunc(currentPage + 1);
+    flex.appendChild(nextBtn);
+
+    pagination.appendChild(flex);
 }
 
 function changeMoviePage(page) {
-    if (page < 1 || page > totalMoviePages) return;
-    performSearch(currentQuery, page, currentActorPage);
+    const totalPages = Math.ceil(allMovies.length / MOVIES_PER_PAGE);
+    if (page < 1 || page > totalPages) return;
+    currentMoviePage = page;
+    renderMoviesPage(currentMoviePage);
     window.scrollTo(0, 0);
 }
 
 function changeActorPage(page) {
-    if (page < 1 || page > totalActorPages) return;
-    performSearch(currentQuery, currentMoviePage, page);
+    const totalPages = Math.ceil(allActors.length / ACTORS_PER_PAGE);
+    if (page < 1 || page > totalPages) return;
+    currentActorPage = page;
+    renderActorsPage(currentActorPage);
     window.scrollTo(0, 0);
 }
 
@@ -323,3 +306,132 @@ function setupSearchResultClickHandlers() {
 
 // Start searching and displaying
 displayResults();
+
+async function fetchAllResults(query) {
+    allMovies = [];
+    allActors = [];
+    // Fetch first 5 pages (adjust as needed)
+    for (let page = 1; page <= 5; page++) {
+        const res = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(query)}&page=${page}`);
+        const data = await res.json();
+        allMovies.push(...data.results.filter(item => item.type === 'movie'));
+        allActors.push(...data.results.filter(item => item.type === 'actor'));
+        // Optionally break if no more results
+        if (!data.results || data.results.length === 0) break;
+    }
+}
+
+function renderMoviesPage(page) {
+    const container = document.querySelector('#movieResults .row');
+    const section = document.getElementById('movieResults');
+    const start = (page - 1) * MOVIES_PER_PAGE;
+    const end = start + MOVIES_PER_PAGE;
+    const moviesToShow = allMovies.slice(start, end);
+
+    if (allMovies.length === 0) {
+        section.style.display = 'none';
+        return;
+    } else {
+        section.style.display = 'block';
+    }
+
+    container.innerHTML = '';
+    moviesToShow.forEach(movie => {
+        const col = document.createElement('div');
+        col.className = 'col';
+
+        const card = document.createElement('div');
+        card.className = 'card movie-card text-center';
+
+        const link = document.createElement('a');
+        link.href = '/moviedesc.html';
+        link.className = 'text-decoration-none text-light';
+
+        link.addEventListener('click', () => {
+            sessionStorage.setItem('selectedMovie', JSON.stringify({
+                id: movie.id,
+                title: movie.title,
+                img: movie.img
+            }));
+        });
+
+        card.innerHTML = `
+            <img src="${movie.img}" 
+                 class="card-img-top movie-img" 
+                 alt="${movie.title}"
+                 onerror="this.style.display='none'; this.parentElement.style.display='none';">
+            <div class="card-body">
+                <h6 class="movie-title">${movie.title}</h6>
+            </div>
+        `;
+
+        link.appendChild(card);
+        col.appendChild(link);
+        container.appendChild(col);
+    });
+    updateMoviePagination();
+}
+
+function renderActorsPage(page) {
+    const container = document.querySelector('#actorResults .row');
+    const section = document.getElementById('actorResults');
+    const start = (page - 1) * ACTORS_PER_PAGE;
+    const end = start + ACTORS_PER_PAGE;
+    const actorsToShow = allActors.slice(start, end);
+
+    if (allActors.length === 0) {
+        section.style.display = 'none';
+        return;
+    } else {
+        section.style.display = 'block';
+    }
+
+    container.innerHTML = '';
+    actorsToShow.forEach(actor => {
+        const col = document.createElement('div');
+        col.className = 'col';
+
+        const card = document.createElement('div');
+        card.className = 'card actor-card text-center';
+
+        const link = document.createElement('a');
+        link.href = '/actor-profile.html';
+        link.className = 'text-decoration-none text-light';
+
+        link.addEventListener('click', () => {
+            sessionStorage.setItem('selectedActor', JSON.stringify({
+                id: actor.id,
+                name: actor.name,
+                image: actor.image
+            }));
+        });
+
+        card.innerHTML = `
+            <img src="${actor.image}" 
+                 class="actor-img" 
+                 alt="${actor.name}"
+                 onerror="this.style.display='none'; this.parentElement.style.display='none';">
+            <div class="card-body">
+                <h6 class="actor-name">${actor.name}</h6>
+            </div>
+        `;
+
+        link.appendChild(card);
+        col.appendChild(link);
+        container.appendChild(col);
+    });
+    updateActorPagination();
+}
+
+function showNoResultsMessage(query) {
+    // Remove any previous message
+    let existing = document.getElementById('no-results-message');
+    if (existing) existing.remove();
+
+    const container = document.querySelector('.container');
+    const noResults = document.createElement('div');
+    noResults.id = 'no-results-message';
+    noResults.className = 'text-center mt-4';
+    noResults.innerHTML = `<p class="text-light">No result found for "<span class="fw-bold">${query}</span>"</p>`;
+    container.appendChild(noResults);
+}

@@ -74,18 +74,18 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log('Token:', token);
     
     if (!user || !token) {
-      alert("Please log in to submit a review.");
+      showCustomMessage("Please log in to submit a review.");
       return;
     }
 
     if (!movieData || !movieData.id) {
       console.error('Movie data missing:', movieData);
-      alert("Movie information not found. Please try again.");
+      showCustomMessage("Movie information not found. Please try again.");
       return;
     }
 
     if (reviewSelectedRating === 0) {
-      alert("Please select a star rating.");
+      showCustomMessage("Please select a star rating.");
       return;
     }
 
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     } catch (err) {
       console.error('Failed to submit review:', err);
-      alert(err.message || 'Failed to submit review. Please try again.');
+      showCustomMessage(err.message || 'Failed to submit review. Please try again.');
     }
   });
 
@@ -203,4 +203,13 @@ document.addEventListener("DOMContentLoaded", function () {
   fetchMovieReviews();
   updateMovieStats();
 });
+
+function showCustomMessage(message, title = "Message") {
+  // Set the modal title and body
+  document.getElementById('customMessageModalBody').textContent = message;
+
+  // Show the modal (Bootstrap 5)
+  const modal = new bootstrap.Modal(document.getElementById('customMessageModal'));
+  modal.show();
+}
 
