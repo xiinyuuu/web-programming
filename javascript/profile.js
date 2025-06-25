@@ -481,9 +481,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 showDeleteError('Please enter your password');
                 return;
             }
-            if (!confirm('Are you absolutely sure you want to delete your account? This cannot be undone!')) {
-                return;
-            }
             const token = getToken();
             try {
                 const response = await fetch('/api/profile', {
