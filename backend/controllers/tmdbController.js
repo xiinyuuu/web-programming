@@ -12,9 +12,9 @@ console.log('TMDB Controller loaded, API_KEY present:', !!API_KEY);
 exports.getTrendingMovies = async (req, res) => {
     try {
         console.log('Attempting to fetch trending movies...');
-        console.log('Request URL:', `${BASE_URL}/trending/movie/week`);
+        console.log('Request URL:', `${BASE_URL}/trending/movie/day`);
         
-        const response = await axios.get(`${BASE_URL}/trending/movie/week`, {
+        const response = await axios.get(`${BASE_URL}/trending/movie/day`, {
             params: {
                 api_key: API_KEY
             }
@@ -45,7 +45,7 @@ exports.getTrendingActors = async (req, res) => {
     try {
         console.log('Attempting to fetch trending actors...');
         
-        const response = await axios.get(`${BASE_URL}/trending/person/week`, {
+        const response = await axios.get(`${BASE_URL}/trending/person/day`, {
             params: {
                 api_key: API_KEY
             }
