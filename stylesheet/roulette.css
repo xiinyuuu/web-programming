@@ -144,6 +144,10 @@
     }
   }
 
+  #resultModal.modal.show {
+    z-index: 1055;
+  }
+
   /* Custom dark overlay when result modal is active */
 .body-darkened::before {
     content: "";
@@ -168,7 +172,7 @@
   }
 
   .roulette-modal-dimmed {
-    opacity: 0.3;
+    opacity: 0.1;
     pointer-events: none;
     transition: opacity 0.2s;
   }

@@ -123,6 +123,12 @@ function createRouletteModal() {
 
     resultModalEl.addEventListener("shown.bs.modal", () => {
       console.log("Result modal shown, overlay:", rouletteDimOverlay);
+      // Ensure overlay is the last child of <body> for correct stacking
+      if (rouletteDimOverlay && rouletteDimOverlay.parentNode !== document.body) {
+        document.body.appendChild(rouletteDimOverlay);
+      } else if (rouletteDimOverlay && document.body.lastChild !== rouletteDimOverlay) {
+        document.body.appendChild(rouletteDimOverlay);
+      }
       if (rouletteDimOverlay) rouletteDimOverlay.style.display = "block";
       // Fire confetti
       confetti({
@@ -130,12 +136,20 @@ function createRouletteModal() {
         spread: 70,
         origin: { y: 0.6 },
       });
+      const rouletteModalContent = document.querySelector('#rouletteModal .modal-content');
+      if (rouletteModalContent) {
+        rouletteModalContent.classList.add('roulette-modal-dimmed');
+      }
     });
 
     resultModalEl.addEventListener("hidden.bs.modal", () => {
       console.log("Result modal hidden, overlay:", rouletteDimOverlay);
       if (rouletteDimOverlay) rouletteDimOverlay.style.display = "none";
-      });
+      const rouletteModalContent = document.querySelector('#rouletteModal .modal-content');
+      if (rouletteModalContent) {
+        rouletteModalContent.classList.remove('roulette-modal-dimmed');
+      }
+    });
 
   // Reset modal title when modal is opened
   const rouletteModal = document.getElementById('rouletteModal');
