@@ -2,6 +2,7 @@ const BASE_URL = '/api/tmdb'; // This should match your backend route prefix
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
 
 document.addEventListener("DOMContentLoaded", async () => {
+  sessionStorage.clear();
   const movieCache = sessionStorage.getItem("trendingMovies");
   const actorCache = sessionStorage.getItem("trendingActors");
 
