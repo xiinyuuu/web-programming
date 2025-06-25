@@ -252,6 +252,28 @@ main {
   color: #cccccc;
 }
 
+.star-partial {
+  width: 1.2em;
+  height: 1em;
+  position: relative;
+  display: inline-block;
+  vertical-align: -0.15em; /* Fine-tune alignment with other stars */
+}
+.star-partial .bi-star-fill,
+.star-partial .bi-star {
+  color: #ffc107;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  vertical-align: middle;
+  line-height: 1em;
+}
+.star-partial .bi-star-fill {
+  z-index: 2;
+  overflow: hidden;
+}
+
 /* Brighter review date next to star rating */
 .review-date {
   color: #e0e0e0; /* light grey */
@@ -349,4 +371,5 @@ main {
   border: 1.5px solid #cc99ff;   
   border-radius: 16px;         /* Rounded corners */
 }
+
 

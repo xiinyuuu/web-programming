@@ -16,17 +16,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Generate stars HTML helper function
   function generateStarsHTML(rating) {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 >= 0.5;
     let stars = '';
-    for (let i = 0; i < fullStars; i++) {
-      stars += '<i class="bi bi-star-fill text-warning"></i>';
-    }
-    if (halfStar) {
-      stars += '<i class="bi bi-star-half text-warning"></i>';
-    }
-    for (let i = fullStars + (halfStar ? 1 : 0); i < 5; i++) {
-      stars += '<i class="bi bi-star text-warning"></i>';
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(rating)) {
+        stars += '<i class="bi bi-star-fill text-warning"></i>';
+      } else if (i === Math.floor(rating) + 1 && rating % 1 !== 0) {
+        // Partial star
+        const percent = Math.round((rating % 1) * 100);
+        stars += `<span class="star-partial" style="position:relative;display:inline-block;width:1.2em;">
+          <i class="bi bi-star text-warning" style="position:absolute;left:0;top:0;z-index:1;"></i>
+          <i class="bi bi-star-fill text-warning" style="width:${percent}%;overflow:hidden;position:absolute;left:0;top:0;z-index:2;"></i>
+        </span>`;
+      } else {
+        stars += '<i class="bi bi-star text-warning"></i>';
+      }
     }
     return stars;
   }
@@ -172,9 +175,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Failed to delete review');
-      // Remove from local list and re-render
-      reviewList = reviewList.filter(r => r._id !== reviewId);
-      renderReviewList();
+      // Re-fetch reviews and update stats
+      await fetchMovieReviews();
       await updateMovieStats();
       // Hide modal
       const modal = bootstrap.Modal.getInstance(document.getElementById('deleteReviewModal'));
@@ -187,74 +189,108 @@ document.addEventListener("DOMContentLoaded", function () {
   // Update form submission to handle edit mode
   document.getElementById('review-form').addEventListener('submit', async function (e) {
     e.preventDefault();
-    const user = getCurrentUser();
-    const token = getAuthToken();
-    if (!user || !token) {
-      showCustomMessage("Please log in to submit a review.");
-      return;
-    }
-    if (!movieData || !movieData.id) {
-      showCustomMessage("Movie information not found. Please try again.");
-      return;
-    }
-    if (reviewSelectedRating === 0) {
-      showCustomMessage("Please select a star rating.");
-      return;
-    }
-    const reviewText = document.getElementById('review-text').value;
-    const submitBtn = document.querySelector('#review-form button[type="submit"]');
-    // If editing
-    if (editingReviewId) {
+    try {
+      const user = getCurrentUser();
+      const token = getAuthToken();
+      if (!user || !token) {
+        showCustomMessage("Please log in to submit a review.");
+        return;
+      }
+      if (!movieData || !movieData.id) {
+        showCustomMessage("Movie information not found. Please try again.");
+        return;
+      }
+      if (reviewSelectedRating === 0) {
+        showCustomMessage("Please select a star rating.");
+        return;
+      }
+      const reviewText = document.getElementById('review-text').value;
+      const submitBtn = document.querySelector('#review-form button[type="submit"]');
+      // If editing
+      if (editingReviewId) {
+        try {
+          const response = await fetch(`/api/reviews/${editingReviewId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ rating: reviewSelectedRating, text: reviewText })
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.message || 'Failed to update review');
+          // Re-fetch reviews and update stats
+          await fetchMovieReviews();
+          console.log('DEBUG: reviewList after editing review:', reviewList);
+          await updateMovieStats();
+          // Reset form
+          this.reset();
+          updateReviewStars(0);
+          reviewSelectedRating = 0;
+          editingReviewId = null;
+          submitBtn.textContent = originalButtonText || 'Submit Review';
+        } catch (err) {
+          showCustomMessage(err.message || 'Failed to update review.');
+        }
+        return;
+      }
+      // POST logic for new review
       try {
-        const response = await fetch(`/api/reviews/${editingReviewId}`, {
-          method: 'PUT',
+        const requestData = {
+          movieId: movieData.id.toString(),
+          rating: reviewSelectedRating,
+          text: reviewText
+        };
+        const response = await fetch('/api/reviews', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
           },
-          body: JSON.stringify({ rating: reviewSelectedRating, text: reviewText })
+          body: JSON.stringify(requestData)
         });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message || 'Failed to update review');
-        // Update local list
-        const idx = reviewList.findIndex(r => r._id === editingReviewId);
-        if (idx !== -1) {
-          reviewList[idx].text = reviewText;
-          reviewList[idx].rating = reviewSelectedRating;
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message || 'Failed to submit review');
         }
-        renderReviewList();
-        await updateMovieStats();
-        // Reset form
+        // Reset form first
         this.reset();
         updateReviewStars(0);
         reviewSelectedRating = 0;
-        editingReviewId = null;
-        submitBtn.textContent = originalButtonText || 'Submit Review';
+        reviewCurrentDisplayed = 0;
+        // Then fetch updated data
+        await fetchMovieReviews();
+        await updateMovieStats();
       } catch (err) {
-        showCustomMessage(err.message || 'Failed to update review.');
+        showCustomMessage(err.message || 'Failed to submit review. Please try again.');
       }
-      return;
+    } catch (err) {
+      console.error('Error in submit handler:', err);
     }
-    // ... existing code for submitting a new review ...
   });
 
   async function updateMovieStats() {
-    // Get TMDB average from sessionStorage
-    const tmdbAvg = parseFloat(sessionStorage.getItem('tmdbAvg'));
+    // Get TMDB average from sessionStorage (raw TMDB rating out of 10)
+    const tmdbRaw = parseFloat(sessionStorage.getItem('tmdbAvg'));
+    // If you have vote_count, you can get it from sessionStorage as well, otherwise default to 1
+    const tmdbCount = parseInt(sessionStorage.getItem('tmdbCount')) || 1;
+    // Convert TMDB rating to 5-star scale
+    const tmdbStars = isNaN(tmdbRaw) ? 0 : (tmdbRaw / 10 * 5);
     // Get all user ratings from reviewList
     const userRatings = reviewList.map(r => r.rating);
-    const sum = userRatings.reduce((a, b) => a + b, 0);
+    const userSum = userRatings.reduce((a, b) => a + b, 0);
+    const userCount = userRatings.length;
     // Calculate the combined average
     let combinedAvg;
-    if (userRatings.length === 0 || isNaN(tmdbAvg)) {
-      combinedAvg = tmdbAvg;
+    if (userCount === 0 && tmdbCount === 0) {
+      combinedAvg = 0;
+    } else if (userCount === 0) {
+      combinedAvg = tmdbStars;
+    } else if (tmdbCount === 0) {
+      combinedAvg = userSum / userCount;
     } else {
-      combinedAvg = (tmdbAvg + sum) / (userRatings.length + 1);
+      combinedAvg = (tmdbStars * tmdbCount + userSum) / (tmdbCount + userCount);
     }
-    // Debug logging
-    console.log('TMDB avg:', tmdbAvg);
-    console.log('User ratings:', userRatings);
-    console.log('Combined avg:', combinedAvg);
     // Display the combined average
     const ratingDisplay = document.getElementById('movie-rating');
     if (ratingDisplay) {

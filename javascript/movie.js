@@ -48,7 +48,8 @@ async function fetchAndDisplayMovieDetails(movieId) {
     await fetchAndDisplayTrailerButton(movieId);
 
     // Only set tmdbAvg in sessionStorage
-    sessionStorage.setItem('tmdbAvg', (movieDetails.vote_average / 2).toString());
+    sessionStorage.setItem('tmdbAvg', movieDetails.vote_average.toString());
+    sessionStorage.setItem('tmdbCount', movieDetails.vote_count ? movieDetails.vote_count.toString() : '1');
   } catch (error) {
     console.error('Error fetching movie details:', error);
     document.querySelector('#movie-details').innerHTML = "<p class='text-light'>Error loading movie details.</p>";
