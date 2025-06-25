@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
   let reviewCurrentDisplayed = 0;
   let expanded = false;
 
+  // Track edit state
+  let editingReviewId = null;
+  let originalButtonText = null;
+
   // Generate stars HTML helper function
   function generateStarsHTML(rating) {
     const fullStars = Math.floor(rating);
@@ -56,6 +60,12 @@ document.addEventListener("DOMContentLoaded", function () {
     return userData ? userData.token : null;
   }
 
+  // Helper to get current user ID
+  function getCurrentUserId() {
+    const user = getCurrentUser();
+    return user ? user.id || user._id : null;
+  }
+
   // Function to fetch all reviews for the current movie
   async function fetchMovieReviews() {
     if (!movieData || !movieData.id) return;
@@ -73,95 +83,30 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Form submission
-  document.getElementById('review-form').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const user = getCurrentUser();
-    const token = getAuthToken();
-    
-    console.log('User data:', user);
-    console.log('Token:', token);
-    
-    if (!user || !token) {
-      showCustomMessage("Please log in to submit a review.");
-      return;
-    }
-
-    if (!movieData || !movieData.id) {
-      console.error('Movie data missing:', movieData);
-      showCustomMessage("Movie information not found. Please try again.");
-      return;
-    }
-
-    if (reviewSelectedRating === 0) {
-      showCustomMessage("Please select a star rating.");
-      return;
-    }
-
-    const reviewText = document.getElementById('review-text').value;
-    const requestData = {
-      movieId: movieData.id.toString(),
-      rating: reviewSelectedRating,
-      text: reviewText
-    };
-
-    console.log('Submitting review:', requestData);
-    console.log('Headers:', {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    });
-
-    try {
-      const response = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify(requestData)
-      });
-
-      console.log('Response status:', response.status);
-      const responseData = await response.json();
-      console.log('Response data:', responseData);
-
-      if (!response.ok) {
-        throw new Error(responseData.message || 'Failed to submit review');
-      }
-
-      // Reset form first
-      this.reset();
-      updateReviewStars(0);
-      reviewSelectedRating = 0;
-      reviewCurrentDisplayed = 0;
-
-      // Then fetch updated data
-      await fetchMovieReviews();
-      await updateMovieStats();
-
-    } catch (err) {
-      console.error('Failed to submit review:', err);
-      showCustomMessage(err.message || 'Failed to submit review. Please try again.');
-    }
-  });
-
+  // Function to render the review list with edit/delete icons for current user
   function renderReviewList() {
     reviewContainer.innerHTML = "";
-
+    const currentUserId = getCurrentUserId();
     let reviewsToDisplay = expanded
       ? reviewList
       : reviewList.slice(0, REVIEWS_TO_SHOW);
 
     reviewsToDisplay.forEach(review => {
+      const isCurrentUser = review.userId === currentUserId || review.user === currentUserId;
       const reviewHTML = `
-        <div class="d-flex gap-3 align-items-start mb-4 review-entry">
+        <div class="d-flex gap-3 align-items-start mb-4 review-entry" data-review-id="${review._id}">
           <img src="${review.profilePic || '../images/profile.jpg'}" class="rounded-circle" width="40" height="40" alt="Profile">
-          <div>
+          <div style="flex:1">
             <div class="d-flex align-items-center gap-2 mb-1">
               <strong class="text-light">${review.username}</strong>
               <span class="text-warning small">${generateStarsHTML(review.rating)}</span>
               <span class="review-date">${new Date(review.createdAt).toLocaleDateString()}</span>
+              ${isCurrentUser ? `
+                <span class="ms-auto">
+                  <i class="bi bi-pencil-square text-info edit-review" data-review-id="${review._id}" style="cursor:pointer; margin-right:10px;"></i>
+                  <i class="bi bi-trash text-danger delete-review" data-review-id="${review._id}" style="cursor:pointer;"></i>
+                </span>
+              ` : ''}
             </div>
             <p class="text-light mb-0 fs-6">${review.text}</p>
           </div>
@@ -176,7 +121,122 @@ document.addEventListener("DOMContentLoaded", function () {
       reviewSeeMoreBtn.classList.remove("d-none");
       reviewSeeMoreBtn.textContent = expanded ? "See Less" : "See More";
     }
+
+    attachReviewActionHandlers();
   }
+
+  // Attach event listeners for edit and delete icons
+  function attachReviewActionHandlers() {
+    // Delete
+    document.querySelectorAll('.delete-review').forEach(icon => {
+      icon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const reviewId = this.getAttribute('data-review-id');
+        // Store the reviewId to delete
+        document.getElementById('confirmDeleteReviewBtn').setAttribute('data-review-id', reviewId);
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('deleteReviewModal'));
+        modal.show();
+      });
+    });
+    // Edit
+    document.querySelectorAll('.edit-review').forEach(icon => {
+      icon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const reviewId = this.getAttribute('data-review-id');
+        const review = reviewList.find(r => r._id === reviewId);
+        if (!review) return;
+        // Move review text to comment box
+        document.getElementById('review-text').value = review.text;
+        // Set stars
+        updateReviewStars(review.rating);
+        reviewSelectedRating = review.rating;
+        // Change button to Save Changes
+        const submitBtn = document.querySelector('#review-form button[type="submit"]');
+        if (!originalButtonText) originalButtonText = submitBtn.textContent;
+        submitBtn.textContent = 'Save Changes';
+        editingReviewId = reviewId;
+      });
+    });
+  }
+
+  // Handle delete confirmation
+  document.getElementById('confirmDeleteReviewBtn').addEventListener('click', async function() {
+    const reviewId = this.getAttribute('data-review-id');
+    if (!reviewId) return;
+    const token = getAuthToken();
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Failed to delete review');
+      // Remove from local list and re-render
+      reviewList = reviewList.filter(r => r._id !== reviewId);
+      renderReviewList();
+      await updateMovieStats();
+      // Hide modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('deleteReviewModal'));
+      modal.hide();
+    } catch (err) {
+      showCustomMessage(err.message || 'Failed to delete review.');
+    }
+  });
+
+  // Update form submission to handle edit mode
+  document.getElementById('review-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const user = getCurrentUser();
+    const token = getAuthToken();
+    if (!user || !token) {
+      showCustomMessage("Please log in to submit a review.");
+      return;
+    }
+    if (!movieData || !movieData.id) {
+      showCustomMessage("Movie information not found. Please try again.");
+      return;
+    }
+    if (reviewSelectedRating === 0) {
+      showCustomMessage("Please select a star rating.");
+      return;
+    }
+    const reviewText = document.getElementById('review-text').value;
+    const submitBtn = document.querySelector('#review-form button[type="submit"]');
+    // If editing
+    if (editingReviewId) {
+      try {
+        const response = await fetch(`/api/reviews/${editingReviewId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ rating: reviewSelectedRating, text: reviewText })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Failed to update review');
+        // Update local list
+        const idx = reviewList.findIndex(r => r._id === editingReviewId);
+        if (idx !== -1) {
+          reviewList[idx].text = reviewText;
+          reviewList[idx].rating = reviewSelectedRating;
+        }
+        renderReviewList();
+        await updateMovieStats();
+        // Reset form
+        this.reset();
+        updateReviewStars(0);
+        reviewSelectedRating = 0;
+        editingReviewId = null;
+        submitBtn.textContent = originalButtonText || 'Submit Review';
+      } catch (err) {
+        showCustomMessage(err.message || 'Failed to update review.');
+      }
+      return;
+    }
+    // ... existing code for submitting a new review ...
+  });
 
   async function updateMovieStats() {
     // Get TMDB average from sessionStorage
