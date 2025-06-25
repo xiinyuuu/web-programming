@@ -27,6 +27,9 @@ let currentMovieIndex = 0;
 const MOVIES_PER_GENRE = 100; // Increased from 50 to 100 movies per genre
 const POPULAR_MOVIES_COUNT = 100; // Cache 100 popular movies
 
+// Track the last set of displayed movie IDs to avoid repeats between shuffles
+let lastRouletteMovieIds = [];
+
 // Create modal HTML directly
 function createRouletteModal() {
   const container = document.getElementById('roulette-modal-container');
@@ -380,7 +383,7 @@ window.selectGenre = async function(genreId, genreName) {
 // Get random movies from cache for wheel
 function updateWheelWithRandomMovies(movies) {
   console.log('updateWheelWithRandomMovies called with', movies.length, 'movies');
-  
+
   if (movies.length === 0) {
     console.log('No movies provided, showing error message');
     const wheel = document.querySelector('.wheel');
@@ -389,11 +392,20 @@ function updateWheelWithRandomMovies(movies) {
     }
     return;
   }
-  
-  // Shuffle and take first 8 movies
-  const shuffledMovies = shuffleArray(movies).slice(0, 8);
-  console.log('Shuffled movies:', shuffledMovies.map(m => m.title));
-  updateWheelWithMovies(shuffledMovies);
+
+  // Exclude last shown movies if possible
+  let availableMovies = movies.filter(m => !lastRouletteMovieIds.includes(m.id));
+  let nextMovies = [];
+  if (availableMovies.length >= 8) {
+    nextMovies = shuffleArray(availableMovies).slice(0, 8);
+  } else {
+    // Not enough unique movies, allow repeats to fill
+    nextMovies = shuffleArray(movies).slice(0, 8);
+  }
+  // Update the tracker for next shuffle
+  lastRouletteMovieIds = nextMovies.map(m => m.id);
+  console.log('Shuffled movies (no repeats from last set):', nextMovies.map(m => m.title));
+  updateWheelWithMovies(nextMovies);
 }
 
 // Update the wheel segments with movie data
@@ -456,10 +468,19 @@ async function shuffleMoviesAndUpdateWheel() {
   // Get cached movies for current genre
   const genreName = allGenres.find(g => g.id === currentGenreId)?.name || 'Unknown';
   const genreMovies = await preFetchGenreMovies(currentGenreId, genreName);
-  
-  // Shuffle the cached movies
-  const shuffledMovies = shuffleArray(genreMovies);
-  updateWheelWithMovies(shuffledMovies.slice(0, 8));
+
+  // Exclude last shown movies if possible
+  let availableMovies = genreMovies.filter(m => !lastRouletteMovieIds.includes(m.id));
+  let nextMovies = [];
+  if (availableMovies.length >= 8) {
+    nextMovies = shuffleArray(availableMovies).slice(0, 8);
+  } else {
+    // Not enough unique movies, allow repeats to fill
+    nextMovies = shuffleArray(genreMovies).slice(0, 8);
+  }
+  // Update the tracker for next shuffle
+  lastRouletteMovieIds = nextMovies.map(m => m.id);
+  updateWheelWithMovies(nextMovies);
 }
 
 // Utility function to shuffle an array

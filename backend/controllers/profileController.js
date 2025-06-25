@@ -46,7 +46,8 @@ exports.getProfile = async (req, res) => {
           year: new Date(movie.release_date).getFullYear(),
           rating: review.rating,
           review: review.text,
-          date: review.createdAt
+          date: review.createdAt,
+          duration: movie.runtime ? formatDuration(movie.runtime) : '',
         };
       } catch (error) {
         console.error(`Error fetching movie details for ${review.movieId}:`, error);
@@ -99,7 +100,8 @@ exports.getAllReviews = async (req, res) => {
           year: new Date(movie.release_date).getFullYear(),
           rating: review.rating,
           review: review.text,
-          date: review.createdAt
+          date: review.createdAt,
+          duration: movie.runtime ? formatDuration(movie.runtime) : '',
         };
       } catch (error) {
         console.error(`Error fetching movie details for ${review.movieId}:`, error);
@@ -176,7 +178,8 @@ exports.updateProfile = async (req, res) => {
           year: new Date(movie.release_date).getFullYear(),
           rating: review.rating,
           review: review.text,
-          date: review.createdAt
+          date: review.createdAt,
+          duration: movie.runtime ? formatDuration(movie.runtime) : '',
         };
       } catch (error) {
         console.error(`Error fetching movie details for ${review.movieId}:`, error);
@@ -344,6 +347,14 @@ exports.updateProfilePic = async (req, res) => {
     res.status(500).json({ message: 'Failed to update profile picture' });
   }
 };
+
+// Add a helper to format duration as '2h 49m'
+function formatDuration(runtime) {
+  if (!runtime || isNaN(runtime)) return '';
+  const hours = Math.floor(runtime / 60);
+  const minutes = runtime % 60;
+  return `${hours > 0 ? hours + 'h ' : ''}${minutes}m`;
+}
 
 module.exports = {
   getProfile: exports.getProfile,

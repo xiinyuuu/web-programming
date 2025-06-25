@@ -211,6 +211,7 @@ body {
   font-size: 0.9rem;
 }
 
+
 .activity-content {
   display: flex;
   gap: 1.5rem;
@@ -237,13 +238,13 @@ body {
 
 .activity-movie-duration {
   color: #999;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   margin-bottom: 0px;
 }
 
 .activity-movie-info {
   color: #999;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
 }
 
 .activity-movie-review {
@@ -536,4 +537,8 @@ body {
 }
 .footer-link:hover {
   text-decoration: underline;
+}
+
+#reviewDetailModal .activity-date.mt-1 {
+  margin-top: 0.25rem !important;
 }

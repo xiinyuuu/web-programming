@@ -267,8 +267,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                     console.log('Found review data:', review);
                     document.getElementById('modalMovieImage').src = review.image;
                     document.getElementById('modalMovieTitle').textContent = review.title;
-                    document.getElementById('modalMovieInfo').textContent = review.info || (review.genre ? `${review.genre} • ${review.year}` : '');
                     document.getElementById('modalMovieDuration').textContent = review.duration || '';
+                    document.getElementById('modalMovieInfo').textContent = review.info || (review.genre ? `${review.genre} • ${review.year}` : '');
                     document.getElementById('modalMovieRating').innerHTML = generateStars(review.rating);
                     document.getElementById('modalMovieReview').textContent = review.review;
                     document.getElementById('modalReviewDate').textContent = formatDate(review.date);
@@ -400,12 +400,13 @@ document.addEventListener('DOMContentLoaded', async function() {
             const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
             if (!currentPassword || !newPassword || !confirmPassword) {
                 showError('Please fill in all fields');
                 return;
             }
-            if (newPassword.length < 8) {
-                showError('Password must be at least 8 characters');
+            if (!passwordRegex.test(newPassword)) {
+                showError("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
                 return;
             }
             if (newPassword !== confirmPassword) {
@@ -525,8 +526,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         alertDiv.setAttribute('role', 'alert');
         alertDiv.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${message}`;
         
-        // Insert before the form's submit button
-        changePasswordForm.insertBefore(alertDiv, changePasswordForm.lastElementChild);
+        // Insert above the Current Password field
+        const currentPasswordDiv = document.getElementById('currentPassword').closest('.mb-3');
+        changePasswordForm.insertBefore(alertDiv, currentPasswordDiv);
     }
 
     function clearErrors() {
