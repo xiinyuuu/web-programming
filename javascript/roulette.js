@@ -432,10 +432,10 @@ function updateWheelWithMovies(movies) {
     return;
   }
   
-  // Check if wheel has been replaced with loading spinner
+  
   if (wheel.innerHTML.includes('spinner-border')) {
     console.log('Wheel was replaced with loading spinner, recreating wheel structure');
-    // Recreate the wheel structure
+    
     wheel.innerHTML = `
       <div class="number" style="--i:1;--clr:#db7093;"><span></span></div>
       <div class="number" style="--i:2;--clr:#20b22a;"><span></span></div>
