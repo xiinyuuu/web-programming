@@ -24,7 +24,7 @@ let rouletteTotalPages = 1;
 let movieCache = {};
 let popularMovies = [];
 let currentMovieIndex = 0;
-const MOVIES_PER_GENRE = 100; // Increased from 50 to 100 movies per genre
+const MOVIES_PER_GENRE = 100; // Cache 100 movies per genre
 const POPULAR_MOVIES_COUNT = 100; // Cache 100 popular movies
 
 // Track the last set of displayed movie IDs to avoid repeats between shuffles
@@ -368,7 +368,6 @@ window.selectGenre = async function(genreId, genreName) {
     // Update the wheel with random movies from cache
     updateWheelWithRandomMovies(genreMovies);
 
-    // Show total movies available
     if (genreMovies.length > 0) {
       const modalTitle = document.getElementById('rouletteModalLabel');
       if (modalTitle) {
