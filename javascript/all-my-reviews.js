@@ -219,10 +219,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (container) {
             container.innerHTML = `
                 <div class="text-center py-5">
-                    <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
-                    <h4 class="mt-3 text-danger">Error Loading Reviews</h4>
+                    <i class="bi bi-file-earmark-x" style="font-size: 3rem; color:rgba(205, 205, 205, 0.58);"></i>
+                    <h6 class="mt-1 text-secondary">No reviews submitted yet</h6>
                     <p class="text-muted">${error}</p>
-                    <button onclick="location.reload()" class="btn btn-primary">Try Again</button>
                 </div>
             `;
         }
@@ -236,7 +235,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             const userReviews = await fetchUserReviews();
             if (userReviews.length === 0 && window.renderedReviews === undefined) {
                 // This means there was an error fetching reviews
-                showErrorState('Unable to load reviews. Please check your connection and try again.');
+                showErrorState('');
                 return;
             }
             renderAllReviews(userReviews);
