@@ -1,4 +1,5 @@
-document.addEventListener("DOMContentLoaded", function () {
+// Remove the DOMContentLoaded wrapper and create a function that can be called after movie.js completes
+function initializeReviews() {
   let reviewSelectedRating = 0;
   const reviewStars = document.querySelectorAll('#review-star-rating i');
   const reviewContainer = document.getElementById('review-user-reviews');
@@ -20,13 +21,9 @@ document.addEventListener("DOMContentLoaded", function () {
     for (let i = 1; i <= 5; i++) {
       if (i <= Math.floor(rating)) {
         stars += '<i class="bi bi-star-fill text-warning"></i>';
-      } else if (i === Math.floor(rating) + 1 && rating % 1 !== 0) {
-        // Partial star
-        const percent = Math.round((rating % 1) * 100);
-        stars += `<span class="star-partial" style="position:relative;display:inline-block;width:1.2em;">
-          <i class="bi bi-star text-warning" style="position:absolute;left:0;top:0;z-index:1;"></i>
-          <i class="bi bi-star-fill text-warning" style="width:${percent}%;overflow:hidden;position:absolute;left:0;top:0;z-index:2;"></i>
-        </span>`;
+      } else if (i === Math.floor(rating) + 1 && rating % 1 >= 0.5) {
+        // Use Bootstrap's half-star icon
+        stars += '<i class="bi bi-star-half text-warning"></i>';
       } else {
         stars += '<i class="bi bi-star text-warning"></i>';
       }
@@ -185,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
       showCustomMessage(err.message || 'Failed to delete review.');
     }
   });
-
+      
   // Update form submission to handle edit mode
   document.getElementById('review-form').addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -201,10 +198,14 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
       if (reviewSelectedRating === 0) {
-        showCustomMessage("Please select a star rating.");
+        showCustomMessage("Please select a rating.");
         return;
       }
-      const reviewText = document.getElementById('review-text').value;
+      const reviewText = document.getElementById('review-text').value.trim();
+      if (!reviewText) {
+        showCustomMessage("Please enter a review.");
+        return;
+      }
       const submitBtn = document.querySelector('#review-form button[type="submit"]');
       // If editing
       if (editingReviewId) {
@@ -270,27 +271,43 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   async function updateMovieStats() {
-    // Get TMDB average from sessionStorage (raw TMDB rating out of 10)
-    const tmdbRaw = parseFloat(sessionStorage.getItem('tmdbAvg'));
-    // If you have vote_count, you can get it from sessionStorage as well, otherwise default to 1
-    const tmdbCount = parseInt(sessionStorage.getItem('tmdbCount')) || 1;
+    // Get current movie ID
+    const currentMovieId = sessionStorage.getItem('currentMovieId');
+    const movieData = JSON.parse(sessionStorage.getItem('selectedMovie'));
+    const movieId = currentMovieId || (movieData ? movieData.id : null);
+    
+    if (!movieId) {
+      return;
+    }
+    
+    // Get TMDB average from sessionStorage (movie-specific)
+    const tmdbAvgKey = `tmdbAvg_${movieId}`;
+    const tmdbCountKey = `tmdbCount_${movieId}`;
+    const tmdbRaw = parseFloat(sessionStorage.getItem(tmdbAvgKey));
+    // Get TMDB vote count, but only if it exists and is valid
+    const tmdbCountStr = sessionStorage.getItem(tmdbCountKey);
+    const tmdbCount = tmdbCountStr ? parseInt(tmdbCountStr) : null;
     // Convert TMDB rating to 5-star scale
     const tmdbStars = isNaN(tmdbRaw) ? 0 : (tmdbRaw / 10 * 5);
     // Get all user ratings from reviewList
     const userRatings = reviewList.map(r => r.rating);
     const userSum = userRatings.reduce((a, b) => a + b, 0);
     const userCount = userRatings.length;
+    
     // Calculate the combined average
     let combinedAvg;
-    if (userCount === 0 && tmdbCount === 0) {
+    if (userCount === 0 && !tmdbCount) {
       combinedAvg = 0;
     } else if (userCount === 0) {
       combinedAvg = tmdbStars;
-    } else if (tmdbCount === 0) {
+    } else if (!tmdbCount) {
+      // If no TMDB vote count, just use user average
       combinedAvg = userSum / userCount;
     } else {
+      // Use weighted average when we have both TMDB and user data
       combinedAvg = (tmdbStars * tmdbCount + userSum) / (tmdbCount + userCount);
     }
+    
     // Display the combined average
     const ratingDisplay = document.getElementById('movie-rating');
     if (ratingDisplay) {
@@ -306,19 +323,102 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Wait for tmdbAvg to be set in sessionStorage before initial load
   async function waitForTmdbAvg() {
-    let tries = 0;
-    while (!sessionStorage.getItem('tmdbAvg') && tries < 20) {
-      await new Promise(res => setTimeout(res, 100));
-      tries++;
-    }
+    return new Promise((resolve) => {
+      // Get current movie ID
+      const currentMovieId = sessionStorage.getItem('currentMovieId');
+      const movieData = JSON.parse(sessionStorage.getItem('selectedMovie'));
+      const movieId = currentMovieId || (movieData ? movieData.id : null);
+      
+      if (!movieId) {
+        resolve();
+        return;
+      }
+      
+      const tmdbAvgKey = `tmdbAvg_${movieId}`;
+      
+      // Check if data is already available
+      if (sessionStorage.getItem(tmdbAvgKey)) {
+        resolve();
+        return;
+      }
+      
+      // Listen for the custom event
+      const handleTmdbDataReady = (event) => {
+        if (event.detail.movieId == movieId) {
+          window.removeEventListener('tmdbDataReady', handleTmdbDataReady);
+          resolve();
+        }
+      };
+      
+      window.addEventListener('tmdbDataReady', handleTmdbDataReady);
+      
+      // Fallback: poll for data (in case event doesn't fire)
+      let tries = 0;
+      const maxTries = 50; // 5 seconds
+      const pollInterval = setInterval(() => {
+        tries++;
+        if (sessionStorage.getItem(tmdbAvgKey)) {
+          clearInterval(pollInterval);
+          window.removeEventListener('tmdbDataReady', handleTmdbDataReady);
+          resolve();
+        } else if (tries >= maxTries) {
+          clearInterval(pollInterval);
+          window.removeEventListener('tmdbDataReady', handleTmdbDataReady);
+          resolve();
+        }
+      }, 100);
+    });
   }
 
-  // Initial load
+  // Start the initialization sequence
   (async function() {
+    // Step 1: Wait for TMDB data to be fetched and stored
     await waitForTmdbAvg();
+    
+    // Step 2: Fetch user reviews
     await fetchMovieReviews();
+    
+    // Step 3: Calculate and display the combined average
     await updateMovieStats();
   })();
+}
+
+// Wait for DOM to be ready, then wait for movie.js to complete before initializing reviews
+document.addEventListener("DOMContentLoaded", function () {
+  // Wait a bit to ensure movie.js has started its work
+  setTimeout(() => {
+    // Check if movie.js has already completed its work
+    const movieId = sessionStorage.getItem('currentMovieId');
+    if (movieId && window.movieJsReady) {
+      const tmdbAvgKey = `tmdbAvg_${movieId}`;
+      if (sessionStorage.getItem(tmdbAvgKey)) {
+        initializeReviews();
+      } else {
+        // Wait for the tmdbDataReady event
+        const handleTmdbDataReady = (event) => {
+          window.removeEventListener('tmdbDataReady', handleTmdbDataReady);
+          initializeReviews();
+        };
+        window.addEventListener('tmdbDataReady', handleTmdbDataReady);
+      }
+    } else if (window.movieJsReady) {
+      initializeReviews();
+    } else {
+      // Wait for movie.js to complete
+      let tries = 0;
+      const maxTries = 100; // 10 seconds
+      const pollInterval = setInterval(() => {
+        tries++;
+        if (window.movieJsReady) {
+          clearInterval(pollInterval);
+          initializeReviews();
+        } else if (tries >= maxTries) {
+          clearInterval(pollInterval);
+          initializeReviews();
+        }
+      }, 100);
+    }
+  }, 100);
 });
 
 function showCustomMessage(message, title = "Message") {

@@ -1,6 +1,9 @@
 const BASE_URL = '/api/tmdb';
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
 
+// Global flag to track if movie.js has completed its work
+window.movieJsReady = false;
+
 document.addEventListener("DOMContentLoaded", async () => {
   const movie = JSON.parse(sessionStorage.getItem('selectedMovie'));
 
@@ -9,13 +12,73 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Fetch additional details like rating, duration, etc.
     await fetchAndDisplayMovieDetails(movie.id);
+    
+    // Mark movie.js as ready
+    window.movieJsReady = true;
   } else {
     document.querySelector('#movie-details').innerHTML = "<p class='text-light'>Movie not found.</p>";
+    // Mark movie.js as ready even if no movie found
+    window.movieJsReady = true;
   }
 });
 
 async function fetchAndDisplayMovieDetails(movieId) {
   try {
+    // Check if we already have TMDB data for this specific movie
+    const tmdbAvgKey = `tmdbAvg_${movieId}`;
+    const tmdbCountKey = `tmdbCount_${movieId}`;
+    const existingTmdbAvg = sessionStorage.getItem(tmdbAvgKey);
+    const existingTmdbCount = sessionStorage.getItem(tmdbCountKey);
+    const selectedMovie = JSON.parse(sessionStorage.getItem('selectedMovie'));
+    
+    // If we have TMDB data and it's for the same movie, don't fetch again
+    if (existingTmdbAvg && selectedMovie && selectedMovie.id === movieId) {
+      // Still fetch other details but skip TMDB rating storage
+      const res = await fetch(`${BASE_URL}/movies/${movieId}`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const movieDetails = await res.json();
+      
+      // Display movie details but don't overwrite TMDB data
+      const releaseYear = movieDetails.release_date ? new Date(movieDetails.release_date).getFullYear() : 'N/A';
+      document.querySelector('#movie-year').innerHTML = `<strong>Year:</strong> ${releaseYear}`;
+
+      const genres = movieDetails.genres && movieDetails.genres.length > 0 ? movieDetails.genres.map(g => g.name).join(', ') : 'N/A';
+      document.querySelector('#movie-genre').innerHTML = `<strong>Genre:</strong> ${genres}`;
+
+      document.querySelector('#movie-details img').src = movieDetails.poster_path;
+      document.querySelector('#movie-details img').alt = movieDetails.title;
+      document.querySelector('#movie-duration').innerHTML = `<strong>Duration:</strong> ${movieDetails.runtime || 'N/A'} mins`;
+      document.querySelector('#movie-synopsis').innerHTML = `<strong>Synopsis:</strong> ${movieDetails.overview || 'No synopsis available.'}`;
+
+      // Call to fetch and display cast
+      fetchAndDisplayCast(movieId);
+
+      // Set data attributes for the watchlist button
+      const watchlistBtn = document.getElementById('add-to-watchlist-btn');
+      if (watchlistBtn) {
+        watchlistBtn.dataset.movieId = movieDetails.id;
+        watchlistBtn.dataset.title = movieDetails.title;
+        watchlistBtn.dataset.poster = movieDetails.poster_path;
+      }
+
+      // After rendering movie details, fetch trailers:
+      await fetchAndDisplayTrailerButton(movieId);
+      
+      // Dispatch event to notify that cached TMDB data is ready
+      window.dispatchEvent(new CustomEvent('tmdbDataReady', {
+        detail: {
+          movieId: movieId,
+          tmdbAvg: parseFloat(existingTmdbAvg),
+          tmdbCount: existingTmdbCount ? parseInt(existingTmdbCount) : null
+        }
+      }));
+      
+      return;
+    }
+
+    // Fetch fresh TMDB data
     const res = await fetch(`${BASE_URL}/movies/${movieId}`);
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
@@ -47,9 +110,29 @@ async function fetchAndDisplayMovieDetails(movieId) {
     // After rendering movie details, fetch trailers:
     await fetchAndDisplayTrailerButton(movieId);
 
-    // Only set tmdbAvg in sessionStorage
-    sessionStorage.setItem('tmdbAvg', movieDetails.vote_average.toString());
-    sessionStorage.setItem('tmdbCount', movieDetails.vote_count ? movieDetails.vote_count.toString() : '1');
+    // Store TMDB data in sessionStorage (movie-specific) - this is the first step
+    sessionStorage.setItem(tmdbAvgKey, movieDetails.vote_average.toString());
+    
+    // Only store tmdbCount if we have a valid vote_count from TMDB
+    if (movieDetails.vote_count && movieDetails.vote_count > 0) {
+      sessionStorage.setItem(tmdbCountKey, movieDetails.vote_count.toString());
+    } else {
+      // Remove any existing tmdbCount if vote_count is invalid
+      sessionStorage.removeItem(tmdbCountKey);
+    }
+    
+    // Also store the current movie ID for reference
+    sessionStorage.setItem('currentMovieId', movieId.toString());
+    
+    // Dispatch custom event to notify that TMDB data is ready for calculation
+    window.dispatchEvent(new CustomEvent('tmdbDataReady', {
+      detail: {
+        movieId: movieId,
+        tmdbAvg: movieDetails.vote_average,
+        tmdbCount: movieDetails.vote_count
+      }
+    }));
+    
   } catch (error) {
     console.error('Error fetching movie details:', error);
     document.querySelector('#movie-details').innerHTML = "<p class='text-light'>Error loading movie details.</p>";
